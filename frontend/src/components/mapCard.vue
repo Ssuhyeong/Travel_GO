@@ -1,14 +1,16 @@
 <template>
   <div class="card">
-    <div class="card-body">
-      
-    </div>
+    <div class="card-body"><mapSearchbar /></div>
   </div>
 </template>
 
 <script>
+import mapSearchbar from "./mapSearchbar.vue";
 export default {
   name: "cardMap",
+  components: {
+    mapSearchbar,
+  },
 };
 </script>
 
@@ -20,7 +22,6 @@ export default {
   border: 1px solid #ddd;
   background-color: #fff;
   border-radius: 5px;
-  overflow: hidden;
   margin: 20px 40px;
   box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
 }
