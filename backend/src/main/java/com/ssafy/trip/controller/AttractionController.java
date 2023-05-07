@@ -5,6 +5,8 @@ import com.ssafy.trip.Entity.Attraction;
 import com.ssafy.trip.service.AttractionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,28 +26,16 @@ public class AttractionController {
 
     @GetMapping("/search-list")
     public ResponseEntity<?> selectByKeyword(
-            @RequestParam(value = "sido_code") Integer sido_code,
-            @RequestParam(value = "content_type_id", required = false) Integer content_type_id,
+            Pageable pageable,
+            @RequestParam(value = "sidoCode",required = false) Integer sidoCode,
+            @RequestParam(value = "contentTypeId", required = false) Integer contentTypeId,
             @RequestParam(value = "keyword", required = false) String keyword
     ){
 
-      // log.debug("SIDO: "+sido_code + " TYPE: "+content_type_id+" KEY: "+keyword);
-        List<Attraction> attractionList = attractionService.findAttraction(sido_code, content_type_id, keyword);
-       // log.debug(attractionList.toString());
+        Page<Attraction> attractions = attractionService.getAttractions(pageable,sidoCode,contentTypeId,keyword);
 
-        if(attractionList.isEmpty()){
-            HttpStatus status = HttpStatus.NOT_FOUND;
-            log.debug("STATUS: " + String.valueOf(HttpStatus.NOT_FOUND));
-            return ResponseEntity.status(404).build();
-        }
-        else{
-            log.debug("STATUS : " + String.valueOf(HttpStatus.OK));
-            return ResponseEntity.ok().body(attractionList);
-        }
+        return new ResponseEntity<>(attractions,HttpStatus.OK);
 
-        // HttpStatus status = attractionList.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK;
-
-      //  return new ResponseEntity<List<Attraction>>(attractionList, status);
     }
 
 }
