@@ -33,7 +33,8 @@
             <img
               src="@/assets/img/kakao_talk.png"
               alt=""
-              style="width: 30px; padding: 5px"
+              style="width: 30px; padding: 5px; cursor: pointer;"
+              @click="kakaoLink()"
             />
           </div>
         </div>
@@ -147,6 +148,22 @@
 export default {
   name: "detailView",
   components: {},
+  methods: {
+    kakaoLink () {
+      window.Kakao.Link.sendDefault({
+        objectType: 'text',
+        text:
+          '당신에게 여행지를 추천했어요 빨리와',
+        link: {
+          mobileWebUrl:
+            'http://localhost:8080',
+          webUrl:
+            'http://localhost:8080'
+        }
+      }
+      )
+    }
+  }
 };
 </script>
 

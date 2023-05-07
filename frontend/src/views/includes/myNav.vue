@@ -9,8 +9,8 @@
 
       <ul class="nav-links">
         <li><a href="/loginpage">로그인</a></li>
-        <li><a href="/detailpage">지역별 여행지</a></li>
-        <li><a href="#">게시판</a></li>
+        <li><a href="/">지역별 여행지</a></li>
+        <li><a href="/boardpage">게시판</a></li>
         <li><a href="/profilepage">프로필</a></li>
       </ul>
     </div>

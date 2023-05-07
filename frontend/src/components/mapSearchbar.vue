@@ -1,12 +1,19 @@
 <template>
   <div class="search_container">
-    <h1 class="heading">Tiny Animated search bar</h1>
+    <h1 class="heading">여행지를 검색합니다</h1>
     <div class="searchInputWrapper">
       <input
         class="searchInput"
         type="text"
-        placeholder="focus here to search" />
+        placeholder="여행지를 검색해주세요" />
       <!-- <i class="searchInputIcon fa fa-search"></i> -->
+      <font-awesome-icon :icon="['fas', 'search']" class="searchInputIcon"/>
+    </div>
+    <div id="select_container">
+      <div>검색</div>
+      <div>추천</div>
+      <div>거리순</div>
+      <div>MY</div>
     </div>
   </div>
 </template>
@@ -17,6 +24,24 @@ export default {};
 
 <style>
 /* Quick and dirty normalize hax */
+#select_container {
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+  text-align: center;
+  width: 93%;
+}
+
+#select_container > div {
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#select_container > div:hover {
+  background-color: #017e94;
+}
 
 .search_container {
   height: 0%;
@@ -24,7 +49,9 @@ export default {};
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  color: #a1a1a1;
+  color: #FFF;
+  background-color: #0097b2;
+  border-radius: 10px 10px 0px 0px;
 }
 
 .heading {
@@ -37,13 +64,14 @@ export default {};
 }
 
 .searchInput {
-  width: 15rem;
+  width: 18rem;
   height: 2rem;
-  padding: 0 1rem;
-  border-radius: 2rem;
+  padding: 0.2rem 3rem 0 1rem;
+  border-radius: 0.4rem;
   border: none;
   transition: transform 0.1s ease-in-out;
-  background-color: red;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  font-family: cookierunotf;
 }
 
 ::placeholder {
@@ -63,8 +91,8 @@ export default {};
 
 .searchInputIcon {
   position: absolute;
-  right: 0.8rem;
-  top: 0.5rem;
+  right: 0.5rem;
+  top: 0.7rem;
   color: #a1a1a1;
   transition: all 0.1s ease-in-out;
 }

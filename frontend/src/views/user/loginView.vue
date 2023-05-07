@@ -1,42 +1,42 @@
 <template>
-  <!-- partial:index.partial.html -->
   <div class="login_body">
-    <div class="container right-panel-active">
-      <!-- Sign Up -->
-      <div class="container__form container--signup">
-        <form action="#" class="form" id="form1">
-          <h2 class="form__title">Sign Up</h2>
-          <input type="text" placeholder="User" class="input" />
-          <input type="email" placeholder="Email" class="input" />
-          <input type="password" placeholder="Password" class="input" />
-          <button class="btn">Sign Up</button>
-        </form>
-      </div>
+    <!-- partial:index.partial.html -->
+    <div class="container">
+    <!-- Sign Up -->
+    <div class="container__form container--signup">
+      <form action="#" class="form" id="form1">
+        <h2 class="form__title">Sign Up</h2>
+        <input type="text" placeholder="User" class="input" />
+        <input type="email" placeholder="Email" class="input" />
+        <input type="password" placeholder="Password" class="input" />
+        <button class="btn">Sign Up</button>
+      </form>
+    </div>
 
-      <!-- Sign In -->
-      <div class="container__form container--signin">
-        <form action="#" class="form" id="form2">
-          <h2 class="form__title">Sign In</h2>
-          <input type="email" placeholder="Email" class="input" />
-          <input type="password" placeholder="Password" class="input" />
-          <a href="#" class="link">Forgot your password?</a>
-          <button class="btn">Sign In</button>
-        </form>
-      </div>
+    <!-- Sign In -->
+    <div class="container__form container--signin">
+      <form action="#" class="form" id="form2">
+        <h2 class="form__title">Sign In</h2>
+        <input type="email" placeholder="Email" class="input" />
+        <input type="password" placeholder="Password" class="input" />
+        <a href="#" class="link">Forgot your password?</a>
+        <button class="btn">Sign In</button>
+      </form>
+    </div>
 
-      <!-- Overlay -->
-      <div class="container__overlay">
-        <div class="overlay">
-          <div class="overlay__panel overlay--left">
-            <button class="btn" id="signIn">Sign In</button>
-          </div>
-          <div class="overlay__panel overlay--right">
-            <button class="btn" id="signUp">Sign Up</button>
-          </div>
+    <!-- Overlay -->
+    <div class="container__overlay">
+      <div class="overlay">
+        <div class="overlay__panel overlay--left">
+          <button class="btn" id="signIn">Sign In</button>
+        </div>
+        <div class="overlay__panel overlay--right">
+          <button class="btn" id="signUp">Sign Up</button>
         </div>
       </div>
     </div>
   </div>
+</div>
 </template>
 
 <script>
@@ -63,26 +63,9 @@ export default {
 </script>
 
 <style scoped>
-:root {
-  /* COLORS */
-  --white: #e9e9e9;
-  --gray: #333;
-  --blue: #0367a6;
-  --lightblue: #008997;
-
-  /* RADII */
-  --button-radius: 0.7rem;
-
-  /* SIZES */
-  --max-width: 758px;
-  --max-height: 420px;
-
-  font-size: 16px;
-}
-
 .login_body {
   align-items: center;
-  background-color: var(--white);
+  background-color: #e9e9e9;
   background: url("https://images.unsplash.com/reserve/91JuTaUSKaMh2yjB1C4A_IMG_9284.jpg?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
   background-attachment: fixed;
   background-position: center;
@@ -91,16 +74,6 @@ export default {
   display: grid;
   height: 100vh;
   place-items: center;
-  overflow: hidden;
-}
-
-.login_body {
-  width: 100vh;
-  min-width: 1000px;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .form__title {
@@ -110,19 +83,19 @@ export default {
 }
 
 .link {
-  color: var(--gray);
+  color: #333;
   font-size: 0.9rem;
   margin: 1.5rem 0;
   text-decoration: none;
 }
 
 .container {
-  background-color: var(--white);
-  border-radius: var(--button-radius);
+  background-color: #e9e9e9;
+  border-radius: 0.7rem;
   box-shadow: 0 0.9rem 1.7rem rgba(0, 0, 0, 0.25),
     0 0.7rem 0.7rem rgba(0, 0, 0, 0.22);
-  height: var(--max-height);
-  max-width: var(--max-width);
+  height: 420px;
+  max-width: 758px;
   overflow: hidden;
   position: relative;
   width: 100%;
@@ -176,7 +149,7 @@ export default {
 }
 
 .overlay {
-  background-color: var(--lightblue);
+  background-color: #008997;
   background: url("https://images.unsplash.com/reserve/91JuTaUSKaMh2yjB1C4A_IMG_9284.jpg?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80");
   background-attachment: fixed;
   background-position: center;
@@ -226,15 +199,15 @@ export default {
 }
 
 .btn {
-  background-color: var(--blue);
+  background-color: #0367a6;
   background-image: linear-gradient(
     90deg,
-    var(--blue) 0%,
-    var(--lightblue) 74%
+    #0367a6 0%,
+    #008997 74%
   );
   border-radius: 20px;
-  border: 1px solid var(--blue);
-  color: var(--white);
+  border: 1px solid #0367a6;
+  color: #e9e9e9;
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: bold;
@@ -257,7 +230,7 @@ export default {
 }
 
 .form {
-  background-color: var(--white);
+  background-color: #e9e9e9;
   display: flex;
   align-items: center;
   justify-content: center;
