@@ -175,7 +175,6 @@ section img {
 #sec h2 {
   font-size: 4rem;
   margin-bottom: 30px;
-  color: #20496a;
 }
 #sec p {
   font-size: 1.2rem;

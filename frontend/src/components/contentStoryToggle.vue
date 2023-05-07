@@ -344,7 +344,6 @@ export default {
   .cs--content-sequence
   .cs--content-headline
   h3 {
-  color: #3c4043;
   opacity: 1;
 }
 .content-story-toggle--js
@@ -372,20 +371,20 @@ h2 {
   font-size: 36px;
   font-weight: 700;
   line-height: 1.2;
-  color: #3c4043;
+
 }
 h3 {
   font-size: 21px;
   font-weight: 700;
   line-height: 1.2;
-  color: #3c4043;
+
 }
 p {
   font-size: 16px;
   font-weight: 300;
   line-height: 26px;
   margin-top: 12px;
-  color: #3c4043;
+
 }
 img {
   display: block;

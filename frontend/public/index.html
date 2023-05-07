@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="icon" href="<%= BASE_URL %>favicon.ico" />
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <script src="//developers.kakao.com/sdk/js/kakao.js"></script>
+    <script>window.Kakao.init("915cffed372954b7b44804ed422b9cf0")</script>
   </head>
   <body>
     <noscript>
@@ -17,6 +19,5 @@
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->
-    <script src="//developers.kakao.com/sdk/js/kakao.js"></script>
   </body>
 </html>

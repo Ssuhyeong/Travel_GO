@@ -1,7 +1,7 @@
 <template>
   <myNav />
-  <div class="write_container">
-    <form id="contact" action="" method="post">
+  <div class="write_container" v-on:submit.prevent>
+    <form id="contact">
       <input type="hidden" name="action" value="write" />
       <h3>공지사항</h3>
       <h4>괸리자님 공지사항을 알려주세요</h4>
@@ -12,6 +12,7 @@
           tabindex="1"
           id="subject"
           name="subject"
+          v-model="board_data.subject"
           required
           autofocus
         />
@@ -22,6 +23,7 @@
           name="content"
           placeholder="Type your text..."
           tabindex="5"
+          v-model="board_data.content"
           required
         ></textarea>
       </fieldset>
@@ -30,7 +32,7 @@
           name="submit"
           type="submit"
           id="btn-register"
-          data-submit="...Sending"
+          @click="regist()"
         >
           글작성
         </button>
@@ -38,9 +40,9 @@
           name="submit"
           type="submit"
           id="contact -submit"
-          data-submit="...Sending"
+          @click="cancel()"
         >
-          초기화
+          취소
         </button>
       </fieldset>
     </form>
@@ -54,6 +56,36 @@ export default {
   components: {
     myNav,
   },
+  data() {
+    return{
+      board_data: {
+        userId: "ssafy",
+        subject: "",
+        content: ""
+      }
+    }
+  },
+  methods: {
+    regist() {
+      console.log(this.board_data);
+      const url = `http://localhost:8080/board`;
+
+      this.$axios
+        .post(url, this.board_data)
+        .then(() => {
+          console.log("callback 함수에서 this : ", this);
+          alert("등록 성공");
+          location.href="/boardpage"
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("등록 실패");
+        });
+    },
+    cancel() {
+      location.href="/boardpage"
+    }
+  }
 };
 </script>
 

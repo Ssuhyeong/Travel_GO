@@ -29,5 +29,7 @@ a {
   color: #2c3e50;
   font-weight: 600;
   font-size: 14px;
+  text-decoration-line: none;
 }
+ 
 </style>

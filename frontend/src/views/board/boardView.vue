@@ -41,34 +41,17 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>3</td>
+            <tr v-for="(board) in board_list" :key="board.articleNo">
+              <td>{{ board.articleNo }}</td>
               <th>
-                <a href="#!">[공지사항] 개인정보 처리방침 변경안내처리방침</a>
-                <p>테스트</p>
+                <a @click="goDetail(board.articleNo)">{{ board.subject }}</a>
               </th>
-              <td>2017.07.13</td>
-            </tr>
-
-            <tr>
-              <td>2</td>
-              <th>
-                <a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a>
-              </th>
-              <td>2017.06.15</td>
-            </tr>
-
-            <tr>
-              <td>1</td>
-              <th>
-                <a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a>
-              </th>
-              <td>2017.06.15</td>
+              <td>{{ board.registerTime }}</td>
             </tr>
           </tbody>
         </table>
         <div id="submit_btn">
-          <button type="button" id="btn-list" class="custom-btn btn-16">
+          <button @click="write_page()" type="button" id="btn-list" class="custom-btn btn-16">
             글등록
           </button>
         </div>
@@ -85,6 +68,27 @@ export default {
   components: {
     myNav,
   },
+  data() {
+    return{
+      board_list: []
+    }
+  },
+  created() {
+    this.$axios
+        .get(`http://localhost:8080/board`)
+        .then((res) => {
+          console.log(res.data);
+          this.board_list = res.data;
+        })
+  },
+  methods: {
+    write_page() {
+     window.location.href = "/boardwritepage";
+    },
+    goDetail(articleNo) {
+      location.href = `/boardcontentpage?articleNo=${articleNo}`;
+    }
+  }
 };
 </script>
 
@@ -95,6 +99,10 @@ table {
 }
 section.notice {
   padding: 80px 0;
+}
+
+a {
+  cursor: pointer;
 }
 
 .page-title {
@@ -123,8 +131,9 @@ section.notice {
   width: 100%;
   font-size: 14px;
   font-family: cookierun;
-  padding: 7px 14px;
+  padding: 7px 115px 7px 14px;
   border: 1px solid #ccc;
+  
 }
 #board-search .search-window .search-wrap input:focus {
   border-color: #333;

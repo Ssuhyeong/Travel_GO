@@ -2,10 +2,10 @@
   <myNav />
   <div class="view_container">
     <form id="contact">
-      <h3>1. 공지사항입니다.</h3>
-      <h4>tngud124</h4>
-      <h4>2023.05.04 조회 : 20</h4>
-      <fieldset>안녕하세요! 시원한 바람이 불어와 기분이 너무 좋아요</fieldset>
+      <h3>{{ board_data.articleNo }}. {{board_data.subject}}.</h3>
+      <h4>{{board_data.userId}}</h4>
+      <h4>{{ board_data.registerTime}} 조회 : {{board_data.hit}}</h4>
+      <fieldset>{{board_data.content}}</fieldset>
     </form>
   </div>
   <div class="btn_container">
@@ -28,6 +28,30 @@ export default {
   components: {
     myNav,
   },
+  data() {
+    return{
+      board_data: {
+        articleNo: "ssafy",
+        userId: "",
+        subject: "",
+        content: "",
+        hit: 0,
+        registerTime: ""
+      }
+    }
+  },
+  created() {
+    const params = new URL(document.location).searchParams;
+    console.log(params);
+    const articleNo = params.get("articleNo");
+    console.log(articleNo);
+
+    const url = `http://localhost:8080/board/${articleNo}`;
+    this.$axios.get(url).then((res) => {
+      this.board_data = res.data;
+    })
+  }
+  
 };
 </script>
 
