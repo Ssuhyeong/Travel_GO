@@ -24,7 +24,7 @@
                   size="20"
                   style="margin: 10px"
               /></a>
-              <a href="#" class="social-icon"
+              <a class="social-icon"
                 ><font-awesome-icon
                   :icon="['fas', 'trash-can']"
                   size="20"

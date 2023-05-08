@@ -2,45 +2,70 @@
   <div class="login_body">
     <!-- partial:index.partial.html -->
     <div class="container">
-    <!-- Sign Up -->
-    <div class="container__form container--signup">
-      <form action="#" class="form" id="form1">
-        <h2 class="form__title">Sign Up</h2>
-        <input type="text" placeholder="User" class="input" />
-        <input type="email" placeholder="Email" class="input" />
-        <input type="password" placeholder="Password" class="input" />
-        <button class="btn">Sign Up</button>
-      </form>
-    </div>
+      <!-- Sign Up -->
+      <div class="container__form container--signup">
+        <form class="form" id="form1">
+          <h2 class="form__title">Sign Up</h2>
+          <input
+            type="text"
+            placeholder="Name"
+            class="input"
+            name="name"
+            v-model="user_data.name" />
+          <input
+            type="email"
+            placeholder="Id"
+            class="input"
+            name="id"
+            v-model="user_data.id" />
+          <input
+            type="password"
+            placeholder="Password"
+            class="input"
+            name="password"
+            v-model="user_data.password" />
+          <button class="btn" @click="signup()">Sign Up</button>
+        </form>
+      </div>
 
-    <!-- Sign In -->
-    <div class="container__form container--signin">
-      <form action="#" class="form" id="form2">
-        <h2 class="form__title">Sign In</h2>
-        <input type="email" placeholder="Email" class="input" />
-        <input type="password" placeholder="Password" class="input" />
-        <a href="#" class="link">Forgot your password?</a>
-        <button class="btn">Sign In</button>
-      </form>
-    </div>
+      <!-- Sign In -->
+      <div class="container__form container--signin">
+        <form action="#" class="form" id="form2">
+          <h2 class="form__title">Sign In</h2>
+          <input type="email" placeholder="Email" class="input" />
+          <input type="password" placeholder="Password" class="input" />
+          <a href="#" class="link">Forgot your password?</a>
+          <button class="btn">Sign In</button>
+        </form>
+      </div>
 
-    <!-- Overlay -->
-    <div class="container__overlay">
-      <div class="overlay">
-        <div class="overlay__panel overlay--left">
-          <button class="btn" id="signIn">Sign In</button>
-        </div>
-        <div class="overlay__panel overlay--right">
-          <button class="btn" id="signUp">Sign Up</button>
+      <!-- Overlay -->
+      <div class="container__overlay">
+        <div class="overlay">
+          <div class="overlay__panel overlay--left">
+            <button class="btn" id="signIn">Sign In</button>
+          </div>
+          <div class="overlay__panel overlay--right">
+            <button class="btn" id="signUp">Sign Up</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 export default {
+  name: "loginView",
+  data() {
+    return {
+      user_data: {
+        name: "",
+        id: "",
+        password: "",
+      },
+    };
+  },
   mounted() {
     const signInBtn = document.getElementById("signIn");
     const signUpBtn = document.getElementById("signUp");
@@ -58,6 +83,24 @@ export default {
 
     fistForm.addEventListener("submit", (e) => e.preventDefault());
     secondForm.addEventListener("submit", (e) => e.preventDefault());
+  },
+  methods: {
+    signup() {
+      console.log(this.user_data);
+      const url = `http://localhost:8080/user/join`;
+
+      this.$axios
+        .post(url, this.user_data)
+        .then(() => {
+          console.log(this);
+          alert("등록 성공");
+          location.href = "/loginpage";
+        })
+        .catch((error) => {
+          console.log(error);
+          alert("등록 실패");
+        });
+    },
   },
 };
 </script>
@@ -200,11 +243,7 @@ export default {
 
 .btn {
   background-color: #0367a6;
-  background-image: linear-gradient(
-    90deg,
-    #0367a6 0%,
-    #008997 74%
-  );
+  background-image: linear-gradient(90deg, #0367a6 0%, #008997 74%);
   border-radius: 20px;
   border: 1px solid #0367a6;
   color: #e9e9e9;

@@ -2,16 +2,20 @@
   <nav v-bind:class="{ sticky: navActive }">
     <div class="nav-content">
       <div class="logo">
-        <a href="/mainpage"
-          ><img src="../../assets/img/logo.png" style="width: 60px" alt="실패"
+        <a
+          ><img
+            src="../../assets/img/logo.png"
+            style="width: 60px; cursor: pointer"
+            alt="실패"
+            @click="$router.push('/mainpage')"
         /></a>
       </div>
 
       <ul class="nav-links">
-        <li><a href="/loginpage">로그인</a></li>
-        <li><a href="/">지역별 여행지</a></li>
-        <li><a href="/boardpage">게시판</a></li>
-        <li><a href="/profilepage">프로필</a></li>
+        <li><router-link to="/loginpage">로그인</router-link></li>
+        <li><router-link to="/">여행지 검색</router-link></li>
+        <li><router-link to="/boardpage">게시판</router-link></li>
+        <li><router-link to="/profilepage">프로필</router-link></li>
       </ul>
     </div>
   </nav>

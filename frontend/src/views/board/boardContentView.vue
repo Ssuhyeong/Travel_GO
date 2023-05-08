@@ -2,20 +2,32 @@
   <myNav />
   <div class="view_container">
     <form id="contact">
-      <h3>{{ board_data.articleNo }}. {{board_data.subject}}.</h3>
-      <h4>{{board_data.userId}}</h4>
-      <h4>{{ board_data.registerTime}} 조회 : {{board_data.hit}}</h4>
-      <fieldset>{{board_data.content}}</fieldset>
+      <h3>{{ board_data.articleNo }}. {{ board_data.subject }}.</h3>
+      <h4>{{ board_data.userId }}</h4>
+      <h4>{{ board_data.registerTime }} 조회 : {{ board_data.hit }}</h4>
+      <fieldset>{{ board_data.content }}</fieldset>
     </form>
   </div>
   <div class="btn_container">
-    <button type="button" id="btn-list" class="custom-btn btn-16">
+    <button
+      type="button"
+      id="btn-list"
+      class="custom-btn btn-16"
+      @click="$router.push('/boardpage')">
       글목록
     </button>
-    <button type="button" id="btn-mv-modify" class="custom-btn btn-16">
+    <button
+      type="button"
+      id="btn-mv-modify"
+      class="custom-btn btn-16"
+      @click="goUpdate()">
       글수정
     </button>
-    <button type="button" id="btn-delete" class="custom-btn btn-16">
+    <button
+      type="button"
+      id="btn-delete"
+      class="custom-btn btn-16"
+      @click="deleteBoard()">
       글삭제
     </button>
   </div>
@@ -29,29 +41,43 @@ export default {
     myNav,
   },
   data() {
-    return{
+    return {
       board_data: {
-        articleNo: "ssafy",
+        articleNo: "",
         userId: "",
         subject: "",
         content: "",
         hit: 0,
-        registerTime: ""
-      }
-    }
+        registerTime: "",
+      },
+    };
   },
   created() {
     const params = new URL(document.location).searchParams;
-    console.log(params);
     const articleNo = params.get("articleNo");
-    console.log(articleNo);
 
     const url = `http://localhost:8080/board/${articleNo}`;
     this.$axios.get(url).then((res) => {
       this.board_data = res.data;
-    })
-  }
-  
+    });
+  },
+  methods: {
+    deleteBoard() {
+      const no = this.board_data.articleNo;
+      console.log(no);
+      const url = `http://localhost:8080/board/${no}`;
+
+      this.$axios.delete(url).then(() => {
+        alert("삭제 완료");
+      });
+
+      window.location.href = "/boardpage";
+    },
+    goUpdate() {
+      const no = this.board_data.articleNo;
+      location.href = `/boardwritepage?articleNo=${no}`;
+    },
+  },
 };
 </script>
 

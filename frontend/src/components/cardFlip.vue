@@ -5,8 +5,7 @@
         class="front"
         style="
           background-image: url(https://ak-d.tripcdn.com/images/10051g000001h3cqs1344_Z_640_10000_R5.jpg_.webp?proc=autoorient);
-        "
-      >
+        ">
         <p>
           꽉 막힌 교통체증이 두렵다면 바로 여기! 지하철로도 갈 수 있는 송도
           센트럴 파크를 추천드려요.
@@ -30,8 +29,7 @@
         class="front"
         style="
           background-image: url(https://ak-d.tripcdn.com/images/10021g000001h7xezCDEB_Z_640_10000_R5.jpg_.webp?proc=autoorient);
-        "
-      >
+        ">
         <p>
           알록달록한 예쁜 건물들에 각종 벽화와 포토존이 가득해서 어디서 사진
           찍던 인생샷 남기기 가능!
@@ -54,8 +52,7 @@
         class="front"
         style="
           background-image: url(https://ak-d.tripcdn.com/images/10011g000001hds073A02_Z_640_10000_R5.jpg_.webp?proc=autoorient);
-        "
-      >
+        ">
         <p>
           어느 계절에 와도 고즈넉하게 즐기기 좋은 남이섬은 계절의 특성을 잘 느낄
           수 있는 곳이죠.

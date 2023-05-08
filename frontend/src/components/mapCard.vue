@@ -1,32 +1,54 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <mapSearchbar />
+      <div class="search_container">
+        <h1 class="heading">여행지를 검색합니다</h1>
+        <div class="searchInputWrapper">
+          <form id="search_form">
+            <input
+              class="searchInput"
+              type="text"
+              placeholder="여행지를 검색해주세요"
+              v-model="keyword"
+              v-on:keyup.enter="searchcontent" />
+            <font-awesome-icon
+              :icon="['fas', 'search']"
+              class="searchInputIcon"
+              @click="searchcontent()" />
+          </form>
+        </div>
+        <div id="select_container">
+          <div>검색</div>
+          <div>추천</div>
+          <div>거리순</div>
+          <div>MY</div>
+        </div>
+      </div>
       <div class="card_content">
         <div id="info_around">
-          <p style="margin:10px 0px">주변탐색</p>
+          <p style="margin: 10px 0px">주변탐색</p>
           <div id="info_list">
-            <infoIcon/>
-            <infoIcon/>
-            <infoIcon/>
-            <infoIcon/>
-            <infoIcon/>
-            <infoIcon/>
-            <infoIcon/>
+            <infoIcon icon_type="utensils" icon_name="음식점" />
+            <infoIcon icon_type="mug-hot" icon_name="카페" />
+            <infoIcon icon_type="bus" icon_name="버스" />
+            <infoIcon icon_type="train-subway" icon_name="지하철" />
+            <infoIcon icon_type="wallet" icon_name="은행" />
+            <infoIcon icon_type="store" icon_name="편의점" />
+            <infoIcon icon_type="hotel" icon_name="숙박" />
           </div>
         </div>
         <hr />
         <div class="place_num">
           <p>장소</p>
-          <p style="margin-left:10px; color: #696969">234, 000건</p>
+          <p style="margin-left: 10px; color: #696969">
+            {{ trip_list.length }}건
+          </p>
         </div>
-        <div id="content_list">
-          <placeContent/>
-          <placeContent/>
-          <placeContent/>
-          <placeContent/>
-          <placeContent/>
-
+        <div
+          id="content_list"
+          v-for="content in trip_list"
+          :key="content.content_id">
+          <placeContent :trip_content="content" />
         </div>
       </div>
     </div>
@@ -34,25 +56,53 @@
 </template>
 
 <script>
-import infoIcon from './infoIcon.vue';
-import mapSearchbar from "./mapSearchbar.vue";
-import placeContent from './placeContent.vue';
+import infoIcon from "./infoIcon.vue";
+import placeContent from "./placeContent.vue";
 
 export default {
   name: "cardMap",
   components: {
-    mapSearchbar,
     infoIcon,
-    placeContent
+    placeContent,
+  },
+  data() {
+    return {
+      trip_list: [],
+      keyword: "",
+    };
+  },
+  mounted() {
+    const searchForm = document.getElementById("search_form");
+
+    searchForm.addEventListener("submit", (e) => e.preventDefault());
+  },
+  methods: {
+    searchcontent() {
+      const keyword = this.keyword;
+      console.log(this.keyword);
+      const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}`;
+
+      this.$axios
+        .get(url)
+        .then((res) => {
+          this.data = res.data;
+          this.trip_list = res.data.content;
+        })
+        .catch((error) => {
+          console.log("등록 실패" + error.data);
+        });
+
+      this.$emit("setContentList", this.trip_list);
+    },
   },
 };
 </script>
 
 <style scoped>
 hr {
-    background:#dbdbdb;
-    height:1px;
-    border:0;
+  background: #dbdbdb;
+  height: 1px;
+  border: 0;
 }
 .card {
   position: relative;
@@ -90,7 +140,7 @@ hr {
   background-color: #888888;
 }
 
-#info_around{
+#info_around {
   padding: 30px;
 }
 
@@ -99,7 +149,6 @@ hr {
   align-items: center;
   justify-content: space-between;
 }
-
 
 .card img {
   height: 200px;
@@ -124,5 +173,84 @@ hr {
   font-size: 1rem;
   color: #555;
   margin-bottom: 1rem;
+}
+
+/* 검색 관련 */
+/* Quick and dirty normalize hax */
+#select_container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  width: 93%;
+}
+
+#select_container > div {
+  padding: 10px 20px;
+  margin: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#select_container > div:hover {
+  background-color: #017e94;
+}
+
+.search_container {
+  height: 0%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  background-color: #0097b2;
+  border-radius: 10px 10px 0px 0px;
+}
+
+.heading {
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+}
+
+.searchInputWrapper {
+  position: relative;
+}
+
+.searchInput {
+  width: 18rem;
+  height: 2rem;
+  padding: 0.2rem 3rem 0 1rem;
+  border-radius: 0.4rem;
+  border: none;
+  transition: transform 0.1s ease-in-out;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  font-family: cookierunotf;
+}
+
+::placeholder {
+  color: #a1a1a1;
+}
+
+/* hide the placeholder text on focus */
+:focus::placeholder {
+  text-indent: -999px;
+}
+
+.searchInput:focus {
+  outline: none;
+  transform: scale(1.1);
+  transition: all 0.1s ease-in-out;
+}
+
+.searchInputIcon {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.7rem;
+  color: #a1a1a1;
+  transition: all 0.1s ease-in-out;
+}
+
+.container:focus-within > .searchInputWrapper > .searchInputIcon {
+  right: 0.2rem;
 }
 </style>

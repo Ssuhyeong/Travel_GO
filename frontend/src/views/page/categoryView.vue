@@ -1,4 +1,5 @@
 <template>
+  <myNav />
   <div id="category">
     <div id="icon_container">
       <div id="icon_list">
@@ -24,11 +25,13 @@
 <script>
 import cardFlip from "@/components/cardFlip.vue";
 import categoryIcon from "@/components/categoryIcon.vue";
+import myNav from "../includes/myNav.vue";
 
 export default {
   components: {
     cardFlip,
     categoryIcon,
+    myNav,
   },
 };
 </script>

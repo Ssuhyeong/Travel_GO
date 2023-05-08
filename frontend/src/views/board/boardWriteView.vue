@@ -14,8 +14,7 @@
           name="subject"
           v-model="board_data.subject"
           required
-          autofocus
-        />
+          autofocus />
       </fieldset>
       <fieldset>
         <textarea
@@ -24,24 +23,17 @@
           placeholder="Type your text..."
           tabindex="5"
           v-model="board_data.content"
-          required
-        ></textarea>
+          required></textarea>
       </fieldset>
       <fieldset style="display: flex; justify-content: space-between">
-        <button
-          name="submit"
-          type="submit"
-          id="btn-register"
-          @click="regist()"
-        >
+        <button name="submit" type="submit" id="btn-register" @click="regist()">
           글작성
         </button>
         <button
           name="submit"
           type="submit"
           id="contact -submit"
-          @click="cancel()"
-        >
+          @click="cancel()">
           취소
         </button>
       </fieldset>
@@ -57,25 +49,41 @@ export default {
     myNav,
   },
   data() {
-    return{
+    return {
       board_data: {
         userId: "ssafy",
         subject: "",
-        content: ""
-      }
+        content: "",
+      },
+      type: "",
+    };
+  },
+  created() {
+    const params = new URL(document.location).searchParams;
+    const articleNo = params.get("articleNo");
+
+    if (articleNo != null) {
+      this.type = "update";
+      const url = `http://localhost:8080/board/${articleNo}`;
+      this.$axios.get(url).then((res) => {
+        this.board_data = res.data;
+      });
     }
   },
   methods: {
     regist() {
+      const type = this.type;
+
       console.log(this.board_data);
-      const url = `http://localhost:8080/board`;
+      const url = `http://localhost:8080/board/${type}`;
 
       this.$axios
         .post(url, this.board_data)
         .then(() => {
           console.log("callback 함수에서 this : ", this);
           alert("등록 성공");
-          location.href="/boardpage"
+          // location.href = "/boardpage";
+          this.$router.push("/boardpage");
         })
         .catch((error) => {
           console.log(error);
@@ -83,9 +91,9 @@ export default {
         });
     },
     cancel() {
-      location.href="/boardpage"
-    }
-  }
+      this.$router.push("/boardpage");
+    },
+  },
 };
 </script>
 

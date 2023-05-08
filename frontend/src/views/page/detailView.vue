@@ -1,56 +1,47 @@
 <template>
+  <myNav />
   <div id="detail_container">
     <section>
       <font-awesome-icon
         :icon="['fass', 'left-long']"
         size="3x"
-        style="margin: 20px 0px"
-      />
+        style="margin: 20px 0px; cursor: pointer"
+        @click="$router.push('/')" />
     </section>
     <section id="title_sec">
       <img
-        src="@/assets/img/서울.jpg"
+        src="http://tong.visitkorea.or.kr/cms/resource/31/219131_image2_1.jpg"
         alt=""
-        style="width: 40%; height: 400px; border-radius: 10px"
-      />
+        style="width: 40%; height: 400px; border-radius: 10px" />
       <div class="description">
         <div
           style="
             display: flex;
             align-items: center;
             justify-content: space-between;
-          "
-        >
-          <h3 style="display: inline; margin: 0px">카테고리 명</h3>
+          ">
+          <h3 style="display: inline; margin: 0px">
+            {{ detail_data.content_type_id }}
+          </h3>
           <div
-            style="display: flex; align-items: center; justify-content: center"
-          >
+            style="display: flex; align-items: center; justify-content: center">
             <font-awesome-icon
               :icon="['fas', 'heart']"
               size="xl"
-              style="color: #ff0000; padding: 5px"
-            />
+              style="color: #ff0000; padding: 5px" />
             <img
               src="@/assets/img/kakao_talk.png"
               alt=""
-              style="width: 30px; padding: 5px; cursor: pointer;"
-              @click="kakaoLink()"
-            />
+              style="width: 30px; padding: 5px; cursor: pointer"
+              @click="kakaoLink()" />
           </div>
         </div>
 
-        <h2>타이틀</h2>
-        <h3>00도 00시 00동 111-111</h3>
+        <h2>{{ detail_data.title }}</h2>
+        <h3>{{ detail_data.addr1 }}</h3>
         <h3>010-1234-1234</h3>
         <p>
-          경기도 파주시 서패동에 있는 베이커리 카페다. 근처에 심학산 야영장
-          글램핑 가든이 있어 글램핑을 하러 온 사람들이 많이 방문하는 곳이다.
-          야외, 지하, 지상 등 다양한 좌석이 마련되어 있어 원하는 자리에 앉을 수
-          있다. 정원에 있는 식물과 자연을 바라보며 힐링할 수 있다. 내부가 넓은
-          창고형 베이커리 카페와 달리, 포근하고 아늑하며, 조용하고 한적한
-          분위기를 느낄 수 있다. 날씨가 좋으면 밖에 누워서 잠들어 있는 고양이를
-          볼 수도 있다. 많은 사람이 모여 왁자지껄한 카페와 달리 고요한 감성
-          카페다. 가까이에 파주출판단지, 심학산이 있다.
+          {{ detail_data.overview }}
         </p>
       </div>
     </section>
@@ -58,8 +49,7 @@
       <img
         src="@/assets/img/map.png"
         alt=""
-        style="width: 100%; height: 400px; border-radius: 10px"
-      />
+        style="width: 100%; height: 400px; border-radius: 10px" />
     </section>
     <section>
       <h2>이런 곳은 어때요?</h2>
@@ -68,32 +58,28 @@
           <img
             src="@/assets/img/부산.jpg"
             alt=""
-            style="width: 100%; height: 200px; border-radius: 10px"
-          />
+            style="width: 100%; height: 200px; border-radius: 10px" />
           <h3>부평</h3>
         </div>
         <div>
           <img
             src="@/assets/img/서울.jpg"
             alt=""
-            style="width: 100%; height: 200px; border-radius: 10px"
-          />
+            style="width: 100%; height: 200px; border-radius: 10px" />
           <h3>인천</h3>
         </div>
         <div>
           <img
             src="@/assets/img/전주.jpg"
             alt=""
-            style="width: 100%; height: 200px; border-radius: 10px"
-          />
+            style="width: 100%; height: 200px; border-radius: 10px" />
           <h3>익산</h3>
         </div>
         <div>
           <img
             src="@/assets/img/서울.jpg"
             alt=""
-            style="width: 100%; height: 200px; border-radius: 10px"
-          />
+            style="width: 100%; height: 200px; border-radius: 10px" />
           <h3>청삼동</h3>
         </div>
       </div>
@@ -107,14 +93,12 @@
           display: flex;
           align-items: center;
           justify-content: space-between;
-        "
-      >
+        ">
         <h2 style="display: inline; font-size: 50px">리뷰</h2>
         <font-awesome-icon
           :icon="['fass', 'plus']"
           size="2x"
-          style="margin-right: 10px"
-        />
+          style="margin-right: 10px" />
       </div>
       <div class="review_content">
         <div
@@ -123,13 +107,11 @@
             width: 150px;
             text-align: center;
             margin-right: 50px;
-          "
-        >
+          ">
           <img
             src="@/assets/img/man.jpg"
             alt=""
-            style="width: 150px; height: 150px; border-radius: 100px"
-          />
+            style="width: 150px; height: 150px; border-radius: 100px" />
           <h3 style="width: 150px">알프레드</h3>
         </div>
         <div class="review_description">
@@ -145,25 +127,37 @@
 </template>
 
 <script>
+import myNav from "../includes/myNav.vue";
+
 export default {
   name: "detailView",
-  components: {},
+  components: { myNav },
+  data() {
+    return {
+      detail_data: {},
+    };
+  },
+  created() {
+    const params = new URL(document.location).searchParams;
+    const content_id = params.get("content_id");
+
+    const url = `http://localhost:8080/attraction/search-list?contentId=${content_id}`;
+    this.$axios.get(url).then((res) => {
+      this.detail_data = res.data.content[0];
+    });
+  },
   methods: {
-    kakaoLink () {
+    kakaoLink() {
       window.Kakao.Link.sendDefault({
-        objectType: 'text',
-        text:
-          '당신에게 여행지를 추천했어요 빨리와',
+        objectType: "text",
+        text: "당신에게 여행지를 추천했어요 빨리와",
         link: {
-          mobileWebUrl:
-            'http://localhost:8080',
-          webUrl:
-            'http://localhost:8080'
-        }
-      }
-      )
-    }
-  }
+          mobileWebUrl: "http://localhost:8080",
+          webUrl: "http://localhost:8080",
+        },
+      });
+    },
+  },
 };
 </script>
 

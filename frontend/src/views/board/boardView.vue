@@ -20,8 +20,7 @@
                 type="search"
                 name=""
                 placeholder="검색어를 입력해주세요."
-                value=""
-              />
+                value="" />
               <button type="submit" class="btn btn-dark">검색</button>
             </div>
           </form>
@@ -41,7 +40,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(board) in board_list" :key="board.articleNo">
+            <tr v-for="board in board_list" :key="board.articleNo">
               <td>{{ board.articleNo }}</td>
               <th>
                 <a @click="goDetail(board.articleNo)">{{ board.subject }}</a>
@@ -51,7 +50,11 @@
           </tbody>
         </table>
         <div id="submit_btn">
-          <button @click="write_page()" type="button" id="btn-list" class="custom-btn btn-16">
+          <button
+            @click="write_page()"
+            type="button"
+            id="btn-list"
+            class="custom-btn btn-16">
             글등록
           </button>
         </div>
@@ -69,26 +72,23 @@ export default {
     myNav,
   },
   data() {
-    return{
-      board_list: []
-    }
+    return {
+      board_list: [],
+    };
   },
   created() {
-    this.$axios
-        .get(`http://localhost:8080/board`)
-        .then((res) => {
-          console.log(res.data);
-          this.board_list = res.data;
-        })
+    this.$axios.get(`http://localhost:8080/board`).then((res) => {
+      this.board_list = res.data;
+    });
   },
   methods: {
     write_page() {
-     window.location.href = "/boardwritepage";
+      this.$router.push("/boardwritepage");
     },
     goDetail(articleNo) {
       location.href = `/boardcontentpage?articleNo=${articleNo}`;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -133,7 +133,6 @@ a {
   font-family: cookierun;
   padding: 7px 115px 7px 14px;
   border: 1px solid #ccc;
-  
 }
 #board-search .search-window .search-wrap input:focus {
   border-color: #333;
