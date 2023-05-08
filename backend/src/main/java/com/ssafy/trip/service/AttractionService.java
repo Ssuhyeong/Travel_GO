@@ -13,8 +13,8 @@ public class AttractionService {
     @Autowired
     private AttractionRepository attractionRepository;
 
-    public Page<Attraction> getAttractions(Pageable pageable, Integer sidoCode, Integer contentTypeId, String keyword) {
-        return attractionRepository.findBySearchOption(pageable, sidoCode,contentTypeId,keyword);
+    public Page<Attraction> getAttractions(Pageable pageable, Integer sidoCode, Integer contentTypeId, String keyword, Integer contentId) {
+        return attractionRepository.findBySearchOption(pageable, sidoCode,contentTypeId,keyword, contentId);
     }
 
 }
