@@ -24,9 +24,9 @@ public class AttractionRepositoryImpl extends QuerydslRepositorySupport implemen
     }
 
     @Override
-    public Page<Attraction> findBySearchOption(Pageable pageable, Integer sidoCode, Integer contentTypeId, String keyword) {
+    public Page<Attraction> findBySearchOption(Pageable pageable, Integer sidoCode, Integer contentTypeId, String keyword, Integer contentId) {
         JPQLQuery<Attraction> query =  queryFactory.selectFrom(attraction)
-                .where(eqSido(sidoCode), eqContent(contentTypeId), containKeyword(keyword));
+                .where(eqSido(sidoCode), eqContent(contentTypeId), containKeyword(keyword), eqContentId(contentId));
 
         List<Attraction> attractions = this.getQuerydsl().applyPagination(pageable, query).fetch();
         return new PageImpl<Attraction>(attractions, pageable, query.fetchCount());
@@ -52,5 +52,12 @@ public class AttractionRepositoryImpl extends QuerydslRepositorySupport implemen
             return null;
         }
         return attraction.content_type_id.eq(contentTypeId);
+    }
+
+    private BooleanExpression eqContentId(Integer contentId) {
+        if(contentId == null ) {
+            return null;
+        }
+        return attraction.content_id.eq(contentId);
     }
 }

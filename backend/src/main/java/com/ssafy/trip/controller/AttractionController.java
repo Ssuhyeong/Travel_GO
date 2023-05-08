@@ -29,10 +29,11 @@ public class AttractionController {
             Pageable pageable,
             @RequestParam(value = "sidoCode",required = false) Integer sidoCode,
             @RequestParam(value = "contentTypeId", required = false) Integer contentTypeId,
-            @RequestParam(value = "keyword", required = false) String keyword
+            @RequestParam(value = "keyword", required = false) String keyword,
+            @RequestParam(value = "contentId", required = false) Integer contentId
     ){
 
-        Page<Attraction> attractions = attractionService.getAttractions(pageable,sidoCode,contentTypeId,keyword);
+        Page<Attraction> attractions = attractionService.getAttractions(pageable,sidoCode,contentTypeId,keyword, contentId);
 
         return new ResponseEntity<>(attractions,HttpStatus.OK);
 
