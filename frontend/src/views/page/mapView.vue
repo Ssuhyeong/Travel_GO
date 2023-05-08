@@ -2,6 +2,7 @@
   <div>
     <myNav />
     <div id="map"><mapCard style="z-index: 2" /></div>
+    <button @click="displayMarkers(this.markerPositions1)">클릭</button>
   </div>
 </template>
 
@@ -17,9 +18,20 @@ export default {
   },
   data() {
     return {
+      map: null,
+      markerPositions1: [
+        {
+          latlng: new kakao.maps.LatLng(33.452278, 126.567803)
+        },
+        {
+          latlng: new kakao.maps.LatLng(33.452671, 126.574792)
+        },
+        {
+          latlng: new kakao.maps.LatLng(33.451744, 126.572441)
+        }
+      ],
       markers: [],
-      latitube: 0,
-      longitude: 0,
+      infowindow: null,
     };
   },
   mounted() {
@@ -57,6 +69,40 @@ export default {
       var zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
     },
+    displayMarkers(positions) {
+      // 여러개 마커를 정보를 보여줄 info window
+      if(this.markers.length > 0) {
+        this.markers.forEach((item) => {
+          item.setMap(null);
+        })
+      }
+
+      positions.forEach((pos) => {
+
+        this.infowindow = new kakao.maps.InfoWindow({
+          removable: true,
+          content: `<div style="padding: 30px; width:300px; height: 200px">테스트<div>`,
+        });
+
+        const marker = new kakao.maps.Marker({
+          map: this.map,
+          position: pos.latlng
+        });
+
+        kakao.maps.event.addListener(marker, "click", () => {
+          this.infowindow.open(this.map, marker);
+        });
+
+        this.markers.push(marker);
+      })
+
+      const bounds = positions.reduce(
+        (bounds, position) => bounds.extend(position.latlng),
+        new kakao.maps.LatLngBounds()
+      );
+
+      this.map.setBounds(bounds);
+    }
   },
 };
 </script>
