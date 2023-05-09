@@ -34,6 +34,24 @@
           </div>
         </div>
       </div>
+      <div style="margin-bottom: 23px">
+        <div id="category_box">
+          <div class="profile_category">즐겨찾기</div>
+          <div class="profile_category">팔로우</div>
+          <div class="profile_category">좋아요</div>
+        </div>
+        <div class="profile_content">
+          <p id="profile_type">즐겨찾기</p>
+          <div id="content_container">
+            <div class="card">
+              <img
+                src="http://tong.visitkorea.or.kr/cms/resource/31/219131_image2_1.jpg" />
+              <h3>title</h3>
+              <p>description</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -43,11 +61,109 @@ export default {};
 </script>
 
 <style scoped>
+#category_box {
+  display: flex;
+  align-items: center;
+  justify-content: right;
+  height: 25px;
+  margin: 0px 10px;
+  padding: 0px 20px;
+}
+
+#profile_type {
+  font-weight: 600;
+  font-size: 24px;
+  margin-left: 33px;
+}
+
 #profile_container {
   height: 100vh;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 0 auto;
+}
+
+#content_container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  grid-gap: 2rem;
+  margin: 2rem;
+  cursor: pointer;
+}
+
+.profile_category {
+  background-color: #fff;
+  margin: 5px 5px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+    rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
+  padding: 3.5px 10px 0px 10px;
+  border-radius: 10px 10px 0px 0px;
+  z-index: 3;
+}
+
+.profile_category:hover {
+  background-color: #d9ecf0;
+  cursor: pointer;
+}
+
+.card {
+  height: 155px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+  cursor: pointer;
+  z-index: 2;
+}
+
+.card:hover {
+  transform: scale(1.035, 1.035);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+}
+
+.card:hover img {
+  transform: translateY(-10px);
+}
+
+.card > h3 {
+  color: white;
+  font-size: 20px;
+  margin: 20px 0 0 20px;
+}
+
+.card > p {
+  color: white;
+  font-weight: 400;
+  font-size: 12px;
+  align-self: end;
+  margin: 0 0 20px 20px;
+  letter-spacing: 0.5px;
+}
+
+.card > img {
+  position: absolute;
+  top: 0;
+  height: 110%;
+  width: 100%;
+  z-index: -1;
+  transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.profile_content {
+  width: 800px;
+  min-width: 800px;
+  height: 450px;
+  background-color: #fff;
+  border-radius: 5px;
+  margin: 0px 10px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  overflow-y: auto;
 }
 
 .background {
@@ -58,6 +174,7 @@ export default {};
   width: 100vw;
   background-size: cover;
   background: #ccc;
+
   background-position: 0 50%;
   background: url("https://images.unsplash.com/photo-1533035353720-f1c6a75cd8ab?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80");
 }
@@ -74,8 +191,7 @@ export default {};
 .outer-div,
 .inner-div {
   height: 450px;
-  max-width: 300px;
-  margin: 0 auto;
+  max-width: 1000px;
   position: relative;
   z-index: 9999;
 }

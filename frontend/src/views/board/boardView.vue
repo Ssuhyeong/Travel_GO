@@ -1,5 +1,6 @@
 <template>
   <myNav />
+  <toastNotice :message="toastText" v-if="toastShow" />
   <!-- partial:index.partial.html -->
   <section class="notice">
     <div class="page-title">
@@ -65,18 +66,36 @@
 
 <script>
 import myNav from "@/views/includes/myNav.vue";
+import toastNotice from "@/components/toastNotice.vue";
+import { useStore } from "vuex";
+import { computed } from "vue";
 
 export default {
   name: "boardView",
   components: {
     myNav,
+    toastNotice,
   },
   data() {
     return {
       board_list: [],
+      toastShow: false,
+      toastText: "",
     };
   },
+  props: {},
+  setup() {
+    const store = useStore();
+    const toastTextResult = computed(() => store.state.text);
+    const toastShowResult = computed(() => store.state.toastShow);
+
+    return { toastTextResult, toastShowResult };
+  },
   created() {
+    console.log(this.toastTextResult);
+    this.toastText = this.toastTextResult;
+    this.toastShow = this.toastShowResult;
+
     this.$axios.get(`http://localhost:8080/board`).then((res) => {
       this.board_list = res.data;
     });

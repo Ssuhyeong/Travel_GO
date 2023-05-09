@@ -21,14 +21,14 @@ export default {
       map: null,
       markerPositions1: [
         {
-          latlng: new kakao.maps.LatLng(33.452278, 126.567803)
+          latlng: new kakao.maps.LatLng(33.452278, 126.567803),
         },
         {
-          latlng: new kakao.maps.LatLng(33.452671, 126.574792)
+          latlng: new kakao.maps.LatLng(33.452671, 126.574792),
         },
         {
-          latlng: new kakao.maps.LatLng(33.451744, 126.572441)
-        }
+          latlng: new kakao.maps.LatLng(33.451744, 126.572441),
+        },
       ],
       markers: [],
       infowindow: null,
@@ -42,7 +42,7 @@ export default {
       /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
       script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=915cffed372954b7b44804ed422b9cf0";
+        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=811a7460154557e361e1a1839f2697c5";
       document.head.appendChild(script);
     }
   },
@@ -71,14 +71,13 @@ export default {
     },
     displayMarkers(positions) {
       // 여러개 마커를 정보를 보여줄 info window
-      if(this.markers.length > 0) {
+      if (this.markers.length > 0) {
         this.markers.forEach((item) => {
           item.setMap(null);
-        })
+        });
       }
 
       positions.forEach((pos) => {
-
         this.infowindow = new kakao.maps.InfoWindow({
           removable: true,
           content: `<div style="padding: 30px; width:300px; height: 200px">테스트<div>`,
@@ -86,7 +85,7 @@ export default {
 
         const marker = new kakao.maps.Marker({
           map: this.map,
-          position: pos.latlng
+          position: pos.latlng,
         });
 
         kakao.maps.event.addListener(marker, "click", () => {
@@ -94,7 +93,7 @@ export default {
         });
 
         this.markers.push(marker);
-      })
+      });
 
       const bounds = positions.reduce(
         (bounds, position) => bounds.extend(position.latlng),
@@ -102,7 +101,7 @@ export default {
       );
 
       this.map.setBounds(bounds);
-    }
+    },
   },
 };
 </script>

@@ -15,16 +15,22 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: "/", name: "mapView", component: mapView },
-    { path: "/boardpage", name: "boardView", component: boardView },
+    {
+      path: "/boardpage",
+      name: "boardView",
+      component: boardView,
+    },
     {
       path: "/boardwritepage",
       name: "boardwritepage",
       component: boardWritePage,
+      props: true,
     },
     {
       path: "/boardcontentpage",
       name: "boardContentPage",
       component: boardContentPage,
+      props: true,
     },
     { path: "/testpage", name: "testView", component: testView },
     { path: "/mainpage", name: "mainView", component: mainView },

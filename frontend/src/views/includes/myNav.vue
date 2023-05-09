@@ -12,10 +12,10 @@
       </div>
 
       <ul class="nav-links">
-        <li><router-link to="/loginpage">로그인</router-link></li>
         <li><router-link to="/">여행지 검색</router-link></li>
         <li><router-link to="/boardpage">게시판</router-link></li>
         <li><router-link to="/profilepage">프로필</router-link></li>
+        <li><router-link to="/loginpage">로그인</router-link></li>
       </ul>
     </div>
   </nav>

@@ -108,7 +108,6 @@ hr {
   position: relative;
   width: 400px;
   height: 97%;
-  border: 1px solid #ddd;
   background-color: #fff;
   border-radius: 5px;
   margin: 20px 10px;
@@ -160,10 +159,6 @@ hr {
   align-items: center;
   padding: 10px 30px;
 }
-
-.card-body {
-}
-
 .card-title {
   font-size: 1.2rem;
   margin-bottom: 0.5rem;

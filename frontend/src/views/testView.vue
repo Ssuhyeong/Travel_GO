@@ -32,6 +32,7 @@
 <script>
 export default {
   name: "testView",
+  components: {},
   data() {
     return {
       book: {

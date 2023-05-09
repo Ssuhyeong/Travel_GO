@@ -33,21 +33,21 @@ body {
   overflow-x: hidden;
 }
 
-body::-webkit-scrollbar-track {
+*::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
   background-color: #f5f5f5;
 }
 
-body::-webkit-scrollbar {
+*::-webkit-scrollbar {
   width: 8px;
   background-color: #f5f5f5;
 }
 
-body::-webkit-scrollbar-thumb {
+*::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-  background-color: #555;
+  background-color: #888888;
 }
 
 #app {

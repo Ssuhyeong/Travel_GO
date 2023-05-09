@@ -43,6 +43,7 @@
 
 <script>
 import myNav from "@/views/includes/myNav.vue";
+import { useStore } from "vuex";
 
 export default {
   components: {
@@ -57,6 +58,14 @@ export default {
       },
       type: "",
     };
+  },
+  setup() {
+    const store = useStore();
+    const setShow = () => store.commit("setShow", true);
+    const setText = () => store.commit("setText", "성공적으로 등록하였습니다.");
+    const setColor = () => store.commit("setColor", "#0e4bf1");
+
+    return { setShow, setText, setColor };
   },
   created() {
     const params = new URL(document.location).searchParams;
@@ -73,17 +82,17 @@ export default {
   methods: {
     regist() {
       const type = this.type;
-
-      console.log(this.board_data);
       const url = `http://localhost:8080/board/${type}`;
 
       this.$axios
         .post(url, this.board_data)
         .then(() => {
-          console.log("callback 함수에서 this : ", this);
-          alert("등록 성공");
-          // location.href = "/boardpage";
-          this.$router.push("/boardpage");
+          this.setShow();
+          this.setText();
+          this.setColor();
+          this.$router.push({
+            name: "boardView",
+          });
         })
         .catch((error) => {
           console.log(error);

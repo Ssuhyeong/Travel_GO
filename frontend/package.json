@@ -28,6 +28,7 @@
     "vue2-hammer": "^2.1.2",
     "vue3-carousel": "^0.3.0",
     "vue3-naver-maps": "^4.1.0",
+    "vuex": "^4.1.0",
     "yarn": "^1.22.19"
   },
   "devDependencies": {

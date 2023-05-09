@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router/router";
 import axios from "axios";
+import store from "./store";
 import { gsap } from "gsap";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
@@ -22,5 +23,8 @@ app.use(router);
 
 // content story 부분 라이브러리 -> gsap
 app.use(gsap);
+
+// vuex 사용
+app.use(store);
 
 app.mount("#app");

@@ -35,6 +35,7 @@
 
 <script>
 import myNav from "@/views/includes/myNav.vue";
+import { useStore } from "vuex";
 
 export default {
   components: {
@@ -52,6 +53,14 @@ export default {
       },
     };
   },
+  setup() {
+    const store = useStore();
+    const setShow = () => store.commit("setShow", true);
+    const setText = () => store.commit("setText", "성공적으로 삭제하였습니다.");
+    const setColor = () => store.commit("setColor", "#f44040");
+
+    return { setShow, setText, setColor };
+  },
   created() {
     const params = new URL(document.location).searchParams;
     const articleNo = params.get("articleNo");
@@ -64,14 +73,14 @@ export default {
   methods: {
     deleteBoard() {
       const no = this.board_data.articleNo;
-      console.log(no);
       const url = `http://localhost:8080/board/${no}`;
 
       this.$axios.delete(url).then(() => {
-        alert("삭제 완료");
+        this.setShow();
+        this.setText();
+        this.setColor();
+        this.$router.push("/boardpage");
       });
-
-      window.location.href = "/boardpage";
     },
     goUpdate() {
       const no = this.board_data.articleNo;
