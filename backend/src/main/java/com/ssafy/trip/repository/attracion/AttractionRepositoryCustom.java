@@ -1,4 +1,4 @@
-package com.ssafy.trip.repository;
+package com.ssafy.trip.repository.attracion;
 
 import com.ssafy.trip.Entity.Attraction;
 import org.springframework.data.domain.Page;
