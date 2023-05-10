@@ -1,8 +1,9 @@
 <template>
   <div>
     <myNav />
-    <div id="map"><mapCard style="z-index: 2" /></div>
-    <button @click="displayMarkers(this.markerPositions1)">클릭</button>
+    <div id="map">
+      <mapCard style="z-index: 2" @setContentList="setContentList" />
+    </div>
   </div>
 </template>
 
@@ -19,17 +20,7 @@ export default {
   data() {
     return {
       map: null,
-      markerPositions1: [
-        {
-          latlng: new kakao.maps.LatLng(33.452278, 126.567803),
-        },
-        {
-          latlng: new kakao.maps.LatLng(33.452671, 126.574792),
-        },
-        {
-          latlng: new kakao.maps.LatLng(33.451744, 126.572441),
-        },
-      ],
+      markerData: [],
       markers: [],
       infowindow: null,
     };
@@ -47,6 +38,11 @@ export default {
     }
   },
   methods: {
+    setContentList(value) {
+      this.markerData = value;
+
+      this.displayMarkers(value);
+    },
     initMap() {
       const container = document.getElementById("map");
       const options = {
@@ -70,6 +66,7 @@ export default {
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
     },
     displayMarkers(positions) {
+      console.log(positions);
       // 여러개 마커를 정보를 보여줄 info window
       if (this.markers.length > 0) {
         this.markers.forEach((item) => {
@@ -77,18 +74,53 @@ export default {
         });
       }
 
-      positions.forEach((pos) => {
+      // 마커를 생성하고 지도 위에 마커를 표시
+      positions.forEach((pos, idx) => {
         this.infowindow = new kakao.maps.InfoWindow({
           removable: true,
-          content: `<div style="padding: 30px; width:300px; height: 200px">테스트<div>`,
+          content: ``,
         });
+
+        // 이미지 초기화
+        const imageSrc =
+          "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png"; // 마커 이미지 url, 스프라이트 이미지를 씁니다
+        const imageSize = new kakao.maps.Size(36, 37); // 마커 이미지의 크기
+        const imgOptions = {
+          spriteSize: new kakao.maps.Size(36, 691), // 스프라이트 이미지의 크기
+          spriteOrigin: new kakao.maps.Point(0, idx * 46 + 10), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+          offset: new kakao.maps.Point(13, 37), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+        };
+        const markerImage = new kakao.maps.MarkerImage(
+          imageSrc,
+          imageSize,
+          imgOptions
+        );
+
+        const latlng = new kakao.maps.LatLng(pos.latitude, pos.longitude);
 
         const marker = new kakao.maps.Marker({
           map: this.map,
-          position: pos.latlng,
+          position: latlng,
+          image: markerImage,
         });
 
         kakao.maps.event.addListener(marker, "click", () => {
+          var content = `<div style="width: 400px;
+      height: 200px;
+      padding: 40px;"><h2 style="margin: 10px 0px">${positions[idx].title}</h2>
+    <div style="margin: 10px 0px">리뷰</div>
+    <div style="display: flex; justify-content: space-between">
+      <h3>${positions[idx].addr1}</h3>
+      <img
+        src="${positions[idx].first_image}"
+        style="width: 150px" />
+    </div>`;
+
+          this.infowindow.setContent(content);
+          const level = 3;
+          this.map.setLevel(level);
+          this.map.setCenter(latlng);
+
           this.infowindow.open(this.map, marker);
         });
 
@@ -96,11 +128,17 @@ export default {
       });
 
       const bounds = positions.reduce(
-        (bounds, position) => bounds.extend(position.latlng),
+        (bounds, position) =>
+          bounds.extend(
+            new kakao.maps.LatLng(position.latitude, position.longitude)
+          ),
         new kakao.maps.LatLngBounds()
       );
 
       this.map.setBounds(bounds);
+    },
+    test() {
+      console.log("실행");
     },
   },
 };

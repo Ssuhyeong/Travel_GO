@@ -28,13 +28,12 @@
         <div id="info_around">
           <p style="margin: 10px 0px">주변탐색</p>
           <div id="info_list">
-            <infoIcon icon_type="utensils" icon_name="음식점" />
+            <infoIcon icon_type="wallet" icon_name="은행" ref="activeIcon" />
+            <infoIcon icon_type="cart-shopping" icon_name="마트" />
+            <infoIcon icon_type="house-medical" icon_name="약국" />
+            <infoIcon icon_type="utensils" icon_name="주유소" />
             <infoIcon icon_type="mug-hot" icon_name="카페" />
-            <infoIcon icon_type="bus" icon_name="버스" />
-            <infoIcon icon_type="train-subway" icon_name="지하철" />
-            <infoIcon icon_type="wallet" icon_name="은행" />
             <infoIcon icon_type="store" icon_name="편의점" />
-            <infoIcon icon_type="hotel" icon_name="숙박" />
           </div>
         </div>
         <hr />
@@ -46,9 +45,9 @@
         </div>
         <div
           id="content_list"
-          v-for="content in trip_list"
+          v-for="(content, index) in trip_list"
           :key="content.content_id">
-          <placeContent :trip_content="content" />
+          <placeContent :trip_content="content" :marker_num="index + 1" />
         </div>
       </div>
     </div>
@@ -69,30 +68,31 @@ export default {
     return {
       trip_list: [],
       keyword: "",
+      page: "2",
     };
   },
   mounted() {
     const searchForm = document.getElementById("search_form");
-
     searchForm.addEventListener("submit", (e) => e.preventDefault());
   },
   methods: {
     searchcontent() {
       const keyword = this.keyword;
+      const page = this.page;
       console.log(this.keyword);
-      const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}`;
+      const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}&page=${page}`;
 
       this.$axios
         .get(url)
         .then((res) => {
-          this.data = res.data;
           this.trip_list = res.data.content;
+          this.$emit("setContentList", res.data.content);
+
+          console.log(res.data.content);
         })
         .catch((error) => {
-          console.log("등록 실패" + error.data);
+          console.log("검색 실패" + error.data);
         });
-
-      this.$emit("setContentList", this.trip_list);
     },
   },
 };
@@ -147,6 +147,7 @@ hr {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 15px;
 }
 
 .card img {

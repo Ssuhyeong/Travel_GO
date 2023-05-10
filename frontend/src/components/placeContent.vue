@@ -1,5 +1,6 @@
 <template>
   <div class="place_content">
+    <kakakIcon :marker_num="'marker_' + marker_num" />
     <div class="place_title">
       <h3>{{ trip_content.title }}</h3>
       <p>{{ trip_content.content_type_id }}</p>
@@ -10,17 +11,25 @@
     <div class="addr_main">{{ trip_content.addr1 }}</div>
     <div class="addr_sub">{{ trip_content.sido_code }}</div>
     <div class="detail">
-      <a @click="goDetail()">상세보기</a>
+      <a class="detail_btn" @click="goDetail()">상세보기</a>
     </div>
   </div>
 </template>
 
 <script>
+import kakakIcon from "./kakakIcon.vue";
+
 export default {
   name: "placeContent",
+  components: {
+    kakakIcon,
+  },
   props: {
     trip_content: {
       type: Object,
+    },
+    marker_num: {
+      type: String,
     },
   },
   methods: {
@@ -52,6 +61,12 @@ a:visited {
   color: #5398dd;
 }
 
+.addr_main,
+.addr_sub,
+.detail_btn {
+  margin-left: 45px;
+}
+
 .place_content {
   padding: 10px 30px;
   border-bottom: 1px solid #dbdbdb;
@@ -79,6 +94,7 @@ a:visited {
 .addr_sub {
   font-size: 12px;
   color: #9c9c9c;
-  margin: 5px 0px;
+  margin-top: 5px;
+  margin-bottom: 5px;
 }
 </style>

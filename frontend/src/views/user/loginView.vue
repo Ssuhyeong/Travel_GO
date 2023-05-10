@@ -1,4 +1,5 @@
 <template>
+  <toastNotice :message="toastText" v-if="toastShow" />
   <div class="login_body">
     <!-- partial:index.partial.html -->
     <div class="container">
@@ -55,8 +56,14 @@
 </template>
 
 <script>
+import toastNotice from "@/components/toastNotice.vue";
+import { useStore } from "vuex";
+
 export default {
   name: "loginView",
+  components: {
+    toastNotice,
+  },
   data() {
     return {
       user_data: {
@@ -64,7 +71,16 @@ export default {
         id: "",
         password: "",
       },
+      toastShow: false,
+      toastText: "",
     };
+  },
+  setup() {
+    const store = useStore();
+    const setSuccessColor = () => store.commit("setColor", "#0e4bf1");
+    const setFailColor = () => store.commit("setColor", "#f44040");
+
+    return { setSuccessColor, setFailColor };
   },
   mounted() {
     const signInBtn = document.getElementById("signIn");
@@ -92,13 +108,21 @@ export default {
       this.$axios
         .post(url, this.user_data)
         .then(() => {
-          console.log(this);
-          alert("등록 성공");
-          location.href = "/loginpage";
+          this.setSuccessColor();
+          this.toastShow = true;
+          this.toastText = "성공적으로 회원가입하셨습니다.";
+          this.user_data.id = "";
+          this.user_data.name = "";
+          this.user_data.password = "";
         })
-        .catch((error) => {
-          console.log(error);
-          alert("등록 실패");
+        .catch((err) => {
+          console.log(err);
+          this.setFailColor();
+          this.toastShow = true;
+          this.toastText = "회원가입에 실패하셨습니다. 다시 입력해주세요";
+          this.user_data.id = "";
+          this.user_data.name = "";
+          this.user_data.password = "";
         });
     },
   },

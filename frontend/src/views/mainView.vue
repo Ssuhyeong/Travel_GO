@@ -5,25 +5,20 @@
     <section id="top">
       <img
         src="https://images.unsplash.com/photo-1593726222205-21404ff4e5fd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1073&q=80"
-        id="bg"
-      />
+        id="bg" />
       <h2 id="text">Travel</h2>
       <img
         src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_1.png"
-        id="clouds_1"
-      />
+        id="clouds_1" />
       <img
         src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_2.png"
-        id="clouds_2"
-      />
+        id="clouds_2" />
       <img
         src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_1.png"
-        id="mountain_left"
-      />
+        id="mountain_left" />
       <img
         src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_2.png"
-        id="mountain_right"
-      />
+        id="mountain_right" />
     </section>
     <cardSlider style="padding-top: 40px; margin-bottom: 0px" />
     <section id="sec" style="padding-top: 0px">
@@ -44,20 +39,20 @@
       </div>
       <div id="board_contents">
         <div class="board_content">
-          <h3>개인정보처리방침 변경 안내</h3>
-          <p>2022-11-11</p>
+          <h3>{{ board_list[0].subject.substr(0, 15) }}</h3>
+          <p>{{ board_list[0].registerTime }}</p>
         </div>
         <div class="board_content">
-          <h3>개인정보처리방침 변경 안내</h3>
-          <p>2022-11-11</p>
+          <h3>{{ board_list[1].subject.substr(0, 15) }}</h3>
+          <p>{{ board_list[1].registerTime }}</p>
         </div>
         <div class="board_content">
-          <h3>개인정보처리방침 변경 안내</h3>
-          <p>2022-11-11</p>
+          <h3>{{ board_list[2].subject.substr(0, 15) }}</h3>
+          <p>{{ board_list[2].registerTime }}</p>
         </div>
         <div class="board_content" style="border-right: 3px solid #b5b5b5">
-          <h3>개인정보처리방침 변경 안내</h3>
-          <p>2022-11-11</p>
+          <h3>{{ board_list[3].subject.substr(0, 15) }}</h3>
+          <p>{{ board_list[3].registerTime }}</p>
         </div>
       </div>
     </section>
@@ -83,8 +78,19 @@ export default {
     myFooter,
     myNav,
   },
+  data() {
+    return {
+      board_list: [],
+    };
+  },
+  created() {
+    this.$axios.get(`http://localhost:8080/board`).then((res) => {
+      console.log(res.data);
+      this.board_list = res.data;
+    });
+  },
 };
-// mounted() {
+// 구름 이동 관련
 //   const mountainLeft = document.querySelector("#mountain_left");
 //   const mountainRight = document.querySelector("#mountain_right");
 //   const cloud1 = document.querySelector("#clouds_1");

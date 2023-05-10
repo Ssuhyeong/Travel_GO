@@ -285,14 +285,6 @@ a {
 }
 
 /* reset */
-
-* {
-  list-style: none;
-  text-decoration: none;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
 .clearfix:after {
   content: "";
   display: block;

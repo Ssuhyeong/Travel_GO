@@ -27,6 +27,24 @@
     </form>
     {{ book.isbn }}
   </div>
+  <div
+    id="info_content"
+    style="
+      width: 400px;
+      height: 200px;
+      padding: 40px;
+      background-color: #c8c8c8;
+    ">
+    <h2 style="margin: 10px 0px">북한산둘레길 1구간소나무숲길</h2>
+    <div style="margin: 10px 0px">리뷰</div>
+    <div style="display: flex; justify-content: space-between">
+      <h3>서울 강북구 우이동 산 40-1</h3>
+      <img
+        src="http://tong.visitkorea.or.kr/cms/resource/31/219131_image2_1.jpg"
+        style="width: 150px" />
+    </div>
+    <a>상세보기</a>
+  </div>
 </template>
 
 <script>
@@ -64,4 +82,9 @@ export default {
 };
 </script>
 
-<style></style>
+<style scoped>
+#info_content > * {
+  margin: 0px;
+  padding: 0px;
+}
+</style>
