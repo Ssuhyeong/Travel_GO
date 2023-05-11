@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import Paginate from "vuejs-paginate-next";
 
 library.add(fas);
 
@@ -23,6 +24,9 @@ app.use(router);
 
 // content story 부분 라이브러리 -> gsap
 app.use(gsap);
+
+// pagination 라이브러리
+app.use(Paginate);
 
 // vuex 사용
 app.use(store);

@@ -89,6 +89,7 @@ export default {
       this.board_list = res.data;
     });
   },
+  methods: {},
 };
 // 구름 이동 관련
 //   const mountainLeft = document.querySelector("#mountain_left");

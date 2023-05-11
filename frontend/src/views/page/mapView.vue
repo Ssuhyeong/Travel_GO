@@ -2,7 +2,10 @@
   <div>
     <myNav />
     <div id="map">
-      <mapCard style="z-index: 2" @setContentList="setContentList" />
+      <mapCard
+        style="z-index: 2"
+        @setContentList="setContentList"
+        @setCategoryNum="setCategoryNum" />
     </div>
   </div>
 </template>
@@ -21,8 +24,11 @@ export default {
     return {
       map: null,
       markerData: [],
+      categoryData: [],
       markers: [],
       infowindow: null,
+      categoryNum: 0,
+      categoryCode: ["PM9", "OL7", "CE7", "AD5", "CS2", "MT1"],
     };
   },
   mounted() {
@@ -33,7 +39,7 @@ export default {
       /* global kakao */
       script.onload = () => kakao.maps.load(this.initMap);
       script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=811a7460154557e361e1a1839f2697c5";
+        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=811a7460154557e361e1a1839f2697c5&libraries=services";
       document.head.appendChild(script);
     }
   },
@@ -41,7 +47,19 @@ export default {
     setContentList(value) {
       this.markerData = value;
 
+      console.log(value);
+
       this.displayMarkers(value);
+    },
+    setCategoryNum(value) {
+      this.categoryNum = value;
+      if (value != 0) {
+        this.displayCategory(value);
+      } else {
+        this.categoryData = [];
+      }
+
+      this.displayMarkers(this.categoryData);
     },
     initMap() {
       const container = document.getElementById("map");
@@ -117,7 +135,7 @@ export default {
     </div>`;
 
           this.infowindow.setContent(content);
-          const level = 3;
+          const level = 4;
           this.map.setLevel(level);
           this.map.setCenter(latlng);
 
@@ -137,8 +155,51 @@ export default {
 
       this.map.setBounds(bounds);
     },
-    test() {
-      console.log("실행");
+    displayCategory(categoryNum) {
+      const categoryCode = this.categoryCode[categoryNum - 1];
+
+      for (let i = 1; i < 46; i++) {
+        this.$axios({
+          url: `https://dapi.kakao.com/v2/local/search/category.json?category_group_code=${categoryCode}&page=${i}`,
+          headers: {
+            Authorization: `KakaoAK 68435c839ca94f29d68df0ab5c378c16`,
+          },
+        }).then((res) => {
+          res.data.documents.forEach((data) => this.categoryData.push(data));
+        });
+      }
+
+      this.displayCategoryMarkers(this.categoryData);
+    },
+    displayCategoryMarkers(positions) {
+      // 여러개 마커를 정보를 보여줄 info window
+
+      if (this.markers.length > 0) {
+        this.markers.forEach((item) => {
+          item.setMap(null);
+        });
+      }
+
+      console.log(positions[1]);
+
+      // 마커를 생성하고 지도 위에 마커를 표시
+      positions.forEach((pos) => {
+        console.log(pos);
+
+        this.infowindow = new kakao.maps.InfoWindow({
+          removable: true,
+          content: `<div>안녕<div>`,
+        });
+
+        const latlng = new kakao.maps.LatLng(pos.x, pos.y);
+
+        const marker = new kakao.maps.Marker({
+          map: this.map,
+          position: latlng,
+        });
+
+        this.markers.push(marker);
+      });
     },
   },
 };

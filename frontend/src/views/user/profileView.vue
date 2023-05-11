@@ -18,13 +18,13 @@
           </div>
           <div class="back">
             <div class="social-media-wrapper">
-              <a href="#" class="social-icon"
+              <a @click="UpdateUser" class="social-icon"
                 ><font-awesome-icon
                   :icon="['fas', 'pen']"
                   size="20"
                   style="margin: 10px"
               /></a>
-              <a class="social-icon"
+              <a @click="UpdateUser" class="social-icon"
                 ><font-awesome-icon
                   :icon="['fas', 'trash-can']"
                   size="20"
@@ -57,7 +57,34 @@
 </template>
 
 <script>
-export default {};
+export default {
+  name: "profileView",
+  data() {
+    return {
+      userId: "",
+      updateData: {},
+    };
+  },
+  methods: {
+    deleteUser() {
+      const id = this.userId;
+      const url = `http://localhost:8080/user/${id}`;
+
+      this.$axios.delete(url).then(() => {
+        this.$router.push("/mainpage");
+      });
+    },
+    UpdateUser() {
+      const id = this.userId;
+      const updateData = this.updateData;
+      const url = `http://localhost:8080/user/${id}`;
+
+      this.$axios.update(url, updateData).then(() => {
+        this.$router.push("/profilepage");
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -211,6 +238,11 @@ export default {};
   transition: all 0.6s cubic-bezier(0.8, -0.4, 0.2, 1.7);
   transform-style: preserve-3d;
 }
+
+.social-icon {
+  cursor: pointer;
+}
+
 .inner-div:hover .social-icon {
   opacity: 1;
   top: 0;

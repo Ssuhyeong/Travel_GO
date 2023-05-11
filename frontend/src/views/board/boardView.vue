@@ -50,6 +50,7 @@
             </tr>
           </tbody>
         </table>
+        <paginationComponent />
         <div id="submit_btn">
           <button
             @click="write_page()"
@@ -67,6 +68,7 @@
 <script>
 import myNav from "@/views/includes/myNav.vue";
 import toastNotice from "@/components/toastNotice.vue";
+import paginationComponent from "@/components/paginationComponent.vue";
 import { useStore } from "vuex";
 import { computed } from "vue";
 
@@ -75,6 +77,7 @@ export default {
   components: {
     myNav,
     toastNotice,
+    paginationComponent,
   },
   data() {
     return {
@@ -324,9 +327,10 @@ a {
 /* 16 */
 .btn-16 {
   border: none;
+  margin-top: 10px;
   color: #000;
-  margin-top: 20px;
-}
+}ㅋㅊㅌㅋㅌㅊㅋㅌㅊㅋㅌㅊ
+
 .btn-16:after {
   position: absolute;
   content: "";

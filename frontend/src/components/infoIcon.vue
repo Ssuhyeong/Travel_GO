@@ -1,6 +1,6 @@
 <template>
   <div id="infoicon_container">
-    <div id="info_icon" @click="changeColor" ref="activeIcon">
+    <div id="info_icon">
       <font-awesome-icon :icon="['fas', icon_type]" size="xs" />
     </div>
     <p>{{ icon_name }}</p>
@@ -19,6 +19,10 @@ export default {
       type: String,
       default: "",
     },
+    check: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -27,14 +31,21 @@ export default {
     };
   },
   methods: {
-    changeColor() {
-      if (this.icon_background_color == "#FFF") {
+    changeColor(isCheck) {
+      if (isCheck) {
         this.icon_background_color = "#d9ecf0";
         this.icon_hover_color = "#ebf6f8";
       } else {
         this.icon_background_color = "#FFF";
         this.icon_hover_color = "rgb(223, 223, 223)";
       }
+    },
+  },
+  watch: {
+    check(current, preview) {
+      this.changeColor(current);
+      console.log("current: ", current);
+      console.log("preview: ", preview);
     },
   },
 };

@@ -10,7 +10,7 @@
     </section>
     <section id="title_sec">
       <img
-        src="http://tong.visitkorea.or.kr/cms/resource/31/219131_image2_1.jpg"
+        :src="detail_data.first_image"
         alt=""
         style="width: 40%; height: 400px; border-radius: 10px" />
       <div class="description">

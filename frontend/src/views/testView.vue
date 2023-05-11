@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <paginationComponent />
+  <!-- <div>
     <form v-on:submit.prevent="regist">
       <input v-model="book.isbn" type="text" id="isbn" name="isbn" /><label
         for="isbn"></label>
@@ -44,13 +45,15 @@
         style="width: 150px" />
     </div>
     <a>상세보기</a>
-  </div>
+  </div> -->
 </template>
 
 <script>
+import paginationComponent from "@/components/paginationComponent.vue";
+
 export default {
   name: "testView",
-  components: {},
+  components: { paginationComponent },
   data() {
     return {
       book: {
@@ -83,8 +86,8 @@ export default {
 </script>
 
 <style scoped>
-#info_content > * {
+/* #info_content > * {
   margin: 0px;
   padding: 0px;
-}
+} */
 </style>
