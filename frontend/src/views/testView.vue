@@ -1,5 +1,5 @@
 <template>
-  <paginationComponent />
+  <weatherBox />
   <!-- <div>
     <form v-on:submit.prevent="regist">
       <input v-model="book.isbn" type="text" id="isbn" name="isbn" /><label
@@ -49,11 +49,11 @@
 </template>
 
 <script>
-import paginationComponent from "@/components/paginationComponent.vue";
+import weatherBox from "@/components/weatherBox.vue";
 
 export default {
   name: "testView",
-  components: { paginationComponent },
+  components: { weatherBox },
   data() {
     return {
       book: {

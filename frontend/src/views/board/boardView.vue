@@ -13,18 +13,17 @@
     <div id="board-search">
       <div class="container">
         <div class="search-window">
-          <form action="">
-            <div class="search-wrap">
-              <label for="search" class="blind">공지사항 내용 검색</label>
-              <input
-                id="search"
-                type="search"
-                name=""
-                placeholder="검색어를 입력해주세요."
-                value="" />
-              <button type="submit" class="btn btn-dark">검색</button>
-            </div>
-          </form>
+          <div class="search-wrap">
+            <label for="search" class="blind">공지사항 내용 검색</label>
+            <input
+              id="search"
+              type="search"
+              name=""
+              placeholder="검색어를 입력해주세요."
+              v-model="searchKeyword"
+              @keyup.enter="search()" />
+            <button class="btn btn-dark" @click="search()">검색</button>
+          </div>
         </div>
       </div>
     </div>
@@ -50,7 +49,11 @@
             </tr>
           </tbody>
         </table>
-        <paginationComponent />
+        <paginationComponent
+          :totalPage="totalpage"
+          @setboardList="setboardList"
+          keyword="board"
+          type="board" />
         <div id="submit_btn">
           <button
             @click="write_page()"
@@ -84,6 +87,9 @@ export default {
       board_list: [],
       toastShow: false,
       toastText: "",
+      searchKeyword: "",
+      totalpage: 0,
+      sendKeyword: "board",
     };
   },
   props: {},
@@ -99,16 +105,31 @@ export default {
     this.toastText = this.toastTextResult;
     this.toastShow = this.toastShowResult;
 
-    this.$axios.get(`http://localhost:8080/board`).then((res) => {
-      this.board_list = res.data;
+    this.$axios.get(`http://localhost:8080/board/search`).then((res) => {
+      this.board_list = res.data.content;
+      this.totalpage = res.data.totalPages;
     });
   },
   methods: {
+    setboardList(value) {
+      this.board_list = value;
+    },
     write_page() {
       this.$router.push("/boardwritepage");
     },
     goDetail(articleNo) {
       location.href = `/boardcontentpage?articleNo=${articleNo}`;
+    },
+    search() {
+      const keyword = this.searchKeyword;
+      this.sendKeyword = keyword;
+
+      this.$axios
+        .get(`http://localhost:8080/board/search?keyword=${keyword}`)
+        .then((res) => {
+          this.board_list = res.data.content;
+          this.totalpage = res.data.totalPages;
+        });
     },
   },
 };
@@ -329,9 +350,8 @@ a {
   border: none;
   margin-top: 10px;
   color: #000;
-}ㅋㅊㅌㅋㅌㅊㅋㅌㅊㅋㅌㅊ
-
-.btn-16:after {
+}
+ㅋㅊㅌㅋㅌㅊㅋㅌㅊㅋㅌㅊ .btn-16:after {
   position: absolute;
   content: "";
   width: 0;

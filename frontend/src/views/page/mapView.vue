@@ -13,6 +13,7 @@
 <script>
 import myNav from "../includes/myNav.vue";
 import mapCard from "@/components/mapCard.vue";
+import { toRaw } from "vue";
 
 export default {
   name: "KakaoMap",
@@ -23,9 +24,11 @@ export default {
   data() {
     return {
       map: null,
+      cnt: 0,
       markerData: [],
       categoryData: [],
       markers: [],
+      categoryMarkers: [],
       infowindow: null,
       categoryNum: 0,
       categoryCode: ["PM9", "OL7", "CE7", "AD5", "CS2", "MT1"],
@@ -47,19 +50,22 @@ export default {
     setContentList(value) {
       this.markerData = value;
 
-      console.log(value);
-
       this.displayMarkers(value);
     },
     setCategoryNum(value) {
       this.categoryNum = value;
-      if (value != 0) {
-        this.displayCategory(value);
-      } else {
-        this.categoryData = [];
+
+      if (this.categoryMarkers.length > 0) {
+        this.categoryMarkers.forEach((item) => {
+          item.setMap(null);
+        });
       }
 
-      this.displayMarkers(this.categoryData);
+      this.categoryData = [];
+
+      if (value != 0) {
+        this.displayCategory(value);
+      }
     },
     initMap() {
       const container = document.getElementById("map");
@@ -85,6 +91,7 @@ export default {
     },
     displayMarkers(positions) {
       console.log(positions);
+
       // 여러개 마커를 정보를 보여줄 info window
       if (this.markers.length > 0) {
         this.markers.forEach((item) => {
@@ -144,62 +151,88 @@ export default {
 
         this.markers.push(marker);
       });
+      if (positions.length != 0) {
+        const bounds = positions.reduce(
+          (bounds, position) =>
+            bounds.extend(
+              new kakao.maps.LatLng(position.latitude, position.longitude)
+            ),
+          new kakao.maps.LatLngBounds()
+        );
 
-      const bounds = positions.reduce(
-        (bounds, position) =>
-          bounds.extend(
-            new kakao.maps.LatLng(position.latitude, position.longitude)
-          ),
-        new kakao.maps.LatLngBounds()
-      );
-
-      this.map.setBounds(bounds);
+        this.map.setBounds(bounds);
+      }
     },
     displayCategory(categoryNum) {
+      const currentPos = this.map.getCenter();
+
       const categoryCode = this.categoryCode[categoryNum - 1];
 
-      for (let i = 1; i < 46; i++) {
+      for (let i = 1; i < 21; i++) {
         this.$axios({
-          url: `https://dapi.kakao.com/v2/local/search/category.json?category_group_code=${categoryCode}&page=${i}`,
+          url: `https://dapi.kakao.com/v2/local/search/category.json?x=${currentPos.La}&y=${currentPos.Ma}&category_group_code=${categoryCode}&page=${i}&radius=20000`,
           headers: {
             Authorization: `KakaoAK 68435c839ca94f29d68df0ab5c378c16`,
           },
         }).then((res) => {
+          this.cnt++;
           res.data.documents.forEach((data) => this.categoryData.push(data));
         });
       }
-
-      this.displayCategoryMarkers(this.categoryData);
     },
     displayCategoryMarkers(positions) {
-      // 여러개 마커를 정보를 보여줄 info window
-
-      if (this.markers.length > 0) {
-        this.markers.forEach((item) => {
-          item.setMap(null);
-        });
-      }
-
-      console.log(positions[1]);
-
       // 마커를 생성하고 지도 위에 마커를 표시
       positions.forEach((pos) => {
-        console.log(pos);
-
         this.infowindow = new kakao.maps.InfoWindow({
           removable: true,
-          content: `<div>안녕<div>`,
+          content: ``,
         });
 
-        const latlng = new kakao.maps.LatLng(pos.x, pos.y);
+        const imgNum = this.categoryNum;
+
+        // 이미지 초기화
+        const imageSrc = require(`../../assets/img/markerCategory_${imgNum}.png`), // 마커 이미지 url, 스프라이트 이미지를 씁니다
+          imageSize = new kakao.maps.Size(20, 32), // 마커 이미지의 크기
+          imgOptions = {
+            // spriteSize: new kakao.maps.Size(72, 208), // 스프라이트 이미지의 크기
+            // spriteOrigin: new kakao.maps.Point(46, (this.categoryNum - 1) * 36), // 스프라이트 이미지 중 사용할 영역의 좌상단 좌표
+            offset: new kakao.maps.Point(13, 34), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+          },
+          markerImage = new kakao.maps.MarkerImage(
+            imageSrc,
+            imageSize,
+            imgOptions
+          );
+
+        const latlng = new kakao.maps.LatLng(pos.y, pos.x);
 
         const marker = new kakao.maps.Marker({
           map: this.map,
           position: latlng,
+          image: markerImage,
         });
 
-        this.markers.push(marker);
+        kakao.maps.event.addListener(marker, "click", () => {
+          var content = `<div>테스트</div>`;
+
+          this.infowindow.setContent(content);
+          const level = 4;
+          this.map.setLevel(level);
+          this.map.setCenter(latlng);
+
+          this.infowindow.open(this.map, marker);
+        });
+
+        this.categoryMarkers.push(marker);
       });
+    },
+  },
+  watch: {
+    cnt(current) {
+      if (current == 20) {
+        this.displayCategoryMarkers(toRaw(this.categoryData));
+        this.cnt = 0;
+      }
     },
   },
 };

@@ -63,9 +63,7 @@
         <hr />
         <div class="place_num">
           <p>장소</p>
-          <p style="margin-left: 10px; color: #696969">
-            {{ trip_list.length }}건
-          </p>
+          <p style="margin-left: 10px; color: #696969">{{ totalSearch }}건</p>
         </div>
         <div
           id="content_list"
@@ -76,7 +74,8 @@
         <paginationComponent
           :keyword="sendKeyword"
           :totalPage="sendTotalPage"
-          @setpageList="setpageList" />
+          @setpageList="setpageList"
+          type="map" />
       </div>
     </div>
   </div>
@@ -101,7 +100,8 @@ export default {
       keyword: "",
       sendKeyword: "",
       sendTotalPage: 0,
-      page: "1",
+      totalSearch: 0,
+      page: "0",
     };
   },
   mounted() {
@@ -128,6 +128,7 @@ export default {
           this.$emit("setContentList", res.data.content);
 
           this.sendTotalPage = res.data.totalPages;
+          this.totalSearch = res.data.totalElements;
         })
         .catch((error) => {
           console.log("검색 실패" + error.data);

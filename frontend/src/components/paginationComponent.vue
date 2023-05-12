@@ -1,7 +1,7 @@
 <template>
   <paginate
     v-if="keyword"
-    :page-count="totalPage - 1"
+    :page-count="totalPage"
     :page-range="3"
     :margin-pages="0"
     :click-handler="changePage"
@@ -28,6 +28,10 @@ export default {
       type: Number,
       default: 0,
     },
+    type: {
+      type: String,
+      default: "",
+    },
   },
   data() {
     return {
@@ -36,20 +40,35 @@ export default {
   },
   methods: {
     changePage(pageNum) {
-      this.selectPage = pageNum;
+      this.selectPage = pageNum - 1;
       const page = this.selectPage;
+      let keyword;
+      if (this.keyword == "board") {
+        keyword = "";
+      } else {
+        keyword = this.keyword;
+      }
 
-      const keyword = this.keyword;
-      const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}&page=${page}`;
+      if (this.type == "map") {
+        const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}&page=${page}`;
 
-      this.$axios
-        .get(url)
-        .then((res) => {
-          this.$emit("setpageList", res.data.content);
-        })
-        .catch((error) => {
-          console.log("검색 실패" + error.data);
-        });
+        this.$axios
+          .get(url)
+          .then((res) => {
+            this.$emit("setpageList", res.data.content);
+          })
+          .catch((error) => {
+            console.log("검색 실패" + error.data);
+          });
+      } else if (this.type == "board") {
+        this.$axios
+          .get(
+            `http://localhost:8080/board/search?keyword=${keyword}&page=${page}`
+          )
+          .then((res) => {
+            this.$emit("setboardList", res.data.content);
+          });
+      }
     },
   },
 };
