@@ -25,7 +25,7 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final NumberPath<Integer> hit = createNumber("hit", Integer.class);
 
-    public final StringPath registerTime = createString("registerTime");
+    public final DateTimePath<java.sql.Timestamp> registerTime = createDateTime("registerTime", java.sql.Timestamp.class);
 
     public final StringPath subject = createString("subject");
 
