@@ -1,9 +1,10 @@
-package com.ssafy.trip.repository;
+package com.ssafy.trip.repository.attracion;
 
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPQLQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.trip.Entity.Attraction;
+import com.ssafy.trip.repository.attracion.AttractionRepositoryCustom;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;

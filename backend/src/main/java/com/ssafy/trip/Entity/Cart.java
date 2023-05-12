@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @Data
 @Entity
-public class Like {
+public class Cart {
 
     @Id
     @GeneratedValue

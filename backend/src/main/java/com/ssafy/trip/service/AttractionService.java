@@ -1,7 +1,7 @@
 package com.ssafy.trip.service;
 
 import com.ssafy.trip.Entity.Attraction;
-import com.ssafy.trip.repository.AttractionRepository;
+import com.ssafy.trip.repository.attracion.AttractionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

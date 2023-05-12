@@ -1,9 +1,15 @@
 package com.ssafy.trip.controller;
 
+import com.ssafy.trip.Entity.Attraction;
 import com.ssafy.trip.Entity.Board;
-import com.ssafy.trip.repository.BoardRepository;
+import com.ssafy.trip.repository.board.BoardRepository;
+import com.ssafy.trip.service.board.BoardService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,16 +19,29 @@ import java.util.List;
 
 @Slf4j
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/board")
 public class BoardController {
 
-    @Autowired
-    private BoardRepository boardRepository;
+   private final BoardService boardService;
+    private  final BoardRepository boardRepository;
 
     // 전체 조회
     @GetMapping
     public ResponseEntity<List<Board>> selectBoardList() throws SQLException {
         return new ResponseEntity<List<Board>>(boardRepository.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> selectByKeyword(
+            @PageableDefault(size = 10) Pageable pageable,
+            @RequestParam(value = "keyword", required = false) String keyword
+    ){
+
+        Page<Board> boards = boardService.findBySearchKeyword(pageable,keyword);
+
+        return new ResponseEntity<>(boards,HttpStatus.OK);
+
     }
 
     // 상세 정보 조회 ( no )
