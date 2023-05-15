@@ -1,8 +1,9 @@
 <template>
   <paginate
     v-if="keyword"
+    v-model="page"
     :page-count="totalPage"
-    :page-range="3"
+    :page-range="5"
     :margin-pages="0"
     :click-handler="changePage"
     :prev-text="'<'"
@@ -36,6 +37,7 @@ export default {
   data() {
     return {
       selectPage: 1,
+      page: 1,
     };
   },
   methods: {
@@ -68,6 +70,13 @@ export default {
           .then((res) => {
             this.$emit("setboardList", res.data.content);
           });
+      }
+    },
+  },
+  watch: {
+    keyword(cur, prev) {
+      if (cur != prev) {
+        this.page = 1;
       }
     },
   },

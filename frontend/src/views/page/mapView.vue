@@ -6,6 +6,7 @@
         style="z-index: 2"
         @setContentList="setContentList"
         @setCategoryNum="setCategoryNum" />
+      <weatherBoxVue :weatherArea="weatherArea" />
     </div>
   </div>
 </template>
@@ -14,12 +15,14 @@
 import myNav from "../includes/myNav.vue";
 import mapCard from "@/components/mapCard.vue";
 import { toRaw } from "vue";
+import weatherBoxVue from "@/components/weatherBox.vue";
 
 export default {
   name: "KakaoMap",
   components: {
     myNav,
     mapCard,
+    weatherBoxVue,
   },
   data() {
     return {
@@ -32,6 +35,7 @@ export default {
       infowindow: null,
       categoryNum: 0,
       categoryCode: ["PM9", "OL7", "CE7", "AD5", "CS2", "MT1"],
+      weatherArea: "",
     };
   },
   mounted() {
@@ -90,8 +94,6 @@ export default {
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
     },
     displayMarkers(positions) {
-      console.log(positions);
-
       // 여러개 마커를 정보를 보여줄 info window
       if (this.markers.length > 0) {
         this.markers.forEach((item) => {
@@ -140,6 +142,8 @@ export default {
         src="${positions[idx].first_image}"
         style="width: 150px" />
     </div>`;
+
+          this.weatherArea = pos.addr1.split(" ")[0];
 
           this.infowindow.setContent(content);
           const level = 4;
@@ -241,12 +245,6 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 #map {
-  align-items: center;
-  background-color: var(--white);
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
   height: calc(100vh - 4.1em);
   place-items: center;
   overflow: hidden;

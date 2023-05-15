@@ -8,6 +8,11 @@
         <h3 style="font-size: 45px; color: #00859c">공지사항</h3>
       </div>
     </div>
+    <div id="categoryBoard">
+      <div>공지사항</div>
+      <div>열린 게시판</div>
+      <div>FAQ</div>
+    </div>
 
     <!-- board seach area -->
     <div id="board-search">
@@ -156,6 +161,23 @@ a {
   color: #333333;
   font-weight: 400;
   text-align: center;
+  margin: 0px;
+}
+
+#categoryBoard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 50px;
+}
+
+#categoryBoard > div {
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: #cbcbcb;
+  color: #fff;
+  border-radius: 10px;
+  font-weight: 600;
 }
 
 #board-search .search-window {

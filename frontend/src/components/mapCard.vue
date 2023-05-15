@@ -36,7 +36,7 @@
             <infoIcon
               @click="select(1)"
               :check="test[1]"
-              icon_type="utensils"
+              icon_type="gas-pump"
               icon_name="주유소" />
             <infoIcon
               @click="select(2)"

@@ -1,5 +1,5 @@
 <template>
-  <weatherBox />
+  <div></div>
   <!-- <div>
     <form v-on:submit.prevent="regist">
       <input v-model="book.isbn" type="text" id="isbn" name="isbn" /><label
@@ -49,11 +49,9 @@
 </template>
 
 <script>
-import weatherBox from "@/components/weatherBox.vue";
-
 export default {
   name: "testView",
-  components: { weatherBox },
+  components: {},
   data() {
     return {
       book: {
