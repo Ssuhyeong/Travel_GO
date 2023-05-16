@@ -3,10 +3,7 @@ package com.ssafy.trip.Entity;
 import lombok.Data;
 import org.hibernate.annotations.ColumnDefault;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Entity
@@ -14,8 +11,11 @@ import java.sql.Timestamp;
 public class Board {
 
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "article_no")
 	private int articleNo;
+
+	@Column(name = "user_id")
 	private String userId;
 	private String subject;
 	private String content;

@@ -1,6 +1,7 @@
 package com.ssafy.trip.controller;
 
 import com.ssafy.trip.Entity.Board;
+import com.ssafy.trip.Entity.Faq;
 import com.ssafy.trip.Entity.OpenBoard;
 import com.ssafy.trip.repository.board.OpenBoardRepository;
 import com.ssafy.trip.service.board.OpenBoardService;
@@ -38,7 +39,7 @@ public class OpenBoardController {
 
     // 상세 정보 조회 ( no )
     @GetMapping("/{no}")
-    public ResponseEntity<Board> selectBoardDetail(@PathVariable int no) throws SQLException {
+    public ResponseEntity<Board> selectBoardDetail(@PathVariable String no) throws SQLException {
 
         return new ResponseEntity<Board>(boardRepository.getArticle(no), HttpStatus.OK);
     }
@@ -46,22 +47,22 @@ public class OpenBoardController {
     // 게시판 등록
     @PostMapping
     public ResponseEntity<Object> registBoard(@RequestBody OpenBoard board) throws SQLException {
-        boardRepository.registCar(board.getUserId(), board.getTitle(), board.getContent());
+        boardRepository.registCar(board.getUserId(), board.getSubject(), board.getContent());
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
     // 게시판 내용 삭제
     @DeleteMapping("/{no}")
-    public ResponseEntity<Object> deleteBoard(@PathVariable int no) throws SQLException {
+    public ResponseEntity<Object> deleteBoard(@PathVariable String no) throws SQLException {
         log.debug("DELETE MAPPING");
         boardRepository.deleteArticle(no);
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
-    // 게시판 내용 수정
     @PostMapping("/update")
-    public ResponseEntity<Object> ModifyBoard(@RequestBody OpenBoard board) throws SQLException {
-        boardRepository.modifyArticle(board.getId(), board.getTitle(), board.getContent());
+    public ResponseEntity<Object> ModifyBoard(@RequestBody OpenBoard openBoard) throws SQLException {
+        Integer openId = openBoard.getArticleNo();
+        boardService.update(openId,openBoard);
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 

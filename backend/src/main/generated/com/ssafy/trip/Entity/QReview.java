@@ -23,7 +23,7 @@ public class QReview extends EntityPathBase<Review> {
 
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
-    public final NumberPath<Double> star = createNumber("star", Double.class);
+    public final NumberPath<Integer> star = createNumber("star", Integer.class);
 
     public final StringPath title = createString("title");
 

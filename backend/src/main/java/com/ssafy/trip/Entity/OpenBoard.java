@@ -14,19 +14,19 @@ public class OpenBoard {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
-
-    private String title;
-    private String content;
-    private int hit;
-//
-//    @OneToMany(mappedBy = "user")
-//    private List<User> user = new ArrayList<>();
+    @Column(name = "article_no")
+    private int articleNo;
 
     @Column(name = "user_id")
     private String userId;
+    private String subject;
+    private String content;
+    private int hit;
 
     @Column(name = "register_time")
     private Timestamp registerTime;
+
+//    @OneToMany(mappedBy = "user")
+//    private List<User> user = new ArrayList<>();
+
 }
