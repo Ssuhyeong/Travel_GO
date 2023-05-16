@@ -1,8 +1,8 @@
 package com.ssafy.trip.controller;
 
-import com.ssafy.trip.Entity.Board;
 import com.ssafy.trip.Entity.Review;
 import com.ssafy.trip.repository.board.ReviewRepository;
+import com.ssafy.trip.service.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/review")
@@ -20,6 +19,7 @@ import java.util.List;
 public class ReviewController {
 
     private final ReviewRepository reviewRepository;
+    private final ReviewService reviewService;
 
     @GetMapping
     public ResponseEntity<?> selectAllReview(@PageableDefault(size = 5) Pageable pageable) {
@@ -28,8 +28,11 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> registReview(@RequestBody Review review) throws SQLException {
-       reviewRepository.save(review);
+    public ResponseEntity<Object> registReview(
+            @RequestParam Integer attractionId,
+            @RequestBody Review review
+    ) throws SQLException {
+        reviewService.save(attractionId,review);
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
