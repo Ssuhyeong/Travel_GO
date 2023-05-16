@@ -67,6 +67,9 @@ export default {
     this.boardtype = this.$route.params.type;
     this.articleNo = this.$route.params.articleNo;
 
+    console.log(this.boardtype);
+    console.log(this.articleNo);
+
     const url = `http://localhost:8080/${this.boardtype}/${this.articleNo}`;
     this.$axios.get(url).then((res) => {
       this.board_data = res.data;

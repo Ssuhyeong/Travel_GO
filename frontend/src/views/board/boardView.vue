@@ -97,7 +97,7 @@
             @click="
               $router.push({
                 name: 'boardwritepage',
-                params: { type: boardtype, articleNo: null },
+                params: { type: boardtype, articleNo: 5000 },
               })
             "
             type="button"
@@ -149,7 +149,7 @@ export default {
       this.select(0);
     } else if (this.boardtype == "open-board") {
       this.select(1);
-    } else if (this.boardtype == "fqa") {
+    } else if (this.boardtype == "faq") {
       this.select(2);
     }
     this.createBoard(this.boardtype);
@@ -163,7 +163,7 @@ export default {
       this.toastShow = this.toastShowResult;
 
       this.$axios.get(`http://localhost:8080/${type}/search`).then((res) => {
-        console.log(res.data.content);
+        console.log(res);
         this.board_list = res.data.content;
         this.totalpage = res.data.totalPages;
       });
@@ -207,9 +207,10 @@ export default {
         this.select(0);
       } else if (this.boardtype == "open-board") {
         this.select(1);
-      } else if (this.boardtype == "fqa") {
+      } else if (this.boardtype == "faq") {
         this.select(2);
       }
+      console.log(value);
       this.createBoard(value);
     },
   },

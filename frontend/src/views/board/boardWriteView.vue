@@ -52,12 +52,13 @@ export default {
   data() {
     return {
       board_data: {
-        userId: "ssafy",
+        userId: "choi@naver.com",
         subject: "",
         content: "",
       },
       boardtype: "",
       articleNo: "",
+      type: "",
     };
   },
   setup() {
@@ -72,7 +73,9 @@ export default {
     this.boardtype = this.$route.params.type;
     this.articleNo = this.$route.params.articleNo;
 
-    if (this.articleNo != null) {
+    console.log(this.articleNo);
+
+    if (this.articleNo != "5000") {
       this.type = "update";
       const url = `http://localhost:8080/${this.boardtype}/${this.articleNo}`;
       this.$axios.get(url).then((res) => {
