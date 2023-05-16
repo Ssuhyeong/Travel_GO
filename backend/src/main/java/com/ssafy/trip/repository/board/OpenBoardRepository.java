@@ -23,7 +23,7 @@ public interface OpenBoardRepository extends JpaRepository<OpenBoard, Integer> ,
 
     // 게시판 상세정보 조회
     @Query(value = "select article_no, user_id, subject, content, hit, register_time from open_board where article_no = :article_no", nativeQuery = true)
-    Board getArticle(@Param("article_no") String article_no);
+    OpenBoard getArticle(@Param("article_no") String article_no);
 
     // 게시판 내용 삭제
     @Transactional

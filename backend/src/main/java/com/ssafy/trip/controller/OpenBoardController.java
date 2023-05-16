@@ -39,9 +39,9 @@ public class OpenBoardController {
 
     // 상세 정보 조회 ( no )
     @GetMapping("/{no}")
-    public ResponseEntity<Board> selectBoardDetail(@PathVariable String no) throws SQLException {
+    public ResponseEntity<OpenBoard> selectBoardDetail(@PathVariable String no) throws SQLException {
 
-        return new ResponseEntity<Board>(boardRepository.getArticle(no), HttpStatus.OK);
+        return new ResponseEntity<OpenBoard>(boardRepository.getArticle(no), HttpStatus.OK);
     }
 
     // 게시판 등록
