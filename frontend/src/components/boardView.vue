@@ -8,42 +8,9 @@
         <h3 style="font-size: 45px; color: #00859c">공지사항</h3>
       </div>
       <div id="categoryBoard">
-        <div
-          class="board_page"
-          :class="{ category_active: active_list[0] }"
-          @click="
-            [
-              select(0),
-              $router.push({ name: 'boardView', params: { type: 'board' } }),
-            ]
-          ">
-          공지사항
-        </div>
-        <div
-          class="board_page"
-          :class="{ category_active: active_list[1] }"
-          @click="
-            [
-              select(1),
-              $router.push({
-                name: 'boardView',
-                params: { type: 'open-board' },
-              }),
-            ]
-          ">
-          열린 게시판
-        </div>
-        <div
-          class="board_page"
-          :class="{ category_active: active_list[2] }"
-          @click="
-            [
-              select(2),
-              $router.push({ name: 'boardView', params: { type: 'faq' } }),
-            ]
-          ">
-          FAQ
-        </div>
+        <div class="board_page active">공지사항</div>
+        <div class="board_page">열린 게시판</div>
+        <div class="board_page">FAQ</div>
       </div>
     </div>
 
@@ -90,16 +57,11 @@
         <paginationComponent
           :totalPage="totalpage"
           @setboardList="setboardList"
-          :keyword="boardtype"
+          keyword="board"
           type="board" />
         <div id="submit_btn">
           <button
-            @click="
-              $router.push({
-                name: 'boardwritepage',
-                params: { type: boardtype, articleNo: null },
-              })
-            "
+            @click="write_page()"
             type="button"
             id="btn-list"
             class="custom-btn btn-16">
@@ -128,14 +90,15 @@ export default {
   data() {
     return {
       board_list: [],
-      active_list: [true, false, false],
       toastShow: false,
       toastText: "",
       searchKeyword: "",
       totalpage: 0,
+      sendKeyword: "board",
       boardtype: "",
     };
   },
+  props: {},
   setup() {
     const store = useStore();
     const toastTextResult = computed(() => store.state.text);
@@ -144,73 +107,45 @@ export default {
     return { toastTextResult, toastShowResult };
   },
   created() {
-    this.boardtype = this.$route.params.type;
-    if (this.boardtype == "board") {
-      this.select(0);
-    } else if (this.boardtype == "open-board") {
-      this.select(1);
-    } else if (this.boardtype == "fqa") {
-      this.select(2);
-    }
-    this.createBoard(this.boardtype);
+    this.createBoard();
   },
   methods: {
     setboardList(value) {
       this.board_list = value;
     },
-    createBoard(type) {
+    createBoard() {
       this.toastText = this.toastTextResult;
       this.toastShow = this.toastShowResult;
+      this.boardtype = this.$route.params.type;
 
-      this.$axios.get(`http://localhost:8080/${type}/search`).then((res) => {
-        console.log(res.data.content);
-        this.board_list = res.data.content;
-        this.totalpage = res.data.totalPages;
-      });
+      this.$axios
+        .get(`http://localhost:8080/${this.boardtype}/search`)
+        .then((res) => {
+          this.board_list = res.data.content;
+          this.totalpage = res.data.totalPages;
+        });
+    },
+    write_page() {
+      this.$router.push("/boardwritepage");
     },
     goDetail(articleNo) {
-      this.$router.push({
-        name: "boardcontentpage",
-        params: { type: this.boardtype, articleNo: articleNo },
-      });
+      location.href = `/boardcontentpage?articleNo=${articleNo}`;
     },
     search() {
       const keyword = this.searchKeyword;
       this.sendKeyword = keyword;
 
       this.$axios
-        .get(
-          `http://localhost:8080/${this.boardtype}/search?keyword=${keyword}`
-        )
+        .get(`http://localhost:8080/board/search?keyword=${keyword}`)
         .then((res) => {
           this.board_list = res.data.content;
           this.totalpage = res.data.totalPages;
         });
     },
-    select(idx) {
-      if (this.active_list[idx]) {
-        console.log("none");
-      } else {
-        for (let i = 0; i < this.active_list.length; i++) {
-          if (i != idx) {
-            this.active_list[i] = this.active_list[idx];
-          }
-        }
-        this.active_list[idx] = !this.active_list[idx];
-      }
-    },
   },
   watch: {
-    "$route.params.type"(value) {
-      this.boardtype = value;
-      if (this.boardtype == "board") {
-        this.select(0);
-      } else if (this.boardtype == "open-board") {
-        this.select(1);
-      } else if (this.boardtype == "fqa") {
-        this.select(2);
-      }
-      this.createBoard(value);
+    boardtype() {
+      this.createBoard();
     },
   },
 };
@@ -262,7 +197,7 @@ a {
   cursor: pointer;
 }
 
-.category_active {
+.active {
   background-color: #4f4f4f;
 }
 

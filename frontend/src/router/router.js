@@ -10,27 +10,26 @@ import testView from "@/views/testView";
 import boardView from "@/views/board/boardView";
 import boardWritePage from "@/views/board/boardWriteView";
 import boardContentPage from "@/views/board/boardContentView";
+import reviewView from "@/views/page/reviewView";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     { path: "/", name: "mapView", component: mapView },
     {
-      path: "/boardpage",
+      path: "/boardpage/:type",
       name: "boardView",
       component: boardView,
     },
     {
-      path: "/boardwritepage",
+      path: "/boardwritepage/:type/:articleNo",
       name: "boardwritepage",
       component: boardWritePage,
-      props: true,
     },
     {
-      path: "/boardcontentpage",
-      name: "boardContentPage",
+      path: "/boardcontentpage/:type/:articleNo",
+      name: "boardcontentpage",
       component: boardContentPage,
-      props: true,
     },
     { path: "/testpage", name: "testView", component: testView },
     { path: "/mainpage", name: "mainView", component: mainView },
@@ -38,6 +37,7 @@ const router = createRouter({
     { path: "/profilepage", name: "profilepage", component: profileView },
     { path: "/detailpage", name: "detailpage", component: detailView },
     { path: "/categorypage", name: "categorypage", component: categoryView },
+    { path: "/reviewpage", name: "reviewView", component: reviewView },
   ],
 });
 

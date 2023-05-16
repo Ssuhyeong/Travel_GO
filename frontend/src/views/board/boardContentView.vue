@@ -13,7 +13,7 @@
       type="button"
       id="btn-list"
       class="custom-btn btn-16"
-      @click="$router.push('/boardpage')">
+      @click="$router.go(-1)">
       글목록
     </button>
     <button
@@ -51,6 +51,8 @@ export default {
         hit: 0,
         registerTime: "",
       },
+      boardtype: "",
+      articleNo: "",
     };
   },
   setup() {
@@ -62,10 +64,10 @@ export default {
     return { setShow, setText, setColor };
   },
   created() {
-    const params = new URL(document.location).searchParams;
-    const articleNo = params.get("articleNo");
+    this.boardtype = this.$route.params.type;
+    this.articleNo = this.$route.params.articleNo;
 
-    const url = `http://localhost:8080/board/${articleNo}`;
+    const url = `http://localhost:8080/${this.boardtype}/${this.articleNo}`;
     this.$axios.get(url).then((res) => {
       this.board_data = res.data;
     });
@@ -73,18 +75,21 @@ export default {
   methods: {
     deleteBoard() {
       const no = this.board_data.articleNo;
-      const url = `http://localhost:8080/board/${no}`;
+      const url = `http://localhost:8080/${this.boardtype}/${no}`;
 
       this.$axios.delete(url).then(() => {
         this.setShow();
         this.setText();
         this.setColor();
-        this.$router.push("/boardpage");
+        this.$router.push({ name: "boardView", params: { type: "board" } });
       });
     },
     goUpdate() {
       const no = this.board_data.articleNo;
-      location.href = `/boardwritepage?articleNo=${no}`;
+      this.$router.push({
+        name: "boardwritepage",
+        params: { type: this.boardtype, articleNo: no },
+      });
     },
   },
 };

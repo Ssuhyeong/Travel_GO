@@ -100,10 +100,15 @@ export default {
   data() {
     return {
       section_active: [true, false, false, false, false],
+      active_range: ["60px", "120px", "180px", "240px", "300px"],
+      current_range: "60px",
+      past_range: "0px",
+      line_flag: false,
     };
   },
   methods: {
     select(idx) {
+      this.line_flag = true;
       if (this.section_active[idx]) {
         console.log("none");
       } else {
@@ -114,6 +119,13 @@ export default {
         }
         this.section_active[idx] = !this.section_active[idx];
       }
+      this.current_range = this.active_range[idx];
+    },
+  },
+  watch: {
+    current_range(current, past) {
+      console.log(current);
+      this.past_range = past;
     },
   },
 };
@@ -132,23 +144,7 @@ ul,
 ol {
   list-style: none;
 }
-a {
-  text-decoration: none;
-  color: inherit;
-  outline: none;
-  transition: all 0.4s ease-in-out;
-  -webkit-transition: all 0.4s ease-in-out;
-}
-a:focus,
-a:active,
-a:visited,
-a:hover {
-  text-decoration: none;
-  outline: none;
-}
-a:hover {
-  color: #e73700;
-}
+
 h2 {
   margin-bottom: 48px;
   padding-bottom: 16px;
@@ -175,7 +171,7 @@ h3 {
 
 .line-title {
   position: relative;
-  width: 400px;
+  width: 300px;
 }
 .line-title::before,
 .line-title::after {
@@ -190,9 +186,10 @@ h3 {
   width: 100%;
   background: #f2f2f2;
 }
+
 .line-title::after {
-  width: 32px;
   background: #e73700;
+  width: v-bind(current_range);
 }
 
 /******* Middle section CSS Start ******/

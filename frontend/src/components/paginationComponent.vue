@@ -44,12 +44,7 @@ export default {
     changePage(pageNum) {
       this.selectPage = pageNum - 1;
       const page = this.selectPage;
-      let keyword;
-      if (this.keyword == "board") {
-        keyword = "";
-      } else {
-        keyword = this.keyword;
-      }
+      const keyword = this.keyword;
 
       if (this.type == "map") {
         const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}&page=${page}`;
@@ -62,12 +57,15 @@ export default {
           .catch((error) => {
             console.log("검색 실패" + error.data);
           });
-      } else if (this.type == "board") {
+      } else if (
+        keyword == "board" ||
+        keyword == "open-board" ||
+        keyword == "faq"
+      ) {
         this.$axios
-          .get(
-            `http://localhost:8080/board/search?keyword=${keyword}&page=${page}`
-          )
+          .get(`http://localhost:8080/${keyword}/search?page=${page}`)
           .then((res) => {
+            console.log(res);
             this.$emit("setboardList", res.data.content);
           });
       }

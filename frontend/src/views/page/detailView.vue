@@ -6,7 +6,7 @@
         :icon="['fass', 'left-long']"
         size="3x"
         style="margin: 20px 0px; cursor: pointer"
-        @click="$router.push('/')" />
+        @click="$router.go(-1)" />
     </section>
     <section id="title_sec">
       <img
@@ -39,17 +39,15 @@
 
         <h2>{{ detail_data.title }}</h2>
         <h3>{{ detail_data.addr1 }}</h3>
-        <h3>010-1234-1234</h3>
         <p>
           {{ detail_data.overview }}
         </p>
       </div>
     </section>
     <section>
-      <img
-        src="@/assets/img/map.png"
-        alt=""
-        style="width: 100%; height: 400px; border-radius: 10px" />
+      <div
+        id="map"
+        style="width: 100%; height: 400px; border-radius: 10px"></div>
     </section>
     <section>
       <h2>이런 곳은 어때요?</h2>
@@ -95,10 +93,12 @@
           justify-content: space-between;
         ">
         <h2 style="display: inline; font-size: 50px">리뷰</h2>
-        <font-awesome-icon
-          :icon="['fass', 'plus']"
-          size="2x"
-          style="margin-right: 10px" />
+        <router-link to="/reviewpage">
+          <font-awesome-icon
+            :icon="['fass', 'plus']"
+            size="2x"
+            style="margin-right: 10px; cursor: pointer" />
+        </router-link>
       </div>
       <div class="review_content">
         <div
@@ -135,6 +135,7 @@ export default {
   data() {
     return {
       detail_data: {},
+      map: null,
     };
   },
   created() {
@@ -144,16 +145,63 @@ export default {
     const url = `http://localhost:8080/attraction/search-list?contentId=${content_id}`;
     this.$axios.get(url).then((res) => {
       this.detail_data = res.data.content[0];
+
+      if (window.kakao && window.kakao.maps) {
+        this.initMap(this.detail_data.latitude, this.detail_data.longitude);
+      } else {
+        const script = document.createElement("script");
+        /* global kakao */
+        script.onload = () => kakao.maps.load(this.initMap);
+        script.src =
+          "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=811a7460154557e361e1a1839f2697c5&libraries=services";
+        document.head.appendChild(script);
+      }
     });
   },
+  mounted() {},
   methods: {
+    initMap(latitude, longitude) {
+      console.log(this.detail_data.latitude);
+      const container = document.getElementById("map");
+      const options = {
+        center: new kakao.maps.LatLng(latitude, longitude),
+        level: 3,
+      };
+
+      //지도 객체를 등록합니다.
+      //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
+      this.map = new kakao.maps.Map(container, options);
+
+      // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+      var mapTypeControl = new kakao.maps.MapTypeControl();
+
+      // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+      // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+      this.map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+      // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+      var zoomControl = new kakao.maps.ZoomControl();
+      this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+      const markerPosition = new kakao.maps.LatLng(latitude, longitude);
+
+      const marker = new kakao.maps.Marker({
+        position: markerPosition,
+      });
+
+      marker.setMap(this.map);
+    },
     kakaoLink() {
       window.Kakao.Link.sendDefault({
-        objectType: "text",
-        text: "당신에게 여행지를 추천했어요 빨리와",
-        link: {
-          mobileWebUrl: "http://localhost:8080",
-          webUrl: "http://localhost:8080",
+        objectType: "feed",
+        content: {
+          title: this.detail_data.title,
+          description: this.detail_data.overview,
+          imageUrl: this.detail_data.first_image,
+          link: {
+            mobileWebUrl: `http://localhost:5000/detailpage?${this.detail_data.content_id}`,
+            webUrl: `http://localhost:5000/detailpage?content_id=${this.detail_data.content_id}`,
+          },
         },
       });
     },
@@ -170,6 +218,11 @@ section {
 
 section > h2 {
   font-size: 40px;
+}
+
+a {
+  text-decoration-line: none;
+  color: #2c3e50;
 }
 
 #title_sec {

@@ -33,7 +33,7 @@
           name="submit"
           type="submit"
           id="contact -submit"
-          @click="cancel()">
+          @click="$router.go(-1)">
           취소
         </button>
       </fieldset>
@@ -56,7 +56,8 @@ export default {
         subject: "",
         content: "",
       },
-      type: "",
+      boardtype: "",
+      articleNo: "",
     };
   },
   setup() {
@@ -68,12 +69,12 @@ export default {
     return { setShow, setText, setColor };
   },
   created() {
-    const params = new URL(document.location).searchParams;
-    const articleNo = params.get("articleNo");
+    this.boardtype = this.$route.params.type;
+    this.articleNo = this.$route.params.articleNo;
 
-    if (articleNo != null) {
+    if (this.articleNo != null) {
       this.type = "update";
-      const url = `http://localhost:8080/board/${articleNo}`;
+      const url = `http://localhost:8080/${this.boardtype}/${this.articleNo}`;
       this.$axios.get(url).then((res) => {
         this.board_data = res.data;
       });
@@ -81,8 +82,7 @@ export default {
   },
   methods: {
     regist() {
-      const type = this.type;
-      const url = `http://localhost:8080/board/${type}`;
+      const url = `http://localhost:8080/${this.boardtype}/${this.type}`;
 
       this.$axios
         .post(url, this.board_data)
@@ -92,15 +92,13 @@ export default {
           this.setColor();
           this.$router.push({
             name: "boardView",
+            params: { type: "board" },
           });
         })
         .catch((error) => {
           console.log(error);
           alert("등록 실패");
         });
-    },
-    cancel() {
-      this.$router.push("/boardpage");
     },
   },
 };
