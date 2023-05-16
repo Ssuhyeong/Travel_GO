@@ -33,6 +33,7 @@ public class ReviewController {
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
+    // TODO: LOGIN 구현 후 userID 연결 예정
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteReview(@PathVariable Integer id){
         reviewRepository.deleteById(id);
