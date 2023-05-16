@@ -19,15 +19,15 @@ public class QFaq extends EntityPathBase<Faq> {
 
     public static final QFaq faq = new QFaq("faq");
 
+    public final NumberPath<Integer> articleNo = createNumber("articleNo", Integer.class);
+
     public final StringPath content = createString("content");
 
     public final NumberPath<Integer> hit = createNumber("hit", Integer.class);
 
-    public final NumberPath<Integer> id = createNumber("id", Integer.class);
-
     public final DateTimePath<java.sql.Timestamp> registerTime = createDateTime("registerTime", java.sql.Timestamp.class);
 
-    public final StringPath title = createString("title");
+    public final StringPath subject = createString("subject");
 
     public final StringPath userId = createString("userId");
 

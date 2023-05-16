@@ -36,6 +36,6 @@ public class OpenBoardRepositoryImpl extends QuerydslRepositorySupport implement
         if(keyword == null || keyword.isEmpty()) {
             return null;
         }
-        return openBoard.title.containsIgnoreCase(keyword);
+        return openBoard.subject.containsIgnoreCase(keyword);
     }
 }
