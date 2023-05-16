@@ -22,7 +22,7 @@ public class FaqController {
     private final FaqService faqService;
 
     //전체조회
-    @GetMapping
+    @GetMapping("/search")
     public ResponseEntity<?> selectAll(){
         List<Faq> faqList = faqRepository.findAll();
         return  new ResponseEntity<>(faqList, HttpStatus.OK);
