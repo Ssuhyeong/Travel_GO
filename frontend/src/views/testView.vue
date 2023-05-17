@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div><faqBoard /></div>
   <!-- <div>
     <form v-on:submit.prevent="regist">
       <input v-model="book.isbn" type="text" id="isbn" name="isbn" /><label
@@ -49,9 +49,11 @@
 </template>
 
 <script>
+import faqBoard from "@/components/faqBoard.vue";
+
 export default {
   name: "testView",
-  components: {},
+  components: { faqBoard },
   data() {
     return {
       book: {

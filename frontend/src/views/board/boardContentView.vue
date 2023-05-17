@@ -2,7 +2,7 @@
   <myNav />
   <div class="view_container">
     <form id="contact">
-      <h3>{{ board_data.articleNo }}. {{ board_data.subject }}.</h3>
+      <h3>{{ board_data.subject }}.</h3>
       <h4>{{ board_data.userId }}</h4>
       <h4>{{ board_data.registerTime }} 조회 : {{ board_data.hit }}</h4>
       <fieldset>{{ board_data.content }}</fieldset>

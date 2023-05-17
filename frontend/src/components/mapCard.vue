@@ -125,6 +125,7 @@ export default {
         .get(url)
         .then((res) => {
           this.trip_list = res.data.content;
+          console.log(res.data.content);
           this.$emit("setContentList", res.data.content);
 
           this.sendTotalPage = res.data.totalPages;

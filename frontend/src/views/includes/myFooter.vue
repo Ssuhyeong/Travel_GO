@@ -6,17 +6,36 @@
           <h4>SSAFY</h4>
           <ul>
             <li><a href="#">about us</a></li>
-            <li><a href="#">our SSAFY</a></li>
+            <li>
+              <a
+                href="https://www.ssafy.com/ksp/servlet/swp.content.controller.SwpContentServlet"
+                target="_blank"
+                >our SSAFY</a
+              >
+            </li>
             <li><a href="#">더 알아보기</a></li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>get help</h4>
           <ul>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">열린 게시판</a></li>
-            <li><a href="#">공지사항</a></li>
-            <li><a href="#">추가적인 질문</a></li>
+            <li>
+              <router-link :to="{ name: 'boardView', params: { type: 'faq' } }"
+                >FAQ</router-link
+              >
+            </li>
+            <li>
+              <router-link
+                :to="{ name: 'boardView', params: { type: 'open-board' } }"
+                >열린 게시판</router-link
+              >
+            </li>
+            <li>
+              <router-link
+                :to="{ name: 'boardView', params: { type: 'board' } }"
+                >공지사항</router-link
+              >
+            </li>
           </ul>
         </div>
         <div class="footer-col">

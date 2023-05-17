@@ -5,7 +5,9 @@
   <section class="notice">
     <div class="page-title">
       <div class="container">
-        <h3 style="font-size: 45px; color: #00859c">공지사항</h3>
+        <h3 style="font-size: 45px; color: #00859c">
+          {{ boardtitle[boardtype] }}
+        </h3>
       </div>
       <div id="categoryBoard">
         <div
@@ -47,64 +49,66 @@
       </div>
     </div>
 
-    <!-- board seach area -->
-    <div id="board-search">
-      <div class="container">
-        <div class="search-window">
-          <div class="search-wrap">
-            <label for="search" class="blind">공지사항 내용 검색</label>
-            <input
-              id="search"
-              type="search"
-              name=""
-              placeholder="검색어를 입력해주세요."
-              v-model="searchKeyword"
-              @keyup.enter="search()" />
-            <button class="btn btn-dark" @click="search()">검색</button>
+    <div v-if="boardtype == 'faq'"><faqBoard /></div>
+    <div v-else>
+      <!-- board seach area -->
+      <div id="board-search">
+        <div class="container">
+          <div class="search-window">
+            <div class="search-wrap">
+              <label for="search" class="blind">공지사항 내용 검색</label>
+              <input
+                id="search"
+                type="search"
+                name=""
+                placeholder="검색어를 입력해주세요."
+                v-model="searchKeyword"
+                @keyup.enter="search()" />
+              <button class="btn btn-dark" @click="search()">검색</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- board list area -->
-    <div id="board-list">
-      <div class="container">
-        <table class="board-table">
-          <thead>
-            <tr>
-              <th scope="col" class="th-num">번호</th>
-              <th scope="col" class="th-title">제목</th>
-              <th scope="col" class="th-date">등록일</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="board in board_list" :key="board.articleNo">
-              <td>{{ board.articleNo }}</td>
-              <th>
-                <a @click="goDetail(board.articleNo)">{{ board.subject }}</a>
-              </th>
-              <td>{{ board.registerTime }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <paginationComponent
-          :totalPage="totalpage"
-          @setboardList="setboardList"
-          :keyword="boardtype"
-          type="board" />
-        <div id="submit_btn">
-          <button
-            @click="
-              $router.push({
-                name: 'boardwritepage',
-                params: { type: boardtype, articleNo: 5000 },
-              })
-            "
-            type="button"
-            id="btn-list"
-            class="custom-btn btn-16">
-            글등록
-          </button>
+      <div id="board-list">
+        <div class="container">
+          <table class="board-table">
+            <thead>
+              <tr>
+                <th scope="col" class="th-num">번호</th>
+                <th scope="col" class="th-title">제목</th>
+                <th scope="col" class="th-date">등록일</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(board, idx) in board_list" :key="board.articleNo">
+                <td>{{ idx + 1 }}</td>
+                <th>
+                  <a @click="goDetail(board.articleNo)">{{ board.subject }}</a>
+                </th>
+                <td>{{ board.registerTime }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <paginationComponent
+            :totalPage="totalpage"
+            @setboardList="setboardList"
+            :keyword="boardtype"
+            type="board" />
+          <div id="submit_btn">
+            <button
+              @click="
+                $router.push({
+                  name: 'boardwritepage',
+                  params: { type: boardtype, articleNo: 5000 },
+                })
+              "
+              type="button"
+              id="btn-list"
+              class="custom-btn btn-16">
+              글등록
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -115,6 +119,7 @@
 import myNav from "@/views/includes/myNav.vue";
 import toastNotice from "@/components/toastNotice.vue";
 import paginationComponent from "@/components/paginationComponent.vue";
+import faqBoard from "@/components/faqBoard.vue";
 import { useStore } from "vuex";
 import { computed } from "vue";
 
@@ -124,6 +129,7 @@ export default {
     myNav,
     toastNotice,
     paginationComponent,
+    faqBoard,
   },
   data() {
     return {
@@ -134,6 +140,11 @@ export default {
       searchKeyword: "",
       totalpage: 0,
       boardtype: "",
+      boardtitle: {
+        board: "공지사항",
+        "open-board": "열린 게시판",
+        faq: "FAQ",
+      },
     };
   },
   setup() {
@@ -163,7 +174,6 @@ export default {
       this.toastShow = this.toastShowResult;
 
       this.$axios.get(`http://localhost:8080/${type}/search`).then((res) => {
-        console.log(res);
         this.board_list = res.data.content;
         this.totalpage = res.data.totalPages;
       });

@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -29,9 +30,13 @@ public class QAttraction extends EntityPathBase<Attraction> {
 
     public final StringPath latitude = createString("latitude");
 
+    public final NumberPath<Integer> likeCount = createNumber("likeCount", Integer.class);
+
     public final StringPath longitude = createString("longitude");
 
     public final StringPath overview = createString("overview");
+
+    public final ListPath<Review, QReview> reviews = this.<Review, QReview>createList("reviews", Review.class, QReview.class, PathInits.DIRECT2);
 
     public final NumberPath<Integer> sido_code = createNumber("sido_code", Integer.class);
 

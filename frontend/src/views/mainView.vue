@@ -13,12 +13,6 @@
       <img
         src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_2.png"
         id="clouds_2" />
-      <img
-        src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_1.png"
-        id="mountain_left" />
-      <img
-        src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_2.png"
-        id="mountain_right" />
     </section>
     <cardSlider style="padding-top: 40px; margin-bottom: 0px" />
     <section id="sec" style="padding-top: 0px">
@@ -38,21 +32,12 @@
         <boardBox />
       </div>
       <div id="board_contents">
-        <div class="board_content">
-          <h3>{{ board_list[0].subject.substr(0, 15) }}</h3>
-          <p>{{ board_list[0].registerTime }}</p>
-        </div>
-        <div class="board_content">
-          <h3>{{ board_list[1].subject.substr(0, 15) }}</h3>
-          <p>{{ board_list[1].registerTime }}</p>
-        </div>
-        <div class="board_content">
-          <h3>{{ board_list[2].subject.substr(0, 15) }}</h3>
-          <p>{{ board_list[2].registerTime }}</p>
-        </div>
-        <div class="board_content" style="border-right: 3px solid #b5b5b5">
-          <h3>{{ board_list[3].subject.substr(0, 15) }}</h3>
-          <p>{{ board_list[3].registerTime }}</p>
+        <div
+          class="board_content"
+          v-for="board_data in board_list.slice(0, 4)"
+          :key="board_data.subject">
+          <h3>{{ board_data.subject.substr(0, 15) }}</h3>
+          <p>{{ board_data.registerTime }}</p>
         </div>
       </div>
     </section>
@@ -89,7 +74,33 @@ export default {
       this.board_list = res.data;
     });
   },
-  methods: {},
+  mounted() {
+    window.addEventListener("scroll", this.scrollEvents);
+  },
+  unmounted() {
+    window.removeEventListener("scroll", this.scrollEvents);
+  },
+  methods: {
+    scrollEvents() {
+      // 구름 이동 관련
+
+      const cloud1 = document.querySelector("#clouds_1");
+      const cloud2 = document.querySelector("#clouds_2");
+      const text = document.querySelector("#text");
+      console.log(
+        document.documentElement.scrollTop + window.innerHeight + 200
+      );
+
+      window.addEventListener("scroll", () => {
+        let value =
+          document.documentElement.scrollTop + window.innerHeight - 900;
+
+        cloud2.style.left = `-${value * 2}px`;
+        cloud1.style.left = `${value * 2}px`;
+        text.style.bottom = `-${value}px`;
+      });
+    },
+  },
 };
 // 구름 이동 관련
 //   const mountainLeft = document.querySelector("#mountain_left");

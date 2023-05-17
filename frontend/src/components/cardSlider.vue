@@ -315,9 +315,6 @@ h3 {
     font-size: 18px;
     line-height: 32px;
   }
-  .line-title {
-    width: 330px;
-  }
 
   /* -------- Landing page ------- */
   .game-section {
@@ -351,9 +348,6 @@ h3 {
     margin: 0 0 8px;
     font-size: 12px;
     line-height: 24px;
-  }
-  .line-title {
-    width: 250px;
   }
 
   /* -------- Landing page ------- */
