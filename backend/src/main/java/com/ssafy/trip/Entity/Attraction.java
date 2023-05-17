@@ -3,6 +3,8 @@ package com.ssafy.trip.Entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @Entity
@@ -21,5 +23,10 @@ public class Attraction {
     private String latitude;
     private String longitude;
     private String overview;
+    @Column(name = "like_count")
+    private Integer likeCount;
+
+    @OneToMany(mappedBy = "attraction" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+    List<Review> reviews = new ArrayList<>();
 
 }
