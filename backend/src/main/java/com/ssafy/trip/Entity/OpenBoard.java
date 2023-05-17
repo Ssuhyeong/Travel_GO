@@ -4,8 +4,8 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 
 @Table(name = "open_board")
 @Data
@@ -24,7 +24,13 @@ public class OpenBoard {
     private int hit;
 
     @Column(name = "register_time")
-    private Timestamp registerTime;
+    private String registerTime;
+
+    @PrePersist
+    void registerTime() {
+        Timestamp time = Timestamp.from(Instant.now());
+        this.registerTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(time);
+    }
 
 //    @OneToMany(mappedBy = "user")
 //    private List<User> user = new ArrayList<>();

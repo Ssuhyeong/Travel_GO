@@ -39,6 +39,8 @@ public class BoardController {
     ){
 
         Page<Board> boards = boardService.findBySearchKeyword(pageable,keyword);
+        log.debug("numberofElement: ",boards.getNumberOfElements());
+        log.debug("get Pageable: ",boards.getPageable());
 
         return new ResponseEntity<>(boards,HttpStatus.OK);
 
@@ -54,7 +56,8 @@ public class BoardController {
     // 게시판 등록
     @PostMapping
     public ResponseEntity<Object> registBoard(@RequestBody Board board) throws SQLException {
-        boardRepository.registCar(board.getUserId(), board.getSubject(), board.getContent());
+        boardRepository.save(board);
+        //boardRepository.registCar(board.getUserId(), board.getSubject(), board.getContent());
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 

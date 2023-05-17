@@ -1,10 +1,11 @@
 package com.ssafy.trip.Entity;
 
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 
 @Entity
 @Data
@@ -22,6 +23,12 @@ public class Board {
 	private int hit;
 
 	@Column(name = "register_time")
-	private Timestamp registerTime;
+	private String registerTime;
+
+	@PrePersist
+	void registerTime() {
+		Timestamp time = Timestamp.from(Instant.now());
+		this.registerTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(time);
+	}
 
 }
