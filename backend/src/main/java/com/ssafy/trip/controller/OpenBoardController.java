@@ -47,7 +47,8 @@ public class OpenBoardController {
     // 게시판 등록
     @PostMapping
     public ResponseEntity<Object> registBoard(@RequestBody OpenBoard board) throws SQLException {
-        boardRepository.registCar(board.getUserId(), board.getSubject(), board.getContent());
+       // boardRepository.registCar(board.getUserId(), board.getSubject(), board.getContent());
+        boardRepository.save(board);
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 

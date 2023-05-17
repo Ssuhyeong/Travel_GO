@@ -42,7 +42,8 @@ public class FaqController {
     // 게시판 등록
     @PostMapping
     public ResponseEntity<Object> registBoard(@RequestBody Faq faq ) throws SQLException {
-        faqRepository.registCar(faq.getUserId(), faq.getSubject(), faq.getContent());
+       // faqRepository.registCar(faq.getUserId(), faq.getSubject(), faq.getContent());
+        faqRepository.save(faq);
         return new ResponseEntity<Object>(HttpStatus.OK);
     }
 
