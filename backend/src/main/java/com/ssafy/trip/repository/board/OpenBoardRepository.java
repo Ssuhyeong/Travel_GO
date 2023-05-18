@@ -39,4 +39,6 @@ public interface OpenBoardRepository extends JpaRepository<OpenBoard, Integer> ,
 
     @Override
     Optional<OpenBoard> findById(Integer integer);
+
+
 }
