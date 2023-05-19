@@ -2,6 +2,7 @@ package com.ssafy.trip.controller;
 
 
 import com.ssafy.trip.Entity.Attraction;
+import com.ssafy.trip.Entity.Member;
 import com.ssafy.trip.service.AttractionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class AttractionController {
     ){
 
         String userId = principal.getName();
-        Page<Attraction> attractions = attractionService.getAttractions(pageable,sidoCode,contentTypeId,keyword, contentId,userId);
+        Page<Attraction> attractions = attractionService.getAttractions(pageable,sidoCode,contentTypeId,keyword, contentId);
 
         return new ResponseEntity<>(attractions,HttpStatus.OK);
 

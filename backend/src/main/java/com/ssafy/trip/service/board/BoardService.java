@@ -16,9 +16,9 @@ public class BoardService {
 
     private final MemberRepository memberRepository;
     private final BoardRepository boardRepository;
-    public Page<Board> findBySearchKeyword(Pageable pageable,  String keyword,String userId) {
+    public Page<Board> findBySearchKeyword(Pageable pageable,  String keyword) {
 
-        return boardRepository.findBySearch(pageable,keyword,userId);
+        return boardRepository.findBySearch(pageable,keyword);
     }
 
     public Board findByArticleNoAndMember_Email(Integer no, String userId) {

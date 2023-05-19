@@ -1,6 +1,7 @@
 package com.ssafy.trip.controller;
 
 import com.ssafy.trip.Entity.Board;
+import com.ssafy.trip.Entity.Member;
 import com.ssafy.trip.dto.request.BoardRequestDto;
 import com.ssafy.trip.repository.MemberRepository;
 import com.ssafy.trip.repository.board.BoardRepository;
@@ -35,7 +36,9 @@ public class BoardController {
             Principal principal
     ){
         String userId = principal.getName();
-        Page<Board> boards = boardService.findBySearchKeyword(pageable,keyword,userId);
+        Member member = memberRepository.findByEmail(userId).get();
+       // Page<Board> boards = boardService.findBySearchKeyword(pageable,keyword,userId);
+        Page<Board> boards = boardService.findBySearchKeyword(pageable,keyword);
 
         return new ResponseEntity<>(boards,HttpStatus.OK);
 
