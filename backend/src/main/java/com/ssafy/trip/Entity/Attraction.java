@@ -26,6 +26,10 @@ public class Attraction {
     @Column(name = "like_count")
     private Integer likeCount;
 
+    @ManyToOne(targetEntity = Member.class , fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_email",referencedColumnName = "email")
+    private Member member;
+
     @OneToMany(mappedBy = "attraction" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
     List<Review> reviews = new ArrayList<>();
 

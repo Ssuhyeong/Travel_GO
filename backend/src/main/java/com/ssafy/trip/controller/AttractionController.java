@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.security.Principal;
+
 @Slf4j
 @RestController
 @RequestMapping("/attraction")
@@ -29,10 +31,12 @@ public class AttractionController {
             @RequestParam(value = "sidoCode",required = false) Integer sidoCode,
             @RequestParam(value = "contentTypeId", required = false) Integer contentTypeId,
             @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "contentId", required = false) Integer contentId
+            @RequestParam(value = "contentId", required = false) Integer contentId,
+            Principal principal
     ){
 
-        Page<Attraction> attractions = attractionService.getAttractions(pageable,sidoCode,contentTypeId,keyword, contentId);
+        String userId = principal.getName();
+        Page<Attraction> attractions = attractionService.getAttractions(pageable,sidoCode,contentTypeId,keyword, contentId,userId);
 
         return new ResponseEntity<>(attractions,HttpStatus.OK);
 

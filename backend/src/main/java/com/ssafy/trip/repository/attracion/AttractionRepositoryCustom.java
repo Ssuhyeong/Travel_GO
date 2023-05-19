@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface AttractionRepositoryCustom {
 
-    Page<Attraction> findBySearchOption(Pageable pageable, Integer sidoCode, Integer contentTypeId, String keyword, Integer contentId);
+    Page<Attraction> findBySearchOption(
+            Pageable pageable, Integer sidoCode, Integer contentTypeId, String keyword, Integer contentId, String userId
+    );
 
 }
