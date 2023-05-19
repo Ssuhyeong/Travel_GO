@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -16,6 +17,8 @@ import com.querydsl.core.types.Path;
 public class QAttraction extends EntityPathBase<Attraction> {
 
     private static final long serialVersionUID = 210529968L;
+
+    private static final PathInits INITS = PathInits.DIRECT2;
 
     public static final QAttraction attraction = new QAttraction("attraction");
 
@@ -29,24 +32,39 @@ public class QAttraction extends EntityPathBase<Attraction> {
 
     public final StringPath latitude = createString("latitude");
 
+    public final NumberPath<Integer> likeCount = createNumber("likeCount", Integer.class);
+
     public final StringPath longitude = createString("longitude");
 
+    public final QMember member;
+
     public final StringPath overview = createString("overview");
+
+    public final ListPath<Review, QReview> reviews = this.<Review, QReview>createList("reviews", Review.class, QReview.class, PathInits.DIRECT2);
 
     public final NumberPath<Integer> sido_code = createNumber("sido_code", Integer.class);
 
     public final StringPath title = createString("title");
 
     public QAttraction(String variable) {
-        super(Attraction.class, forVariable(variable));
+        this(Attraction.class, forVariable(variable), INITS);
     }
 
     public QAttraction(Path<? extends Attraction> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QAttraction(PathMetadata metadata) {
-        super(Attraction.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QAttraction(PathMetadata metadata, PathInits inits) {
+        this(Attraction.class, metadata, inits);
+    }
+
+    public QAttraction(Class<? extends Attraction> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
     }
 
 }
