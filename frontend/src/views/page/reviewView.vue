@@ -1,12 +1,13 @@
 <template>
   <myNav />
   <div id="detail_container">
-    <section>
+    <section id="detail_top">
       <font-awesome-icon
         :icon="['fass', 'left-long']"
         size="3x"
         style="margin: 20px 10px; cursor: pointer"
         @click="$router.go(-1)" />
+      <reviewModalVue />
     </section>
     <section>
       <div id="review_title">
@@ -95,11 +96,12 @@
 </template>
 
 <script>
+import reviewModalVue from "@/components/reviewModal.vue";
 import myNav from "../includes/myNav.vue";
 
 export default {
   name: "detailView",
-  components: { myNav },
+  components: { myNav, reviewModalVue },
   data() {
     return {
       detail_data: {},
@@ -134,6 +136,12 @@ section {
   align-items: center;
   justify-content: space-between;
   margin-top: 40px;
+}
+
+#detail_top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .order {

@@ -1,8 +1,8 @@
 package com.ssafy.trip.service;
 
 import com.ssafy.trip.Entity.Attraction;
-import com.ssafy.trip.repository.LikeRepository;
-import com.ssafy.trip.repository.MemberRepository;
+//import com.ssafy.trip.repository.LikeRepository;
+//import com.ssafy.trip.repository.MemberRepository;
 import com.ssafy.trip.repository.attracion.AttractionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

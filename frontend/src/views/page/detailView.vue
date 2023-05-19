@@ -21,7 +21,7 @@
             justify-content: space-between;
           ">
           <h3 style="display: inline; margin: 0px">
-            {{ detail_data.content_type_id }}
+            {{ catagory_spec[detail_data.content_type_id] }}
           </h3>
           <div
             style="display: flex; align-items: center; justify-content: center">
@@ -40,7 +40,7 @@
         <h2>{{ detail_data.title }}</h2>
         <h3>{{ detail_data.addr1 }}</h3>
         <p>
-          {{ detail_data.overview }}
+          {{ textLengthOverCut(detail_data.overview) }}
         </p>
       </div>
     </section>
@@ -135,8 +135,21 @@ export default {
   components: { myNav },
   data() {
     return {
-      detail_data: {},
+      detail_data: {
+        overview: "",
+      },
       map: null,
+      catagory_spec: {
+        12: "관광지",
+        14: "문화시설",
+        15: "축제공연행사",
+        25: "여행코스",
+        28: "레포츠",
+        32: "숙박",
+        38: "쇼핑",
+        39: "음식점",
+      },
+      length: 0,
     };
   },
   created() {
@@ -173,13 +186,6 @@ export default {
       //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
       this.map = new kakao.maps.Map(container, options);
 
-      // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
-      var mapTypeControl = new kakao.maps.MapTypeControl();
-
-      // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
-      // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
-      this.map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-
       // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
       var zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
@@ -205,6 +211,12 @@ export default {
           },
         },
       });
+    },
+    textLengthOverCut(txt) {
+      if (txt.length > 600) {
+        txt = txt.substr(0, 600) + "...";
+      }
+      return txt;
     },
   },
 };

@@ -22,17 +22,19 @@ public class QReview extends EntityPathBase<Review> {
 
     public static final QReview review = new QReview("review");
 
+    public final NumberPath<Integer> articleNo = createNumber("articleNo", Integer.class);
+
     public final QAttraction attraction;
 
     public final StringPath content = createString("content");
 
-    public final NumberPath<Integer> id = createNumber("id", Integer.class);
+    public final QMember member;
+
+    public final StringPath registerTime = createString("registerTime");
 
     public final NumberPath<Integer> star = createNumber("star", Integer.class);
 
-    public final StringPath title = createString("title");
-
-    public final StringPath userId = createString("userId");
+    public final StringPath subject = createString("subject");
 
     public QReview(String variable) {
         this(Review.class, forVariable(variable), INITS);
@@ -52,7 +54,8 @@ public class QReview extends EntityPathBase<Review> {
 
     public QReview(Class<? extends Review> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.attraction = inits.isInitialized("attraction") ? new QAttraction(forProperty("attraction")) : null;
+        this.attraction = inits.isInitialized("attraction") ? new QAttraction(forProperty("attraction"), inits.get("attraction")) : null;
+        this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
     }
 
 }

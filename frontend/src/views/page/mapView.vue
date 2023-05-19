@@ -37,6 +37,8 @@ export default {
       categoryNum: 0,
       categoryCode: ["PM9", "OL7", "CE7", "AD5", "CS2", "MT1"],
       weatherArea: "",
+      placeOverlay: null,
+      contentNode: null,
     };
   },
   mounted() {
@@ -202,11 +204,6 @@ export default {
     displayCategoryMarkers(positions) {
       // 마커를 생성하고 지도 위에 마커를 표시
       positions.forEach((pos) => {
-        this.infowindow = new kakao.maps.InfoWindow({
-          content: ``,
-          removable: true,
-        });
-
         const imgNum = this.categoryNum;
 
         // 이미지 초기화
@@ -231,63 +228,68 @@ export default {
           image: markerImage,
         });
 
-        var placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 });
+        this.placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 });
 
-        var contentNode = document.createElement("div");
+        this.contentNode = document.createElement("div");
 
-        contentNode.className = "placeinfo_wrap";
+        this.contentNode.className = "placeinfo_wrap";
 
-        placeOverlay.setContent(contentNode);
+        this.placeOverlay.setContent(this.contentNode);
 
-        placeOverlay.setMap(null);
+        this.placeOverlay.setMap(null);
 
-        kakao.maps.event.addListener(marker, "click", () => {
-          var content =
-            '<div class="placeinfo">' +
-            '   <a class="title" href="' +
-            pos.place_url +
-            '" target="_blank" title="' +
-            pos.place_name +
-            '">' +
-            pos.place_name +
-            "</a>";
-
-          if (pos.road_address_name) {
-            content +=
-              '    <span title="' +
-              pos.road_address_name +
-              '">' +
-              pos.road_address_name +
-              "</span>" +
-              '  <span class="jibun" title="' +
-              pos.address_name +
-              '">(지번 : ' +
-              pos.address_name +
-              ")</span>";
-          } else {
-            content +=
-              '    <span title="' +
-              pos.address_name +
-              '">' +
-              pos.address_name +
-              "</span>";
-          }
-
-          content +=
-            '    <span class="tel">' +
-            pos.phone +
-            "</span>" +
-            "</div>" +
-            '<div class="after"></div>';
-
-          contentNode.innerHTML = content;
-          console.log(pos);
-          placeOverlay.setPosition(new kakao.maps.LatLng(pos.y, pos.x));
-          placeOverlay.setMap(this.map);
+        kakao.maps.event.addListener(marker, "mouseover", () => {
+          this.displayPlaceInfo(pos);
+        });
+        kakao.maps.event.addListener(marker, "mouseout", () => {
+          this.placeOverlay.setMap(null);
         });
 
         this.categoryMarkers.push(marker);
       });
+    },
+    displayPlaceInfo(place) {
+      var content =
+        '<div class="placeinfo">' +
+        '   <a class="title" href="' +
+        place.place_url +
+        '" target="_blank" title="' +
+        place.place_name +
+        '">' +
+        place.place_name +
+        "</a>";
+
+      if (place.road_address_name) {
+        content +=
+          '    <span title="' +
+          place.road_address_name +
+          '">' +
+          place.road_address_name +
+          "</span>" +
+          '  <span class="jibun" title="' +
+          place.address_name +
+          '">(지번 : ' +
+          place.address_name +
+          ")</span>";
+      } else {
+        content +=
+          '    <span title="' +
+          place.address_name +
+          '">' +
+          place.address_name +
+          "</span>";
+      }
+
+      content +=
+        '    <span class="tel">' +
+        place.phone +
+        "</span>" +
+        "</div>" +
+        '<div class="after"></div>';
+
+      this.contentNode.innerHTML = content;
+      this.placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
+      this.placeOverlay.setMap(this.map);
     },
   },
   watch: {
@@ -323,6 +325,13 @@ button {
 
 div {
   border: none;
+}
+
+.placeinfo_wrap {
+  position: absolute;
+  bottom: 28px;
+  left: -150px;
+  width: 300px;
 }
 
 .placeinfo {

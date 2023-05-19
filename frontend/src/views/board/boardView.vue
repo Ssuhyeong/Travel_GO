@@ -402,6 +402,7 @@ a {
 
 .btn-dark {
   background: #555;
+  margin: 0px;
   color: #fff;
 }
 
