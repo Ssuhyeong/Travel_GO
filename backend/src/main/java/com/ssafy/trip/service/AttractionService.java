@@ -18,9 +18,9 @@ public class AttractionService {
 //    private final MemberRepository userRepository;
 
     public Page<Attraction> getAttractions(
-            Pageable pageable, Integer sidoCode, Integer contentTypeId, String keyword, Integer contentId,String userId
+            Pageable pageable, Integer sidoCode, Integer contentTypeId, String keyword, Integer contentId
     ) {
-        return attractionRepository.findBySearchOption(pageable, sidoCode,contentTypeId,keyword, contentId,userId);
+        return attractionRepository.findBySearchOption(pageable, sidoCode,contentTypeId,keyword, contentId);
     }
 
 
