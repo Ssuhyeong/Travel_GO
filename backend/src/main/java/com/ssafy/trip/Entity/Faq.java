@@ -1,14 +1,12 @@
 package com.ssafy.trip.Entity;
 
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Table(name = "faq")
 @Data
@@ -20,11 +18,10 @@ public class Faq {
     @Column(name = "article_no")
     private int articleNo;
 
-    @Column(name = "user_id")
-    private String userId;
     private String subject;
     private String content;
-    private int hit;
+    @ColumnDefault(value = "0")
+    private Integer hit;
 
     @Column(name = "register_time")
     private String registerTime;

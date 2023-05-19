@@ -29,8 +29,6 @@ public class QFaq extends EntityPathBase<Faq> {
 
     public final StringPath subject = createString("subject");
 
-    public final StringPath userId = createString("userId");
-
     public QFaq(String variable) {
         super(Faq.class, forVariable(variable));
     }

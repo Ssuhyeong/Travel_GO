@@ -25,8 +25,6 @@ public class Board implements Serializable {
 	@Column(name = "article_no")
 	private Integer articleNo;
 
-//	@Column(name = "user_id")
-//	private String userId;
 	private String subject;
 	private String content;
 	@ColumnDefault(value = "0")
