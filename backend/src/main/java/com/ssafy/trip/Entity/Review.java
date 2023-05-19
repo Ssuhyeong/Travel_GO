@@ -4,6 +4,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 
 @NoArgsConstructor
 @Data
@@ -13,19 +16,29 @@ public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @Column(name = "article_no")
+    private Integer articleNo;
 
-    private String title;
+    private String subject;
     private String content;
     private Integer star;
 
-    @Column(name = "user_id")
-    private String userId;
-
-    @ManyToOne
-    @JoinColumn(name = "attraction_id")
+    @ManyToOne(targetEntity = Attraction.class, fetch = FetchType.LAZY)
+    @JoinColumn(name = "attraction_id" , referencedColumnName = "content_id")
     private Attraction attraction;
 
+    @ManyToOne(targetEntity = Member.class , fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_email",referencedColumnName = "email")
+    private Member member;
+
+    @Column(name = "register_time")
+    private String registerTime;
+
+    @PrePersist
+    void registerTime() {
+        Timestamp time = Timestamp.from(Instant.now());
+        this.registerTime = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(time);
+    }
 
     public void setReview (Attraction attraction){
         this.attraction = attraction;
