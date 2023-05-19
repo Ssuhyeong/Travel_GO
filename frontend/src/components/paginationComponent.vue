@@ -15,6 +15,7 @@
 
 <script>
 import Paginate from "vuejs-paginate-next";
+import axios from "@/service/axios"
 
 export default {
   components: {
@@ -49,7 +50,7 @@ export default {
       if (this.type == "map") {
         const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}&page=${page}`;
 
-        this.$axios
+        axios
           .get(url)
           .then((res) => {
             this.$emit("setpageList", res.data.content);
@@ -62,7 +63,7 @@ export default {
         keyword == "open-board" ||
         keyword == "faq"
       ) {
-        this.$axios
+        axios
           .get(`http://localhost:8080/${keyword}/search?page=${page}`)
           .then((res) => {
             console.log(res);

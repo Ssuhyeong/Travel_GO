@@ -16,6 +16,7 @@ import myNav from "../includes/myNav.vue";
 import mapCard from "@/components/mapCard.vue";
 import { toRaw } from "vue";
 import weatherBoxVue from "@/components/weatherBox.vue";
+import axios from "axios";
 
 export default {
   name: "KakaoMap",
@@ -73,6 +74,7 @@ export default {
     },
     initMap() {
       const container = document.getElementById("map");
+
       const options = {
         center: new kakao.maps.LatLng(33.450701, 126.570667),
         level: 5,
@@ -82,12 +84,21 @@ export default {
       //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
       this.map = new kakao.maps.Map(container, options);
 
-      // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
-      var mapTypeControl = new kakao.maps.MapTypeControl();
+      const locationLoadSuccess = (pos) => {
+        const currentPos = new kakao.maps.LatLng(
+          pos.coords.latitude,
+          pos.coords.longitude
+        );
+        this.map.panTo(currentPos);
+      };
+      navigator.geolocation.getCurrentPosition(locationLoadSuccess);
 
-      // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
-      // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
-      this.map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+      // // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
+      // var mapTypeControl = new kakao.maps.MapTypeControl();
+
+      // // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+      // // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+      // this.map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOCENTER);
 
       // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
       var zoomControl = new kakao.maps.ZoomControl();
@@ -169,27 +180,31 @@ export default {
     },
     displayCategory(categoryNum) {
       const currentPos = this.map.getCenter();
-
       const categoryCode = this.categoryCode[categoryNum - 1];
 
       for (let i = 1; i < 21; i++) {
-        this.$axios({
+        axios({
           url: `https://dapi.kakao.com/v2/local/search/category.json?x=${currentPos.La}&y=${currentPos.Ma}&category_group_code=${categoryCode}&page=${i}&radius=20000`,
           headers: {
             Authorization: `KakaoAK 68435c839ca94f29d68df0ab5c378c16`,
           },
-        }).then((res) => {
-          this.cnt++;
-          res.data.documents.forEach((data) => this.categoryData.push(data));
-        });
+        })
+          .then((res) => {
+            this.cnt++;
+            console.log(res.data.documents);
+            res.data.documents.forEach((data) => this.categoryData.push(data));
+          })
+          .catch((err) => {
+            console.log(err);
+          });
       }
     },
     displayCategoryMarkers(positions) {
       // 마커를 생성하고 지도 위에 마커를 표시
       positions.forEach((pos) => {
         this.infowindow = new kakao.maps.InfoWindow({
-          removable: true,
           content: ``,
+          removable: true,
         });
 
         const imgNum = this.categoryNum;
@@ -216,15 +231,59 @@ export default {
           image: markerImage,
         });
 
+        var placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 });
+
+        var contentNode = document.createElement("div");
+
+        contentNode.className = "placeinfo_wrap";
+
+        placeOverlay.setContent(contentNode);
+
+        placeOverlay.setMap(null);
+
         kakao.maps.event.addListener(marker, "click", () => {
-          var content = `<div>테스트</div>`;
+          var content =
+            '<div class="placeinfo">' +
+            '   <a class="title" href="' +
+            pos.place_url +
+            '" target="_blank" title="' +
+            pos.place_name +
+            '">' +
+            pos.place_name +
+            "</a>";
 
-          this.infowindow.setContent(content);
-          const level = 4;
-          this.map.setLevel(level);
-          this.map.setCenter(latlng);
+          if (pos.road_address_name) {
+            content +=
+              '    <span title="' +
+              pos.road_address_name +
+              '">' +
+              pos.road_address_name +
+              "</span>" +
+              '  <span class="jibun" title="' +
+              pos.address_name +
+              '">(지번 : ' +
+              pos.address_name +
+              ")</span>";
+          } else {
+            content +=
+              '    <span title="' +
+              pos.address_name +
+              '">' +
+              pos.address_name +
+              "</span>";
+          }
 
-          this.infowindow.open(this.map, marker);
+          content +=
+            '    <span class="tel">' +
+            pos.phone +
+            "</span>" +
+            "</div>" +
+            '<div class="after"></div>';
+
+          contentNode.innerHTML = content;
+          console.log(pos);
+          placeOverlay.setPosition(new kakao.maps.LatLng(pos.y, pos.x));
+          placeOverlay.setMap(this.map);
         });
 
         this.categoryMarkers.push(marker);
@@ -243,7 +302,7 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
 #map {
   height: calc(100vh - 4.1em);
   place-items: center;
@@ -260,5 +319,69 @@ export default {
 
 button {
   margin: 0 3px;
+}
+
+div {
+  border: none;
+}
+
+.placeinfo {
+  position: relative;
+  width: 100%;
+  border-radius: 2px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+  background: #fff;
+}
+.placeinfo:nth-of-type(n) {
+  border: 0;
+  box-shadow: 0px 1px 2px #888;
+}
+.placeinfo_wrap .after {
+  content: "";
+  position: relative;
+  margin-left: -12px;
+  left: 50%;
+  width: 22px;
+  height: 12px;
+  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png");
+}
+.placeinfo a,
+.placeinfo a:hover,
+.placeinfo a:active {
+  color: #fff;
+  text-decoration: none;
+}
+.placeinfo a,
+.placeinfo span {
+  display: block;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.placeinfo span {
+  margin: 5px 5px 0 5px;
+  cursor: default;
+  font-size: 13px;
+}
+.placeinfo .title {
+  font-weight: bold;
+  font-size: 14px;
+  border-radius: 2px 2px 0 0;
+  margin: -1px -1px 0 -1px;
+  padding: 10px;
+  color: #fff;
+  background: #d95050;
+  background: #d95050
+    /* url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) */
+    no-repeat right 14px center;
+}
+.placeinfo .tel {
+  color: #0f7833;
+}
+.placeinfo .jibun {
+  color: #999;
+  font-size: 11px;
+  margin-top: 0;
 }
 </style>

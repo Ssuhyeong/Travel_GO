@@ -44,6 +44,7 @@
 <script>
 import myNav from "@/views/includes/myNav.vue";
 import { useStore } from "vuex";
+import axios from "@/service/axios";
 
 export default {
   components: {
@@ -52,7 +53,7 @@ export default {
   data() {
     return {
       board_data: {
-        userId: "choi@naver.com",
+        user_id: "교수님",
         subject: "",
         content: "",
       },
@@ -78,16 +79,21 @@ export default {
     if (this.articleNo != "5000") {
       this.type = "update";
       const url = `http://localhost:8080/${this.boardtype}/${this.articleNo}`;
-      this.$axios.get(url).then((res) => {
+      axios.get(url).then((res) => {
         this.board_data = res.data;
       });
     }
   },
   methods: {
     regist() {
-      const url = `http://localhost:8080/${this.boardtype}/${this.type}`;
+      let url;
+      if (this.boardtype == "update") {
+        url = `http://localhost:8080/${this.boardtype}/update/${this.articleNo}`;
+      } else {
+        url = `http://localhost:8080/${this.boardtype}`;
+      }
 
-      this.$axios
+      axios
         .post(url, this.board_data)
         .then(() => {
           this.setShow();

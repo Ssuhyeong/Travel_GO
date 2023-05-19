@@ -32,13 +32,15 @@
         <boardBox />
       </div>
       <div id="board_contents">
-        <div
-          class="board_content"
-          v-for="board_data in board_list.slice(0, 4)"
-          :key="board_data.subject">
-          <h3>{{ board_data.subject.substr(0, 15) }}</h3>
-          <p>{{ board_data.registerTime }}</p>
-        </div>
+        <template v-if="board_list != []">
+          <div
+            class="board_content"
+            v-for="board_data in board_list.slice(0, 4)"
+            :key="board_data.subject">
+            <h3>{{ board_data.subject.substr(0, 15) }}</h3>
+            <p>{{ board_data.registerTime }}</p>
+          </div>
+        </template>
       </div>
     </section>
     <myFooter />
@@ -52,6 +54,7 @@ import cardSlider from "@/components/cardSlider.vue";
 import boardBox from "@/components/boardBox.vue";
 import myFooter from "@/views/includes/myFooter.vue";
 import myNav from "@/views/includes/myNav.vue";
+import axios from "@/service/axios";
 
 export default {
   name: "mainView",
@@ -69,9 +72,9 @@ export default {
     };
   },
   created() {
-    this.$axios.get(`http://localhost:8080/board`).then((res) => {
-      console.log(res.data);
-      this.board_list = res.data;
+    axios.get(`http://localhost:8080/board/search`).then((res) => {
+      this.board_list = res.data.content;
+      console.log(this.board_list);
     });
   },
   mounted() {
@@ -87,9 +90,6 @@ export default {
       const cloud1 = document.querySelector("#clouds_1");
       const cloud2 = document.querySelector("#clouds_2");
       const text = document.querySelector("#text");
-      console.log(
-        document.documentElement.scrollTop + window.innerHeight + 200
-      );
 
       window.addEventListener("scroll", () => {
         let value =
@@ -102,24 +102,6 @@ export default {
     },
   },
 };
-// 구름 이동 관련
-//   const mountainLeft = document.querySelector("#mountain_left");
-//   const mountainRight = document.querySelector("#mountain_right");
-//   const cloud1 = document.querySelector("#clouds_1");
-//   const cloud2 = document.querySelector("#clouds_2");
-//   const text = document.querySelector("#text");
-//   const man = document.querySelector("#man");
-
-//   window.addEventListener("scroll", () => {
-//     let value = scrollY;
-//     mountainLeft.style.left = `-${value / 0.7}px`;
-//     cloud2.style.left = `-${value * 2}px`;
-//     mountainRight.style.left = `${value / 0.7}px`;
-//     cloud1.style.left = `${value * 2}px`;
-//     text.style.bottom = `-${value}px`;
-//     man.style.height = `${window.innerHeight - value}px`;
-//   });
-// },
 </script>
 
 <style scoped>

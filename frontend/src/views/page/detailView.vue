@@ -93,12 +93,12 @@
           justify-content: space-between;
         ">
         <h2 style="display: inline; font-size: 50px">리뷰</h2>
-        <router-link to="/reviewpage">
-          <font-awesome-icon
-            :icon="['fass', 'plus']"
-            size="2x"
-            style="margin-right: 10px; cursor: pointer" />
-        </router-link>
+
+        <font-awesome-icon
+          :icon="['fass', 'plus']"
+          size="2x"
+          style="margin-right: 10px; cursor: pointer"
+          @click="$router.push('/reviewpage').then(() => scrollTo(0, 0))" />
       </div>
       <div class="review_content">
         <div
@@ -128,6 +128,7 @@
 
 <script>
 import myNav from "../includes/myNav.vue";
+import axios from "@/service/axios";
 
 export default {
   name: "detailView",
@@ -143,7 +144,7 @@ export default {
     const content_id = params.get("content_id");
 
     const url = `http://localhost:8080/attraction/search-list?contentId=${content_id}`;
-    this.$axios.get(url).then((res) => {
+    axios.get(url).then((res) => {
       this.detail_data = res.data.content[0];
 
       if (window.kakao && window.kakao.maps) {

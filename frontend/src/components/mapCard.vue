@@ -84,6 +84,7 @@
 <script>
 import infoIcon from "./infoIcon.vue";
 import placeContent from "./placeContent.vue";
+import axios from "@/service/axios"
 import paginationComponent from "./paginationComponent.vue";
 
 export default {
@@ -121,7 +122,7 @@ export default {
       const page = this.page;
       const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}&page=${page}`;
 
-      this.$axios
+      axios
         .get(url)
         .then((res) => {
           this.trip_list = res.data.content;

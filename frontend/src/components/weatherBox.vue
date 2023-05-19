@@ -44,6 +44,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "weatherBox",
   props: ["weatherArea"],
@@ -100,7 +102,7 @@ export default {
   },
   methods: {
     weather(area) {
-      this.$axios
+      axios
         .get(
           `http://api.openweathermap.org/data/2.5/weather?q=${area}&appid=384a415ea57be7bea2f1fd5bd6f55f7e`
         )

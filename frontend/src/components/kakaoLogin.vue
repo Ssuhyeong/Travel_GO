@@ -21,6 +21,7 @@ export default {
           url: "/v1/user/unlink",
           success: function (response) {
             console.log(response);
+            console.log("성공");
           },
           fail: function (error) {
             console.log(error);

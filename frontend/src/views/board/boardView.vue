@@ -120,6 +120,7 @@ import myNav from "@/views/includes/myNav.vue";
 import toastNotice from "@/components/toastNotice.vue";
 import paginationComponent from "@/components/paginationComponent.vue";
 import faqBoard from "@/components/faqBoard.vue";
+import axios from "@/service/axios";
 import { useStore } from "vuex";
 import { computed } from "vue";
 
@@ -173,7 +174,8 @@ export default {
       this.toastText = this.toastTextResult;
       this.toastShow = this.toastShowResult;
 
-      this.$axios.get(`http://localhost:8080/${type}/search`).then((res) => {
+      axios.get(`http://localhost:8080/${type}/search`).then((res) => {
+        console.log(res.data.content);
         this.board_list = res.data.content;
         this.totalpage = res.data.totalPages;
       });
@@ -188,7 +190,7 @@ export default {
       const keyword = this.searchKeyword;
       this.sendKeyword = keyword;
 
-      this.$axios
+      axios
         .get(
           `http://localhost:8080/${this.boardtype}/search?keyword=${keyword}`
         )

@@ -1,5 +1,6 @@
 <template>
   <toastNotice :message="toastText" v-if="toastShow" />
+
   <div class="login_body">
     <!-- partial:index.partial.html -->
     <div class="container">
@@ -17,8 +18,8 @@
             type="email"
             placeholder="Id"
             class="input"
-            name="id"
-            v-model="user_data.id" />
+            name="email"
+            v-model="user_data.email" />
           <input
             type="password"
             placeholder="Password"
@@ -33,10 +34,18 @@
       <div class="container__form container--signin">
         <form action="#" class="form" id="form2">
           <h2 class="form__title">Sign In</h2>
-          <input type="email" placeholder="Email" class="input" />
-          <input type="password" placeholder="Password" class="input" />
+          <input
+            type="email"
+            placeholder="Email"
+            class="input"
+            v-model="login_data.email" />
+          <input
+            type="password"
+            placeholder="Password"
+            class="input"
+            v-model="login_data.password" />
           <a href="#" class="link">Forgot your password?</a>
-          <button class="btn">Sign In</button>
+          <button class="btn" @click="signin()">Sign In</button>
         </form>
       </div>
 
@@ -57,6 +66,8 @@
 
 <script>
 import toastNotice from "@/components/toastNotice.vue";
+import axios from "@/service/axios";
+import VueCookies from "vue-cookies";
 import { useStore } from "vuex";
 
 export default {
@@ -68,7 +79,11 @@ export default {
     return {
       user_data: {
         name: "",
-        id: "",
+        email: "",
+        password: "",
+      },
+      login_data: {
+        email: "",
         password: "",
       },
       toastShow: false,
@@ -101,17 +116,37 @@ export default {
     secondForm.addEventListener("submit", (e) => e.preventDefault());
   },
   methods: {
+    signin() {
+      const url = `http://localhost:8080/login`;
+      console.log(this.login_data);
+
+      axios
+        .post(url, this.login_data)
+        .then((res) => {
+          console.log("accessToken: ", res.data.accessToken);
+          VueCookies.set("accessToken", res.data.accessToken);
+          console.log("refreshToken: ", res.data.refreshToken);
+          VueCookies.set("refreshToken", res.data.refreshToken);
+
+          this.$router.push({
+            path: "/mainpage",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
     signup() {
       console.log(this.user_data);
-      const url = `http://localhost:8080/user/join`;
+      const url = `http://localhost:8080/member/sign-up`;
 
-      this.$axios
+      axios
         .post(url, this.user_data)
         .then(() => {
           this.setSuccessColor();
           this.toastShow = true;
           this.toastText = "성공적으로 회원가입하셨습니다.";
-          this.user_data.id = "";
+          this.user_data.email = "";
           this.user_data.name = "";
           this.user_data.password = "";
         })
@@ -120,10 +155,15 @@ export default {
           this.setFailColor();
           this.toastShow = true;
           this.toastText = "회원가입에 실패하셨습니다. 다시 입력해주세요";
-          this.user_data.id = "";
+          this.user_data.email = "";
           this.user_data.name = "";
           this.user_data.password = "";
         });
+    },
+  },
+  watch: {
+    toastShow() {
+      this.toastShow = !this.toastShow;
     },
   },
 };

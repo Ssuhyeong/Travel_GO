@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import VueCookies from "vue-cookies";
 
 import mainView from "@/views/mainView";
 import loginView from "@/views/user/loginView";
@@ -31,14 +32,46 @@ const router = createRouter({
       name: "boardcontentpage",
       component: boardContentPage,
     },
-    { path: "/testpage", name: "testView", component: testView },
+    {
+      path: "/testpage",
+      name: "testView",
+      component: testView,
+    },
     { path: "/mainpage", name: "mainView", component: mainView },
-    { path: "/loginpage", name: "loginpage", component: loginView },
+    {
+      path: "/loginpage",
+      name: "loginpage",
+      component: loginView,
+      meta: { authRequired: true },
+    },
     { path: "/profilepage", name: "profilepage", component: profileView },
     { path: "/detailpage", name: "detailpage", component: detailView },
     { path: "/categorypage", name: "categorypage", component: categoryView },
     { path: "/reviewpage", name: "reviewView", component: reviewView },
   ],
+  scrollBehavior() {
+    return { top: 0 };
+  },
 });
 
+router.beforeEach(async (to, from, next) => {
+  // if (
+  //   VueCookies.get("accessToken") === null &&
+  //   VueCookies.get("refreshToken") !== null
+  // ) {
+  //   // await refreshToken();
+  // }
+
+  if (
+    to.matched.some(function (routeInfo) {
+      return routeInfo.meta.authRequired;
+    }) ||
+    VueCookies.get("accessToken")
+  ) {
+    return next();
+  }
+
+  alert("로그인 해주세요");
+  return next("/loginpage");
+});
 export default router;

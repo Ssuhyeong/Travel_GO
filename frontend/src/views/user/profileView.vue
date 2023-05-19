@@ -57,6 +57,8 @@
 </template>
 
 <script>
+import axios from "@/service/axios";
+
 export default {
   name: "profileView",
   data() {
@@ -65,12 +67,13 @@ export default {
       updateData: {},
     };
   },
+  components: {},
   methods: {
     deleteUser() {
       const id = this.userId;
       const url = `http://localhost:8080/user/${id}`;
 
-      this.$axios.delete(url).then(() => {
+      axios.delete(url).then(() => {
         this.$router.push("/mainpage");
       });
     },
@@ -79,7 +82,7 @@ export default {
       const updateData = this.updateData;
       const url = `http://localhost:8080/user/${id}`;
 
-      this.$axios.update(url, updateData).then(() => {
+      axios.update(url, updateData).then(() => {
         this.$router.push("/profilepage");
       });
     },

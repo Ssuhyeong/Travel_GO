@@ -3,7 +3,7 @@
   <div class="view_container">
     <form id="contact">
       <h3>{{ board_data.subject }}.</h3>
-      <h4>{{ board_data.userId }}</h4>
+      <h4>{{ name }}</h4>
       <h4>{{ board_data.registerTime }} 조회 : {{ board_data.hit }}</h4>
       <fieldset>{{ board_data.content }}</fieldset>
     </form>
@@ -35,6 +35,7 @@
 
 <script>
 import myNav from "@/views/includes/myNav.vue";
+import axios from "@/service/axios";
 import { useStore } from "vuex";
 
 export default {
@@ -43,14 +44,8 @@ export default {
   },
   data() {
     return {
-      board_data: {
-        articleNo: "",
-        userId: "",
-        subject: "",
-        content: "",
-        hit: 0,
-        registerTime: "",
-      },
+      board_data: {},
+      name: "",
       boardtype: "",
       articleNo: "",
     };
@@ -67,12 +62,10 @@ export default {
     this.boardtype = this.$route.params.type;
     this.articleNo = this.$route.params.articleNo;
 
-    console.log(this.boardtype);
-    console.log(this.articleNo);
-
     const url = `http://localhost:8080/${this.boardtype}/${this.articleNo}`;
-    this.$axios.get(url).then((res) => {
+    axios.get(url).then((res) => {
       this.board_data = res.data;
+      this.name = this.board_data.member.name;
     });
   },
   methods: {
@@ -80,7 +73,7 @@ export default {
       const no = this.board_data.articleNo;
       const url = `http://localhost:8080/${this.boardtype}/${no}`;
 
-      this.$axios.delete(url).then(() => {
+      axios.delete(url).then(() => {
         this.setShow();
         this.setText();
         this.setColor();

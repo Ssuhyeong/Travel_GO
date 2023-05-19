@@ -1,93 +1,107 @@
 <template>
-  <div><faqBoard /></div>
-  <!-- <div>
-    <form v-on:submit.prevent="regist">
-      <input v-model="book.isbn" type="text" id="isbn" name="isbn" /><label
-        for="isbn"></label>
-      <br />
-      <input v-model="book.title" type="text" id="title" name="title" /><label
-        for=""></label>
-      <br />
-      <input
-        v-model="book.author"
-        type="text"
-        id="author"
-        name="author" /><label for=""></label>
-      <br />
-      <input v-model="book.price" type="number" id="price" name="price" /><label
-        for=""></label>
-      <br />
-      <textarea
-        v-model="book.description"
-        type="text"
-        id="description"
-        name="description"></textarea
-      ><label for=""></label>
-      <br />
-      <input type="submit" value="제출하기" @click="search" />
-    </form>
-    {{ book.isbn }}
-  </div>
-  <div
-    id="info_content"
-    style="
-      width: 400px;
-      height: 200px;
-      padding: 40px;
-      background-color: #c8c8c8;
-    ">
-    <h2 style="margin: 10px 0px">북한산둘레길 1구간소나무숲길</h2>
-    <div style="margin: 10px 0px">리뷰</div>
-    <div style="display: flex; justify-content: space-between">
-      <h3>서울 강북구 우이동 산 40-1</h3>
-      <img
-        src="http://tong.visitkorea.or.kr/cms/resource/31/219131_image2_1.jpg"
-        style="width: 150px" />
+  <button @click="showModal = true" class="button">리뷰 작성</button>
+  <transition name="fade" appear>
+    <div
+      class="modal-overlay"
+      v-if="showModal"
+      @click="showModal = false"></div>
+  </transition>
+  <transition name="pop" appear>
+    <div class="modal" role="dialog" v-if="showModal">
+      <h1>서울랜드</h1>
+      <p>
+        <font-awesome-icon :icon="['fas', 'star']" />
+        <font-awesome-icon :icon="['fas', 'star']" />
+        <font-awesome-icon :icon="['fas', 'star']" />
+        <font-awesome-icon :icon="['faR', 'star-half-stroke']" />
+      </p>
+      <textarea></textarea>
+      <button @click="showModal = false" class="button">리뷰 평가완료</button>
     </div>
-    <a>상세보기</a>
-  </div> -->
+  </transition>
 </template>
 
 <script>
-import faqBoard from "@/components/faqBoard.vue";
-
 export default {
   name: "testView",
-  components: { faqBoard },
+  components: {},
   data() {
     return {
-      book: {
-        isbn: "",
-        title: "",
-        author: "",
-        price: 0,
-        description: "",
-      },
+      showModal: false,
     };
-  },
-  mounted() {
-    // [axios http 요청 수행 실시]
-  },
-  methods: {
-    search() {
-      this.$axios
-        .get(`http://192.168.210.40:9000/api/books/${this.book.isbn}`)
-        .then((res) => {
-          console.log("응답 데이터 : " + JSON.stringify(res.data));
-          this.data = res.data;
-        })
-        .catch((error) => {
-          console.log("[MainComponent] : [axios] : [error]");
-          console.log("에러 데이터 : " + error.data);
-        });
-    },
   },
 };
 </script>
 
 <style scoped>
-/* #info_content > * {
-  margin: 0px;
-  padding: 0px;
-} */
+.button {
+  border: none;
+  color: #fff;
+  background: #42b983;
+  appearance: none;
+  font: inherit;
+  font-size: 1.8rem;
+  padding: 0.5em 1em;
+  border-radius: 0.3em;
+  cursor: pointer;
+}
+
+.modal {
+  position: absolute;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+  width: fit-content;
+  height: fit-content;
+  max-width: 22em;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+  background: #fff;
+  z-index: 999;
+  transform: none;
+}
+.modal h1 {
+  margin: 0 0 1rem;
+}
+
+.modal-overlay {
+  content: "";
+  position: absolute;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 998;
+  background: #2c3e50;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+/* ---------------------------------- */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s linear;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.pop-enter-active,
+.pop-leave-active {
+  transition: transform 0.4s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.4s linear;
+}
+
+.pop-enter,
+.pop-leave-to {
+  opacity: 0;
+  transform: scale(0.3) translateY(-50%);
+}
 </style>

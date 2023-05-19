@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import axios from "@/service/axios"
+
 export default {
   data() {
     return {
@@ -25,7 +27,7 @@ export default {
     };
   },
   created() {
-    this.$axios.get(`http://localhost:8080/faq/search`).then((res) => {
+    axios.get(`http://localhost:8080/faq/search`).then((res) => {
       this.faq_list = res.data.content;
       console.log(this.faq_list);
     });

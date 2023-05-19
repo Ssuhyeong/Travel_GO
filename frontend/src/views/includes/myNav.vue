@@ -135,6 +135,50 @@ export default {
 
     handleSmallScreens();
   },
+  unmounted() {
+    let dropdowns = document.querySelectorAll(".navbar .dropdown-toggler");
+    let dropdownIsOpen = false;
+
+    // Handle dropdown menues
+    if (dropdowns.length) {
+      dropdowns.forEach((dropdown) => {
+        dropdown.removeEventListener("click", (event) => {
+          let target = null;
+          target = document.querySelector(`#${event.target.dataset.dropdown}`);
+
+          if (target) {
+            if (target.classList.contains("show")) {
+              target.classList.remove("show");
+              dropdownIsOpen = false;
+            } else {
+              target.classList.add("show");
+              dropdownIsOpen = true;
+            }
+          }
+        });
+      });
+    }
+
+    window.removeEventListener("mouseup", (event) => {
+      if (dropdownIsOpen) {
+        dropdowns.forEach((dropdownButton) => {
+          let dropdown = null;
+          dropdown = document.querySelector(
+            `#${dropdownButton.dataset.dropdown}`
+          );
+          let targetIsDropdown = dropdown == event.target;
+
+          if (dropdownButton == event.target) {
+            return;
+          }
+
+          if (!targetIsDropdown && !dropdown.contains(event.target)) {
+            dropdown.classList.remove("show");
+          }
+        });
+      }
+    });
+  },
 };
 </script>
 

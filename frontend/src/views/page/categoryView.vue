@@ -46,6 +46,7 @@
 import cardFlip from "@/components/cardFlip.vue";
 import categoryIcon from "@/components/categoryIcon.vue";
 import myNav from "../includes/myNav.vue";
+import axios from "@/service/axios"
 
 export default {
   data() {
@@ -64,7 +65,7 @@ export default {
   methods: {
     select(num, current_page) {
       this.contentType = num;
-      this.$axios(
+      axios(
         `http://localhost:8080/attraction/search-list?contentTypeId=${num}&page=${current_page}`
       ).then((res) => {
         // console.log(res.data.content);

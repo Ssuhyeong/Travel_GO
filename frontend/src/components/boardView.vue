@@ -75,6 +75,7 @@
 
 <script>
 import myNav from "@/views/includes/myNav.vue";
+import axios from "@/service/axios";
 import toastNotice from "@/components/toastNotice.vue";
 import paginationComponent from "@/components/paginationComponent.vue";
 import { useStore } from "vuex";
@@ -118,7 +119,7 @@ export default {
       this.toastShow = this.toastShowResult;
       this.boardtype = this.$route.params.type;
 
-      this.$axios
+      axios
         .get(`http://localhost:8080/${this.boardtype}/search`)
         .then((res) => {
           this.board_list = res.data.content;
@@ -135,7 +136,7 @@ export default {
       const keyword = this.searchKeyword;
       this.sendKeyword = keyword;
 
-      this.$axios
+      axios
         .get(`http://localhost:8080/board/search?keyword=${keyword}`)
         .then((res) => {
           this.board_list = res.data.content;

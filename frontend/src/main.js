@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router/router";
 import axios from "axios";
 import store from "./store";
+import { VueCookies } from "vue-cookies";
 import { gsap } from "gsap";
 import { library } from "@fortawesome/fontawesome-svg-core";
 import { fas } from "@fortawesome/free-solid-svg-icons";
@@ -32,5 +33,8 @@ app.use(Paginate);
 
 // vuex 사용
 app.use(store);
+
+// cookie 사용
+app.use(VueCookies);
 
 app.mount("#app");
