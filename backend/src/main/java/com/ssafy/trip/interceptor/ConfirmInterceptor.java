@@ -1,6 +1,6 @@
 package com.ssafy.trip.interceptor;
 
-import com.ssafy.trip.Entity.User;
+import com.ssafy.trip.Entity.Member;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -15,7 +15,7 @@ public class ConfirmInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		HttpSession session = request.getSession();
-		User user = (User) session.getAttribute("userinfo");
+		Member user = (Member) session.getAttribute("userinfo");
 		if(user == null) {
 			response.sendRedirect(request.getContextPath() + "/user/login");
 			return false;

@@ -1,6 +1,7 @@
 package com.ssafy.trip.jwt;
 
 import com.ssafy.trip.dto.UserSignDto;
+import com.ssafy.trip.service.JwtService;
 import com.ssafy.trip.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/member")
 public class MemberController {
 
+    private final JwtService jwtService;
     private final MemberService memberService;
 
     @CrossOrigin

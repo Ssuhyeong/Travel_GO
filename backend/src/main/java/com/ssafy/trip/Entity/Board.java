@@ -1,28 +1,42 @@
 package com.ssafy.trip.Entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Table(name = "board")
+@Builder
 @Entity
 @Data
-public class Board {
+public class Board implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "article_no")
-	private int articleNo;
+	private Integer articleNo;
 
-	@Column(name = "user_id")
-	private String userId;
+//	@Column(name = "user_id")
+//	private String userId;
 	private String subject;
 	private String content;
-	private int hit;
+	@ColumnDefault(value = "0")
+	private Integer hit;
 
-	@Column(name = "register_time")
+	@ManyToOne(targetEntity = Member.class , fetch = FetchType.LAZY)
+	@JoinColumn(name = "member_email",referencedColumnName = "email")
+	private Member member;
+
+	@Column(name = "register_time" )
 	private String registerTime;
 
 	@PrePersist
