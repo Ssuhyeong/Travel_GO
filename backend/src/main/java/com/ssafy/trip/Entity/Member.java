@@ -4,6 +4,9 @@ import lombok.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -11,7 +14,7 @@ import javax.persistence.*;
 @Data
 @Entity
 @Table(name = "member")
-public class Member {
+public class Member implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,12 +22,6 @@ public class Member {
 	private String email;
 	private String password;
 	private String name;
-
-//	@ManyToOne
-//	@JoinColumn(name = "")
-//	private OpenBoard openBoard;
-
-//	private String role;
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
@@ -46,41 +43,4 @@ public class Member {
 	}
 
 
-//	public void encodePassword(PasswordEncoder passwordEncoder){
-//		this.password = passwordEncoder.encode(password);
-//	}
-//
-//	@ElementCollection(fetch = FetchType.EAGER)
-//	@Builder.Default
-//	private List<String> roles = new ArrayList<>();
-//
-//	@Override
-//	public Collection<? extends GrantedAuthority> getAuthorities() {
-//		return this.roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList());
-//	}
-//
-//	@Override
-//	public String getUsername() {
-//		return name;
-//	}
-//
-//	@Override
-//	public boolean isAccountNonExpired() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean isAccountNonLocked() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean isCredentialsNonExpired() {
-//		return true;
-//	}
-//
-//	@Override
-//	public boolean isEnabled() {
-//		return true;
-//	}
 }

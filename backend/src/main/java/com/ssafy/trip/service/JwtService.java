@@ -4,14 +4,17 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.ssafy.trip.Entity.Member;
 import com.ssafy.trip.repository.MemberRepository;
+import com.sun.deploy.net.HttpResponse;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -73,7 +76,15 @@ public class JwtService {
                 .withSubject(REFRESH_TOKEN_SUBJECT)
                 .withExpiresAt(new Date(now.getTime() + refreshTokenExpirationPeriod))
                 .sign(Algorithm.HMAC512(secretKey));
+
     }
+//
+//    public void createCookie(String refreshToken, HttpResponse httpResponse) {
+//        ResponseCookie responseCookie = ResponseCookie.from("refreshToken",refreshToken)
+//                .maxAge(7*24*60*60).path("/").secure(true).sameSite("None").httpOnly(true).build();
+//
+//        httpResponse.
+//    }
 
     /**
      * AccessToken 헤더에 실어서 보내기
@@ -91,8 +102,15 @@ public class JwtService {
     public void sendAccessAndRefreshToken(HttpServletResponse response, String accessToken, String refreshToken) {
         response.setStatus(HttpServletResponse.SC_OK);
 
-        setAccessTokenHeader(response, accessToken);
-        setRefreshTokenHeader(response, refreshToken);
+        response.setContentType("application/json");
+        try {
+            response.getWriter().append("{        \"accessToken\" : \"" +accessToken+
+                    "\",\"refreshToken\" : \""+refreshToken+
+                    "\"}");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         log.info("Access Token, Refresh Token 헤더 설정 완료");
     }
 
