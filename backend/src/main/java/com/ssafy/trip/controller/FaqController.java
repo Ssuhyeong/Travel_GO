@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -56,8 +55,6 @@ public class FaqController {
     }
 
     // 게시판 내용 수정
-
-
     @PostMapping("/update")
     public ResponseEntity<Object> ModifyBoard(@RequestBody Faq faq) throws SQLException {
         Integer faqId = faq.getArticleNo();

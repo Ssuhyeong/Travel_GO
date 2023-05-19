@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -17,6 +18,8 @@ public class QOpenBoard extends EntityPathBase<OpenBoard> {
 
     private static final long serialVersionUID = 1797560915L;
 
+    private static final PathInits INITS = PathInits.DIRECT2;
+
     public static final QOpenBoard openBoard = new QOpenBoard("openBoard");
 
     public final NumberPath<Integer> articleNo = createNumber("articleNo", Integer.class);
@@ -25,22 +28,31 @@ public class QOpenBoard extends EntityPathBase<OpenBoard> {
 
     public final NumberPath<Integer> hit = createNumber("hit", Integer.class);
 
+    public final QMember member;
+
     public final StringPath registerTime = createString("registerTime");
 
     public final StringPath subject = createString("subject");
 
-    public final StringPath userId = createString("userId");
-
     public QOpenBoard(String variable) {
-        super(OpenBoard.class, forVariable(variable));
+        this(OpenBoard.class, forVariable(variable), INITS);
     }
 
     public QOpenBoard(Path<? extends OpenBoard> path) {
-        super(path.getType(), path.getMetadata());
+        this(path.getType(), path.getMetadata(), PathInits.getFor(path.getMetadata(), INITS));
     }
 
     public QOpenBoard(PathMetadata metadata) {
-        super(OpenBoard.class, metadata);
+        this(metadata, PathInits.getFor(metadata, INITS));
+    }
+
+    public QOpenBoard(PathMetadata metadata, PathInits inits) {
+        this(OpenBoard.class, metadata, inits);
+    }
+
+    public QOpenBoard(Class<? extends OpenBoard> type, PathMetadata metadata, PathInits inits) {
+        super(type, metadata, inits);
+        this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
     }
 
 }
