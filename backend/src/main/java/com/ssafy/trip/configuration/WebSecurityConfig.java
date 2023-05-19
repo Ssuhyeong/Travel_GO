@@ -14,15 +14,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebSecurityConfig implements WebMvcConfigurer {// extends WebSecurityConfigurerAdapter {
 
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-
-        registry.addMapping("/**")
-                .allowedHeaders("Authorization","Content-Type")
-                .allowedOrigins("*")
-                .allowedMethods("*")
-                .allowCredentials(true);
-    }
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//
+//        registry.addMapping("/**")
+//                .allowedHeaders("Authorization","Content-Type")
+////                .allowedOrigins("*")
+//                .allowedMethods("*")
+//                .allowCredentials(true);
+//    }
 
 
 //    @Override
