@@ -1,14 +1,13 @@
 <template>
-  <a href="/boardpage">
+  <router-link :to="{ name: 'boardView', params: { type: 'board' } }">
     <div id="board_box">
       더 알아보기
       <font-awesome-icon
         :icon="['fas', 'add']"
         size="20"
-        style="margin-left: 12px; color: #787878"
-      />
+        style="margin-left: 12px; color: #787878" />
     </div>
-  </a>
+  </router-link>
 </template>
 
 <script>
@@ -31,5 +30,4 @@ a {
   font-size: 14px;
   text-decoration-line: none;
 }
- 
 </style>

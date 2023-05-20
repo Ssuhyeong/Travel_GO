@@ -28,28 +28,54 @@
         <div id="info_around">
           <p style="margin: 10px 0px">주변탐색</p>
           <div id="info_list">
-            <infoIcon icon_type="utensils" icon_name="음식점" />
-            <infoIcon icon_type="mug-hot" icon_name="카페" />
-            <infoIcon icon_type="bus" icon_name="버스" />
-            <infoIcon icon_type="train-subway" icon_name="지하철" />
-            <infoIcon icon_type="wallet" icon_name="은행" />
-            <infoIcon icon_type="store" icon_name="편의점" />
-            <infoIcon icon_type="hotel" icon_name="숙박" />
+            <infoIcon
+              @click="select(0)"
+              :check="test[0]"
+              icon_type="house-medical"
+              icon_name="약국" />
+            <infoIcon
+              @click="select(1)"
+              :check="test[1]"
+              icon_type="gas-pump"
+              icon_name="주유소" />
+            <infoIcon
+              @click="select(2)"
+              :check="test[2]"
+              icon_type="mug-hot"
+              icon_name="카페" />
+            <infoIcon
+              @click="select(3)"
+              :check="test[3]"
+              icon_type="hotel"
+              icon_name="숙박" />
+            <infoIcon
+              @click="select(4)"
+              :check="test[4]"
+              icon_type="store"
+              icon_name="편의점" />
+            <infoIcon
+              @click="select(5)"
+              :check="test[5]"
+              icon_type="cart-shopping"
+              icon_name="마트" />
           </div>
         </div>
         <hr />
         <div class="place_num">
           <p>장소</p>
-          <p style="margin-left: 10px; color: #696969">
-            {{ trip_list.length }}건
-          </p>
+          <p style="margin-left: 10px; color: #696969">{{ totalSearch }}건</p>
         </div>
         <div
           id="content_list"
-          v-for="content in trip_list"
+          v-for="(content, index) in trip_list"
           :key="content.content_id">
-          <placeContent :trip_content="content" />
+          <placeContent :trip_content="content" :marker_num="index + 1" />
         </div>
+        <paginationComponent
+          :keyword="sendKeyword"
+          :totalPage="sendTotalPage"
+          @setpageList="setpageList"
+          type="map" />
       </div>
     </div>
   </div>
@@ -58,41 +84,71 @@
 <script>
 import infoIcon from "./infoIcon.vue";
 import placeContent from "./placeContent.vue";
+import axios from "@/service/axios"
+import paginationComponent from "./paginationComponent.vue";
 
 export default {
   name: "cardMap",
   components: {
     infoIcon,
     placeContent,
+    paginationComponent,
   },
   data() {
     return {
+      test: [false, false, false, false, false, false],
       trip_list: [],
       keyword: "",
+      sendKeyword: "",
+      sendTotalPage: 0,
+      totalSearch: 0,
+      page: "0",
     };
   },
   mounted() {
     const searchForm = document.getElementById("search_form");
-
     searchForm.addEventListener("submit", (e) => e.preventDefault());
   },
   methods: {
+    setpageList(value) {
+      this.trip_list = value;
+      const scoller = document.querySelector(".card_content");
+      scoller.scrollTop = 0;
+      this.$emit("setContentList", this.trip_list);
+    },
     searchcontent() {
       const keyword = this.keyword;
-      console.log(this.keyword);
-      const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}`;
+      this.sendKeyword = this.keyword;
+      const page = this.page;
+      const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}&page=${page}`;
 
-      this.$axios
+      axios
         .get(url)
         .then((res) => {
-          this.data = res.data;
           this.trip_list = res.data.content;
+          console.log(res.data.content);
+          this.$emit("setContentList", res.data.content);
+
+          this.sendTotalPage = res.data.totalPages;
+          this.totalSearch = res.data.totalElements;
         })
         .catch((error) => {
-          console.log("등록 실패" + error.data);
+          console.log("검색 실패" + error.data);
         });
-
-      this.$emit("setContentList", this.trip_list);
+    },
+    select(idx) {
+      if (this.test[idx]) {
+        this.test[idx] = !this.test[idx];
+        this.$emit("setCategoryNum", 0);
+      } else {
+        for (let i = 0; i < this.test.length; i++) {
+          if (i != idx) {
+            this.test[i] = this.test[idx];
+          }
+        }
+        this.test[idx] = !this.test[idx];
+        this.$emit("setCategoryNum", idx + 1);
+      }
     },
   },
 };
@@ -147,6 +203,7 @@ hr {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 15px;
 }
 
 .card img {

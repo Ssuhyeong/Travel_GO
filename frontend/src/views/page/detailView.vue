@@ -6,11 +6,11 @@
         :icon="['fass', 'left-long']"
         size="3x"
         style="margin: 20px 0px; cursor: pointer"
-        @click="$router.push('/')" />
+        @click="$router.go(-1)" />
     </section>
     <section id="title_sec">
       <img
-        src="http://tong.visitkorea.or.kr/cms/resource/31/219131_image2_1.jpg"
+        :src="detail_data.first_image"
         alt=""
         style="width: 40%; height: 400px; border-radius: 10px" />
       <div class="description">
@@ -21,7 +21,7 @@
             justify-content: space-between;
           ">
           <h3 style="display: inline; margin: 0px">
-            {{ detail_data.content_type_id }}
+            {{ catagory_spec[detail_data.content_type_id] }}
           </h3>
           <div
             style="display: flex; align-items: center; justify-content: center">
@@ -39,17 +39,15 @@
 
         <h2>{{ detail_data.title }}</h2>
         <h3>{{ detail_data.addr1 }}</h3>
-        <h3>010-1234-1234</h3>
         <p>
-          {{ detail_data.overview }}
+          {{ textLengthOverCut(detail_data.overview) }}
         </p>
       </div>
     </section>
     <section>
-      <img
-        src="@/assets/img/map.png"
-        alt=""
-        style="width: 100%; height: 400px; border-radius: 10px" />
+      <div
+        id="map"
+        style="width: 100%; height: 400px; border-radius: 10px"></div>
     </section>
     <section>
       <h2>이런 곳은 어때요?</h2>
@@ -95,10 +93,12 @@
           justify-content: space-between;
         ">
         <h2 style="display: inline; font-size: 50px">리뷰</h2>
+
         <font-awesome-icon
           :icon="['fass', 'plus']"
           size="2x"
-          style="margin-right: 10px" />
+          style="margin-right: 10px; cursor: pointer"
+          @click="$router.push('/reviewpage').then(() => scrollTo(0, 0))" />
       </div>
       <div class="review_content">
         <div
@@ -128,13 +128,28 @@
 
 <script>
 import myNav from "../includes/myNav.vue";
+import axios from "@/service/axios";
 
 export default {
   name: "detailView",
   components: { myNav },
   data() {
     return {
-      detail_data: {},
+      detail_data: {
+        overview: "",
+      },
+      map: null,
+      catagory_spec: {
+        12: "관광지",
+        14: "문화시설",
+        15: "축제공연행사",
+        25: "여행코스",
+        28: "레포츠",
+        32: "숙박",
+        38: "쇼핑",
+        39: "음식점",
+      },
+      length: 0,
     };
   },
   created() {
@@ -142,20 +157,66 @@ export default {
     const content_id = params.get("content_id");
 
     const url = `http://localhost:8080/attraction/search-list?contentId=${content_id}`;
-    this.$axios.get(url).then((res) => {
+    axios.get(url).then((res) => {
       this.detail_data = res.data.content[0];
+
+      if (window.kakao && window.kakao.maps) {
+        this.initMap(this.detail_data.latitude, this.detail_data.longitude);
+      } else {
+        const script = document.createElement("script");
+        /* global kakao */
+        script.onload = () => kakao.maps.load(this.initMap);
+        script.src =
+          "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=811a7460154557e361e1a1839f2697c5&libraries=services";
+        document.head.appendChild(script);
+      }
     });
   },
+  mounted() {},
   methods: {
+    initMap(latitude, longitude) {
+      console.log(this.detail_data.latitude);
+      const container = document.getElementById("map");
+      const options = {
+        center: new kakao.maps.LatLng(latitude, longitude),
+        level: 3,
+      };
+
+      //지도 객체를 등록합니다.
+      //지도 객체는 반응형 관리 대상이 아니므로 initMap에서 선언합니다.
+      this.map = new kakao.maps.Map(container, options);
+
+      // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+      var zoomControl = new kakao.maps.ZoomControl();
+      this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+
+      const markerPosition = new kakao.maps.LatLng(latitude, longitude);
+
+      const marker = new kakao.maps.Marker({
+        position: markerPosition,
+      });
+
+      marker.setMap(this.map);
+    },
     kakaoLink() {
       window.Kakao.Link.sendDefault({
-        objectType: "text",
-        text: "당신에게 여행지를 추천했어요 빨리와",
-        link: {
-          mobileWebUrl: "http://localhost:8080",
-          webUrl: "http://localhost:8080",
+        objectType: "feed",
+        content: {
+          title: this.detail_data.title,
+          description: this.detail_data.overview,
+          imageUrl: this.detail_data.first_image,
+          link: {
+            mobileWebUrl: `http://localhost:5000/detailpage?${this.detail_data.content_id}`,
+            webUrl: `http://localhost:5000/detailpage?content_id=${this.detail_data.content_id}`,
+          },
         },
       });
+    },
+    textLengthOverCut(txt) {
+      if (txt.length > 600) {
+        txt = txt.substr(0, 600) + "...";
+      }
+      return txt;
     },
   },
 };
@@ -170,6 +231,11 @@ section {
 
 section > h2 {
   font-size: 40px;
+}
+
+a {
+  text-decoration-line: none;
+  color: #2c3e50;
 }
 
 #title_sec {

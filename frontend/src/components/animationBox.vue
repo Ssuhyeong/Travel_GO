@@ -7,8 +7,7 @@
         muted
         loop
         id="video1"
-        style="width: 100%; height: 100%; border-radius: 25px"
-      ></video>
+        style="width: 100%; height: 100%; border-radius: 25px"></video>
     </div>
   </div>
 </template>
@@ -72,4 +71,3 @@ export default {};
   }
 } */
 </style>
-

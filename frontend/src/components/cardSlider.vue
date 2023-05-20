@@ -4,12 +4,11 @@
     <div class="Card_main">
       <div
         class="item"
-        v-bind:class="{ active: section_active_1 }"
-        v-on:click="open_section1"
+        v-bind:class="{ active: section_active[0] }"
+        v-on:click="select(0)"
         style="
           background-image: url(https://ak-d.tripcdn.com/images/10051g000001h3cqs1344_Z_640_10000_R5.jpg_.webp?proc=autoorient);
-        "
-      >
+        ">
         <div class="item-desc">
           <h3>센트럴파크</h3>
           <p>
@@ -23,12 +22,11 @@
       </div>
       <div
         class="item"
-        v-bind:class="{ active: section_active_2 }"
-        v-on:click="open_section2"
+        v-bind:class="{ active: section_active[1] }"
+        v-on:click="select(1)"
         style="
           background-image: url(https://ak-d.tripcdn.com/images/10021g000001h7xezCDEB_Z_640_10000_R5.jpg_.webp?proc=autoorient);
-        "
-      >
+        ">
         <div class="item-desc">
           <h3>프로방스</h3>
           <p>
@@ -41,12 +39,11 @@
       </div>
       <div
         class="item"
-        v-bind:class="{ active: section_active_3 }"
-        v-on:click="open_section3"
+        v-bind:class="{ active: section_active[2] }"
+        v-on:click="select(2)"
         style="
           background-image: url(https://ak-d.tripcdn.com/images/10011g000001hds073A02_Z_640_10000_R5.jpg_.webp?proc=autoorient);
-        "
-      >
+        ">
         <div class="item-desc">
           <h3>남이섬</h3>
           <p>
@@ -61,12 +58,11 @@
       </div>
       <div
         class="item"
-        v-bind:class="{ active: section_active_4 }"
-        v-on:click="open_section4"
+        v-bind:class="{ active: section_active[3] }"
+        v-on:click="select(3)"
         style="
           background-image: url(https://ak-d.tripcdn.com/images/10091g000001h3992EB1B_Z_640_10000_R5.png_.webp?proc=autoorient);
-        "
-      >
+        ">
         <div class="item-desc">
           <h3>스카이워크</h3>
           <p>
@@ -79,12 +75,11 @@
       </div>
       <div
         class="item"
-        v-bind:class="{ active: section_active_5 }"
-        v-on:click="open_section5"
+        v-bind:class="{ active: section_active[4] }"
+        v-on:click="select(4)"
         style="
           background-image: url(https://ak-d.tripcdn.com/images/100f1g000001h0w1t6897_Z_640_10000_R5.jpg_.webp?proc=autoorient);
-        "
-      >
+        ">
         <div class="item-desc">
           <h3>별빛정원우주</h3>
           <p>
@@ -104,48 +99,33 @@ export default {
   name: "cardSlider",
   data() {
     return {
-      section_active_1: true,
-      section_active_2: false,
-      section_active_3: false,
-      section_active_4: false,
-      section_active_5: false,
+      section_active: [true, false, false, false, false],
+      active_range: ["60px", "120px", "180px", "240px", "300px"],
+      current_range: "60px",
+      past_range: "0px",
+      line_flag: false,
     };
   },
   methods: {
-    open_section1: function () {
-      this.section_active_1 = true;
-      this.section_active_2 = false;
-      this.section_active_3 = false;
-      this.section_active_4 = false;
-      this.section_active_5 = false;
+    select(idx) {
+      this.line_flag = true;
+      if (this.section_active[idx]) {
+        console.log("none");
+      } else {
+        for (let i = 0; i < this.section_active.length; i++) {
+          if (i != idx) {
+            this.section_active[i] = this.section_active[idx];
+          }
+        }
+        this.section_active[idx] = !this.section_active[idx];
+      }
+      this.current_range = this.active_range[idx];
     },
-    open_section2: function () {
-      this.section_active_1 = false;
-      this.section_active_2 = true;
-      this.section_active_3 = false;
-      this.section_active_4 = false;
-      this.section_active_5 = false;
-    },
-    open_section3: function () {
-      this.section_active_1 = false;
-      this.section_active_2 = false;
-      this.section_active_3 = true;
-      this.section_active_4 = false;
-      this.section_active_5 = false;
-    },
-    open_section4: function () {
-      this.section_active_1 = false;
-      this.section_active_2 = false;
-      this.section_active_3 = false;
-      this.section_active_4 = true;
-      this.section_active_5 = false;
-    },
-    open_section5: function () {
-      this.section_active_1 = false;
-      this.section_active_2 = false;
-      this.section_active_3 = false;
-      this.section_active_4 = false;
-      this.section_active_5 = true;
+  },
+  watch: {
+    current_range(current, past) {
+      console.log(current);
+      this.past_range = past;
     },
   },
 };
@@ -164,23 +144,7 @@ ul,
 ol {
   list-style: none;
 }
-a {
-  text-decoration: none;
-  color: inherit;
-  outline: none;
-  transition: all 0.4s ease-in-out;
-  -webkit-transition: all 0.4s ease-in-out;
-}
-a:focus,
-a:active,
-a:visited,
-a:hover {
-  text-decoration: none;
-  outline: none;
-}
-a:hover {
-  color: #e73700;
-}
+
 h2 {
   margin-bottom: 48px;
   padding-bottom: 16px;
@@ -207,7 +171,7 @@ h3 {
 
 .line-title {
   position: relative;
-  width: 400px;
+  width: 300px;
 }
 .line-title::before,
 .line-title::after {
@@ -222,9 +186,10 @@ h3 {
   width: 100%;
   background: #f2f2f2;
 }
+
 .line-title::after {
-  width: 32px;
   background: #e73700;
+  width: v-bind(current_range);
 }
 
 /******* Middle section CSS Start ******/
@@ -350,9 +315,6 @@ h3 {
     font-size: 18px;
     line-height: 32px;
   }
-  .line-title {
-    width: 330px;
-  }
 
   /* -------- Landing page ------- */
   .game-section {
@@ -386,9 +348,6 @@ h3 {
     margin: 0 0 8px;
     font-size: 12px;
     line-height: 24px;
-  }
-  .line-title {
-    width: 250px;
   }
 
   /* -------- Landing page ------- */
