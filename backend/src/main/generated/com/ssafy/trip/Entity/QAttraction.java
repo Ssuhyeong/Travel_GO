@@ -32,7 +32,7 @@ public class QAttraction extends EntityPathBase<Attraction> {
 
     public final StringPath latitude = createString("latitude");
 
-    public final NumberPath<Integer> likeCount = createNumber("likeCount", Integer.class);
+    public final NumberPath<Integer> like_count = createNumber("like_count", Integer.class);
 
     public final StringPath longitude = createString("longitude");
 

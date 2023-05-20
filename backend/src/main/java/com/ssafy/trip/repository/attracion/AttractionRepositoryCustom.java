@@ -10,4 +10,7 @@ public interface AttractionRepositoryCustom {
             Pageable pageable, Integer sidoCode, Integer contentTypeId, String keyword, Integer contentId
     );
 
+    void  updateLikeCount(Attraction attraction1);
+    void  updateDownLike(Attraction attraction1);
+
 }
