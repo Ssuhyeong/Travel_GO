@@ -3,13 +3,14 @@ package com.ssafy.trip.Entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
 @Entity
 @Table(name = "attraction")
-public class Attraction {
+public class Attraction implements Serializable {
 
     @Id
     @GeneratedValue
@@ -29,8 +30,8 @@ public class Attraction {
     @ManyToOne(targetEntity = Member.class , fetch = FetchType.LAZY)
     @JoinColumn(name = "member_email",referencedColumnName = "email")
     private Member member;
-
-    @OneToMany(mappedBy = "attraction" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-    List<Review> reviews = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "attraction" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
+//    List<Review> reviews = new ArrayList<>();
 
 }
