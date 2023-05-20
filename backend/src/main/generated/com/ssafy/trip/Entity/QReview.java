@@ -56,6 +56,5 @@ public class QReview extends EntityPathBase<Review> {
         this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
     }
 
-
 }
 
