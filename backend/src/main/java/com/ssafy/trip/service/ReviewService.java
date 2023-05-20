@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
@@ -35,8 +37,11 @@ public class ReviewService {
 
     }
 
-    public Page<Review> getReview(Pageable pageable, Integer attractionId){
-        return reviewRepository.findBySearch(pageable, attractionId);
+    public List<Review> getReview(Integer attractionId){
+
+        Attraction attraction = attractionRepository.findById(attractionId).get();
+
+        return reviewRepository.findByAttraction(attraction);
     }
 
 }

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.sql.SQLException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/review")
@@ -26,10 +27,9 @@ public class ReviewController {
     // 조회 -> attractionId
     @GetMapping
     public ResponseEntity<?> selectAllReview(
-            @PageableDefault(size = 5) Pageable pageable,
             @RequestParam(required = false) Integer attractionId,
             Principal principal) {
-       Page<Review> reviewList = reviewService.getReview(pageable, attractionId);
+        List<Review> reviewList = reviewService.getReview(attractionId);
         return new ResponseEntity<>(reviewList,HttpStatus.OK);
     }
 
