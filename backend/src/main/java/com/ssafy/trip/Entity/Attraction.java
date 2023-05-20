@@ -25,7 +25,7 @@ public class Attraction implements Serializable {
     private String longitude;
     private String overview;
     @Column(name = "like_count")
-    private Integer likeCount;
+    private Integer like_count;
 
     @ManyToOne(targetEntity = Member.class , fetch = FetchType.LAZY)
     @JoinColumn(name = "member_email",referencedColumnName = "email")

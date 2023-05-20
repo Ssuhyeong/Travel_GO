@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport
 import java.util.List;
 
 import static com.ssafy.trip.Entity.QAttraction.attraction;
+
 public class AttractionRepositoryImpl extends QuerydslRepositorySupport implements AttractionRepositoryCustom {
 
     @Autowired
@@ -62,5 +63,26 @@ public class AttractionRepositoryImpl extends QuerydslRepositorySupport implemen
             return null;
         }
         return attraction.content_id.eq(contentId);
+    }
+
+
+    //좋아요 관련
+
+    @Override
+    public void updateLikeCount(Attraction attraction1) {
+
+            queryFactory.update(attraction)
+                    .set(attraction.like_count, attraction.like_count.add(1))
+                    .where(attraction.eq(attraction1))
+                    .execute();
+
+    }
+
+    @Override
+    public void updateDownLike(Attraction attraction1){
+        queryFactory.update(attraction)
+                .set(attraction.like_count , attraction.like_count.subtract(1))
+                .where(attraction.eq(attraction1))
+                .execute();
     }
 }
