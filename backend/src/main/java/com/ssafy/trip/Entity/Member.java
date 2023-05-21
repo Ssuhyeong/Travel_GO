@@ -28,8 +28,6 @@ public class Member implements Serializable {
 	@Column(name = "refresh_token")
 	private String refreshToken;
 
-	@OneToMany(mappedBy = "member", cascade = {CascadeType.ALL}, orphanRemoval=true)
-	private List<Heart> heartList;
 
 	// 유저 권한 설정 메소드
 	public void authorizeUser() {
