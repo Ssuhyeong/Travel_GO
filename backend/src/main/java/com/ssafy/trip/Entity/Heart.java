@@ -19,11 +19,11 @@ public class Heart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(targetEntity = Attraction.class )
+    @ManyToOne(targetEntity = Attraction.class ,fetch = FetchType.LAZY )
     @JoinColumn(name = "attraction_id" , referencedColumnName = "content_id")
     private Attraction attraction;
 
-    @ManyToOne(targetEntity = Member.class )
+    @ManyToOne(targetEntity = Member.class,fetch = FetchType.LAZY)
     @JoinColumn(name = "member_email" , referencedColumnName = "email")
     private Member member;
 

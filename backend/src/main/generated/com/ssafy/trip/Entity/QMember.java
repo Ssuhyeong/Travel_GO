@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -20,6 +21,8 @@ public class QMember extends EntityPathBase<Member> {
     public static final QMember member = new QMember("member1");
 
     public final StringPath email = createString("email");
+
+    public final ListPath<Heart, QHeart> heartList = this.<Heart, QHeart>createList("heartList", Heart.class, QHeart.class, PathInits.DIRECT2);
 
     public final NumberPath<Integer> id = createNumber("id", Integer.class);
 
