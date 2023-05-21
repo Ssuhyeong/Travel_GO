@@ -26,7 +26,7 @@ export default {
   methods: {
     check(index) {
       this.score = index + 1;
-      console.log(this.score);
+      this.$emit("setScore", this.score - 1);
     },
   },
 };

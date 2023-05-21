@@ -6,12 +6,12 @@
       <p>{{ catagory_spec[trip_content.content_type_id] }}</p>
     </div>
     <div class="review_num">
-      <p>리뷰 0</p>
+      <p>좋아요 {{ trip_content.like_count }}</p>
     </div>
     <div class="addr_main">{{ trip_content.addr1 }}</div>
     <div class="addr_sub">{{ sido_code[trip_content.sido_code] }}</div>
     <div class="detail">
-      <a class="detail_btn" @click="goDetail()">상세보기</a>
+      <a class="detail_btn" @click="$router.push({name: 'detailpage', params: {contentId : trip_content.content_id}})">상세보기</a>
     </div>
   </div>
 </template>

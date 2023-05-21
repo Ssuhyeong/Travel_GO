@@ -57,6 +57,8 @@ export default {
     setContentList(value) {
       this.markerData = value;
 
+      console.log(this.markerData);
+
       this.displayMarkers(value);
     },
     setCategoryNum(value) {

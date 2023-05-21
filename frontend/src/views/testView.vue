@@ -1,14 +1,17 @@
 <template>
-  <reviewModalVue />
+  <updateScheduleView/>
 </template>
 
 <script>
-import reviewModalVue from "@/components/reviewModal.vue";
+import updateScheduleView from './page/updateScheduleView.vue';
 
 export default {
-  name: "testView",
-  components: { reviewModalVue },
-};
+  components: {
+    updateScheduleView,
+  }
+}
 </script>
 
-<style scoped></style>
+<style>
+
+</style>

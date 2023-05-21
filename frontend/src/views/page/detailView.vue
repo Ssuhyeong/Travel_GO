@@ -5,7 +5,7 @@
       <font-awesome-icon
         :icon="['fass', 'left-long']"
         size="3x"
-        style="margin: 20px 0px; cursor: pointer"
+        style="margin: 20px 10px; cursor: pointer"
         @click="$router.go(-1)" />
     </section>
     <section id="title_sec">
@@ -20,15 +20,19 @@
             align-items: center;
             justify-content: space-between;
           ">
-          <h3 style="display: inline; margin: 0px">
+          <h3 style="display: inline; margin: 0px; color:#777777">
             {{ catagory_spec[detail_data.content_type_id] }}
           </h3>
           <div
             style="display: flex; align-items: center; justify-content: center">
-            <font-awesome-icon
+              <font-awesome-icon v-if="test == false"
+                id="empty_heart"
+                :icon="['far', 'heart']"
+                size="xl" @click="like_add()" />
+              <font-awesome-icon v-else
               :icon="['fas', 'heart']"
               size="xl"
-              style="color: #ff0000; padding: 5px" />
+              style="color: #ff0000; padding: 5px; cursor: pointer;" @click="like_delete()" />
             <img
               src="@/assets/img/kakao_talk.png"
               alt=""
@@ -37,7 +41,7 @@
           </div>
         </div>
 
-        <h2>{{ detail_data.title }}</h2>
+        <h2 style="font-size: 40px; margin: 0px">{{ detail_data.title }}</h2>
         <h3>{{ detail_data.addr1 }}</h3>
         <p>
           {{ textLengthOverCut(detail_data.overview) }}
@@ -98,9 +102,9 @@
           :icon="['fass', 'plus']"
           size="2x"
           style="margin-right: 10px; cursor: pointer"
-          @click="$router.push('/reviewpage').then(() => scrollTo(0, 0))" />
+          @click="$router.push({name: 'reviewpage', params: {contentId : content_id, title:detail_data.title}})" />
       </div>
-      <div class="review_content">
+      <div class="review_content" v-for="review in review_data.slice(0, 2)" :key="review.articleNo">
         <div
           style="
             display: inline;
@@ -112,15 +116,19 @@
             src="@/assets/img/man.jpg"
             alt=""
             style="width: 150px; height: 150px; border-radius: 100px" />
-          <h3 style="width: 150px">알프레드</h3>
+          <h3 style="width: 150px">{{review.member.name}}</h3>
         </div>
         <div class="review_description">
-          <h1>타이틀 제목입니다.</h1>
-          <h3>
-            너무너무 좋은 여행 수영장, 직원, 룸컨디션 모두 좋았습니다. 호텔 내
-            음식도 개인차 있겠지만 ...
-          </h3>
-        </div>
+              <div>
+                <font-awesome-icon :icon="['fas', 'star']" v-for="star in review.star" :key="star"/>
+                <font-awesome-icon :icon="['far', 'star']" v-for="star in 5 - review.star" :key="star"/>
+                {{ review.star }}.0
+              </div>
+              <div id="review_content">{{ review.content }}</div>
+              <div id="review_time">
+                {{ review.registerTime }}
+              </div>
+            </div>
       </div>
     </section>
   </div>
@@ -150,15 +158,20 @@ export default {
         39: "음식점",
       },
       length: 0,
+      content_id:"",
+      review_data: [],
+      test: false
     };
   },
   created() {
-    const params = new URL(document.location).searchParams;
-    const content_id = params.get("content_id");
+    //const params = new URL(document.location).searchParams;
+    //const content_id = params.get("content_id");
+    this.content_id = this.$route.params.contentId;
 
-    const url = `http://localhost:8080/attraction/search-list?contentId=${content_id}`;
+    const url = `http://localhost:8080/attraction/search-list?contentId=${this.content_id}`;
     axios.get(url).then((res) => {
       this.detail_data = res.data.content[0];
+      console.log(res);
 
       if (window.kakao && window.kakao.maps) {
         this.initMap(this.detail_data.latitude, this.detail_data.longitude);
@@ -172,7 +185,14 @@ export default {
       }
     });
   },
-  mounted() {},
+  mounted() {
+    const content_id = this.$route.params.contentId;
+
+    axios.get(`http://localhost:8080/review?attractionId=${content_id}`).then((res) => {
+      this.review_data = res.data;
+    })
+    .catch((err) => console.log(err) )
+  },
   methods: {
     initMap(latitude, longitude) {
       console.log(this.detail_data.latitude);
@@ -218,6 +238,16 @@ export default {
       }
       return txt;
     },
+    like_add() {
+      axios.post(`http://localhost:8080/like?attractionId=${this.$route.params.contentId}`).then(() => {
+        console.log('등록 성공');
+      })
+    },
+    like_delete() {
+      axios.delete(`http://localhost:8080/like?attractionId=${this.$route.params.contentId}`).then(() => {
+        console.log('삭제 성공');
+      })
+    }
   },
 };
 </script>
@@ -231,6 +261,7 @@ section {
 
 section > h2 {
   font-size: 40px;
+
 }
 
 a {
@@ -255,13 +286,32 @@ a {
   width: 24%;
 }
 
+#review_content {
+  font-size: 28px;
+  margin: 20px 0px;
+}
+
+#review_time{
+  font-size: 14px;
+}
+
+#empty_heart {
+  padding: 5px;
+  cursor: pointer;
+}
+
+#empty_heart:hover {
+  color: #ff0000;
+}
+
+
 .description {
   margin-left: 30px;
 }
 
 .review_content {
   display: flex;
-  padding: 80px;
+  padding: 40px;
 }
 
 .review_description {
@@ -272,4 +322,5 @@ a {
   font-size: 40px;
   margin: 0px;
 }
+
 </style>

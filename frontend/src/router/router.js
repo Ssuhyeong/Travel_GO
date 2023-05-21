@@ -45,9 +45,9 @@ const router = createRouter({
       meta: { authRequired: true },
     },
     { path: "/profilepage", name: "profilepage", component: profileView },
-    { path: "/detailpage", name: "detailpage", component: detailView },
+    { path: "/detailpage/:contentId", name: "detailpage", component: detailView },
     { path: "/categorypage", name: "categorypage", component: categoryView },
-    { path: "/reviewpage", name: "reviewView", component: reviewView },
+    { path: "/reviewpage/:contentId/:title", name: "reviewpage", component: reviewView },
   ],
   scrollBehavior() {
     return { top: 0 };
@@ -71,7 +71,7 @@ router.beforeEach(async (to, from, next) => {
     return next();
   }
 
-  alert("로그인 해주세요");
-  return next("/loginpage");
+  // alert("로그인 해주세요");
+  return next();
 });
 export default router;

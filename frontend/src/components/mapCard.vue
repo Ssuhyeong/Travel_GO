@@ -18,7 +18,7 @@
           </form>
         </div>
         <div id="select_container">
-          <div>검색</div>
+          <div class="active">검색</div>
           <div>추천</div>
           <div>거리순</div>
           <div>MY</div>
@@ -304,5 +304,9 @@ hr {
 
 .container:focus-within > .searchInputWrapper > .searchInputIcon {
   right: 0.2rem;
+}
+
+.active {
+  background-color: #017e94;
 }
 </style>

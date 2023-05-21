@@ -2,7 +2,6 @@
   <div class="content">
     <a
       class="card"
-      href="#!"
       v-for="category_data in category_list"
       :key="category_data.content_id">
       <div
@@ -22,7 +21,7 @@
           <p>
             {{ textLengthOverCut(category_data.overview) }}
           </p>
-          <button class="button">Click Here</button>
+          <button class="button" @click="$router.push({name: 'detailpage', params: {contentId : category_data.content_id}})">Click Here</button>
         </div>
       </div></a
     >
@@ -174,7 +173,7 @@ html {
 }
 
 .back {
-  background: #fff;
+  background: #f7f7f7;
   transform: rotateY(-180deg);
   padding: 0 2em;
 }

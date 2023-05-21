@@ -8,21 +8,23 @@
   </transition>
   <transition name="pop" appear>
     <div class="modal" role="dialog" v-if="showModal">
-      <h1>서울랜드</h1>
+      <h1>{{$route.params.title}}</h1>
       <p>
-        <starComponentVue />
+        <starComponentVue @setScore="setScore"/>
       </p>
       <textarea
         spellcheck="false"
         placeholder="Type something here..."
-        required></textarea>
-      <button @click="showModal = false" class="button">리뷰 평가완료</button>
+        required
+        v-model="review.content"></textarea>
+      <button @click="review_regist" class="button">리뷰 평가완료</button>
     </div>
   </transition>
 </template>
 
 <script>
 import starComponentVue from "./starComponent.vue";
+import axios from "@/service/axios"
 
 export default {
   name: "testView",
@@ -30,8 +32,26 @@ export default {
   data() {
     return {
       showModal: false,
+      review: {
+        content: "",
+        star: 0
+      }
     };
   },
+  methods: {
+    setScore(value) {
+      this.review.star = value;
+    },
+    review_regist() {
+      this.showModal = false;
+      axios.post(`http://localhost:8080/review?attractionId=${this.$route.params.contentId}`, this.review).then(() => {
+        console.log('등록성공');
+        this.review.content = "";
+        this.$router.go(0);
+      })
+      console.log(this.review);
+    }
+  }
 };
 </script>
 

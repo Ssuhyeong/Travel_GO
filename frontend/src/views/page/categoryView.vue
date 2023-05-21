@@ -6,28 +6,28 @@
         <categoryIcon
           icon_type="icons"
           icon_name="관광지"
-          @click="select(12)" />
+          @click="[reset(), select(12)]" />
         <categoryIcon
           icon_type="place-of-worship"
           icon_name="문화시설"
-          @click="select(14)" />
+          @click="[select(14), reset()]" />
         <categoryIcon
           icon_type="champagne-glasses"
           icon_name="축제공연"
-          @click="select(15)" />
+          @click="[select(15), reset()]" />
         <categoryIcon
           icon_type="person-swimming"
           icon_name="레포츠"
-          @click="select(28)" />
+          @click="[select(28), reset()]" />
         <categoryIcon icon_type="hotel" icon_name="숙박" @click="select(32)" />
         <categoryIcon
           icon_type="bag-shopping"
           icon_name="쇼핑"
-          @click="select(38)" />
+          @click="[select(38), reset()]" />
         <categoryIcon
           icon_type="utensils"
           icon_name="음식점"
-          @click="select(39)" />
+          @click="[select(39), reset()]" />
       </div>
     </div>
 
@@ -74,15 +74,18 @@ export default {
       this.flag = false;
     },
     scrollEvents() {
-      this.page = this.page + 1;
       let isBottom =
         document.documentElement.scrollTop + window.innerHeight + 300 >
         document.documentElement.offsetHeight;
       if (isBottom && !this.flag) {
+        this.page = this.page + 1;
         this.flag = true;
         setTimeout(() => this.select(this.contentType, this.page), 1000);
       }
     },
+    reset() {
+      this.category_list = [];
+    }
   },
   mounted() {
     window.addEventListener("scroll", this.scrollEvents);
