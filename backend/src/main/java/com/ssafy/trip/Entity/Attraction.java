@@ -1,11 +1,14 @@
 package com.ssafy.trip.Entity;
 
+import io.micrometer.core.annotation.Counted;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -30,6 +33,9 @@ public class Attraction implements Serializable {
     @ManyToOne(targetEntity = Member.class , fetch = FetchType.LAZY)
     @JoinColumn(name = "member_email",referencedColumnName = "email")
     private Member member;
+
+    @OneToMany(mappedBy = "attraction", cascade = {CascadeType.ALL}, orphanRemoval=true)
+    private List<Heart> heartList;
 //
 //    @OneToMany(mappedBy = "attraction" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
 //    List<Review> reviews = new ArrayList<>();
