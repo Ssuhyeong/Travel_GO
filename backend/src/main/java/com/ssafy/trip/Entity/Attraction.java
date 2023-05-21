@@ -34,10 +34,5 @@ public class Attraction implements Serializable {
     @JoinColumn(name = "member_email",referencedColumnName = "email")
     private Member member;
 
-    @OneToMany(mappedBy = "attraction", cascade = {CascadeType.ALL}, orphanRemoval=true)
-    private List<Heart> heartList;
-//
-//    @OneToMany(mappedBy = "attraction" , cascade = CascadeType.ALL , fetch = FetchType.LAZY)
-//    List<Review> reviews = new ArrayList<>();
 
 }

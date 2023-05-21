@@ -30,8 +30,6 @@ public class QAttraction extends EntityPathBase<Attraction> {
 
     public final StringPath first_image = createString("first_image");
 
-    public final ListPath<Heart, QHeart> heartList = this.<Heart, QHeart>createList("heartList", Heart.class, QHeart.class, PathInits.DIRECT2);
-
     public final StringPath latitude = createString("latitude");
 
     public final NumberPath<Integer> like_count = createNumber("like_count", Integer.class);
