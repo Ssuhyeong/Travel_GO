@@ -10,7 +10,7 @@ public interface AttractionRepositoryCustom {
             Pageable pageable, Integer sidoCode, Integer contentTypeId, String keyword, Integer contentId
     );
 
-    Page<Attraction> findBySearchOrderBy(Pageable pageable,String keyword);
+    Page<Attraction> findBySearchOrderBy(Pageable pageable,String keyword,Integer sidoCode);
 
     void  updateLikeCount(Attraction attraction1);
     void  updateDownLike(Attraction attraction1);

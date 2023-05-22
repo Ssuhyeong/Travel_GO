@@ -25,9 +25,9 @@ public class AttractionRepositoryImpl extends QuerydslRepositorySupport implemen
     }
 
     @Override
-    public Page<Attraction> findBySearchOrderBy(Pageable pageable,String keyword){
+    public Page<Attraction> findBySearchOrderBy(Pageable pageable,String keyword, Integer sidoCode){
         JPQLQuery<Attraction> query =  queryFactory.selectFrom(attraction)
-                .where(containKeyword(keyword))
+                .where(containKeyword(keyword), eqSido(sidoCode))
                 .orderBy(attraction.like_count.desc());
 
         List<Attraction> attractions = this.getQuerydsl().applyPagination(pageable, query).fetch();
