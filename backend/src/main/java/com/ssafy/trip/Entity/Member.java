@@ -5,8 +5,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -32,6 +30,12 @@ public class Member implements Serializable {
 	// 유저 권한 설정 메소드
 	public void authorizeUser() {
 		this.role = Role.USER;
+	}
+
+	public Member(String name, String email, String password) {
+		this.name = name;
+		this.email = email;
+		this.password = password;
 	}
 
 	// 비밀번호 암호화 메소드

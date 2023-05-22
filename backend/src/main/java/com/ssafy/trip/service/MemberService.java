@@ -3,6 +3,7 @@ package com.ssafy.trip.service;
 import com.ssafy.trip.Entity.Member;
 import com.ssafy.trip.Entity.Role;
 import com.ssafy.trip.dto.UserSignDto;
+import com.ssafy.trip.dto.request.MemberRequestDto;
 import com.ssafy.trip.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,5 +37,21 @@ public class MemberService {
 
         user.passwordEncode(passwordEncoder);
         memberRepository.save(user);
+    }
+
+    public void modifyMemberInfo(MemberRequestDto memberRequestDto , String userId) {
+        Member member = memberRepository.findByEmail(userId).get();
+        member.setName(memberRequestDto.getName());
+
+        memberRepository.save(member);
+    }
+
+    public void killPassword(String userId) {
+        Member member = memberRepository.findByEmail(userId).get();
+        member.setPassword("k3i5l7l");
+
+        member.passwordEncode(passwordEncoder);
+        memberRepository.save(member);
+
     }
 }
