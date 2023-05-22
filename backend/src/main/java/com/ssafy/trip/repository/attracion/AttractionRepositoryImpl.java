@@ -29,7 +29,8 @@ public class AttractionRepositoryImpl extends QuerydslRepositorySupport implemen
             Pageable pageable, Integer sidoCode, Integer contentTypeId, String keyword, Integer contentId
     ) {
         JPQLQuery<Attraction> query =  queryFactory.selectFrom(attraction)
-                .where(eqSido(sidoCode), eqContent(contentTypeId), containKeyword(keyword), eqContentId(contentId));
+                .where(eqSido(sidoCode), eqContent(contentTypeId), containKeyword(keyword), eqContentId(contentId))
+                .orderBy(attraction.like_count.desc());
 
         List<Attraction> attractions = this.getQuerydsl().applyPagination(pageable, query).fetch();
         return new PageImpl<Attraction>(attractions, pageable, query.fetchCount());
