@@ -21,9 +21,9 @@ public class AttractionService {
     }
 
     public Page<Attraction> getLikeOrderBy(
-            Pageable pageable, String keyword , Integer sidoCode
+            Pageable pageable, String keyword , Integer sidoCode , Integer contentTypeId
     ) {
-        return attractionRepository.findBySearchOrderBy(pageable, keyword,sidoCode);
+        return attractionRepository.findBySearchOrderBy(pageable, keyword,sidoCode, contentTypeId);
     }
 
 }

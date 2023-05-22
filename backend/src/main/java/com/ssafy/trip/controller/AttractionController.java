@@ -48,10 +48,11 @@ public class AttractionController {
             @PageableDefault(size = 15) Pageable pageable,
             @RequestParam(value = "keyword", required = false) String keyword,
             @RequestParam(value = "sidoCode",required = false) Integer sidoCode,
+            @RequestParam(value = "contentTypeId", required = false) Integer contentTypeId,
             Authentication authentication
     ){
         String userId = authentication.getName();
-        Page<Attraction> attractions = attractionService.getLikeOrderBy(pageable,keyword,sidoCode);
+        Page<Attraction> attractions = attractionService.getLikeOrderBy(pageable,keyword,sidoCode,contentTypeId);
 
         return new ResponseEntity<>(attractions,HttpStatus.OK);
 
