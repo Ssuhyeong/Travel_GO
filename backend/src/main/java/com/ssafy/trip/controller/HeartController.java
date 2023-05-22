@@ -1,5 +1,6 @@
 package com.ssafy.trip.controller;
 
+import com.ssafy.trip.repository.heart.HeartRepository;
 import com.ssafy.trip.service.HeartService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,6 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/like")
@@ -15,6 +18,14 @@ import org.springframework.web.bind.annotation.*;
 public class HeartController {
 
     private final HeartService likeService;
+    private final HeartRepository heartRepository;
+
+
+    @GetMapping
+    public ResponseEntity<?> myLike(Authentication authentication){
+        List<Integer> attractionLikeList = heartRepository.findBySearch(authentication.getName());
+        return new ResponseEntity<>(attractionLikeList,HttpStatus.OK);
+    }
 
     @PostMapping
     public ResponseEntity<?> addLike(@RequestParam Integer attractionId , Authentication authentication) throws Exception {

@@ -2,7 +2,6 @@ package com.ssafy.trip.controller;
 
 
 import com.ssafy.trip.Entity.Attraction;
-import com.ssafy.trip.Entity.Member;
 import com.ssafy.trip.service.AttractionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,21 +41,5 @@ public class AttractionController {
         return new ResponseEntity<>(attractions,HttpStatus.OK);
 
     }
-//
-//    @PostMapping("/{attraction_id}/like")
-//    public ResponseEntity<?> likeAttraction(
-//            @PathVariable Integer attraction_id,
-//            HttpSession session
-//    ){
-//        String userId = session.getId();
-//        boolean check = false;
-//
-//        if(userId != null || !userId.isEmpty()){
-//            check = attractionService.attractionLike(userId,attraction_id);
-//        }
-//
-//        return check ? new ResponseEntity<>(HttpStatus.OK)
-//                : new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//    }
 
 }
