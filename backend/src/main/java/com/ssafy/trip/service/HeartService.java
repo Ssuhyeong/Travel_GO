@@ -4,7 +4,7 @@ import com.ssafy.trip.Entity.Attraction;
 import com.ssafy.trip.Entity.Heart;
 import com.ssafy.trip.Entity.Member;
 import com.ssafy.trip.dto.request.HeartRequestDto;
-import com.ssafy.trip.repository.HeartRepository;
+import com.ssafy.trip.repository.heart.HeartRepository;
 import com.ssafy.trip.repository.MemberRepository;
 import com.ssafy.trip.repository.attracion.AttractionRepository;
 import lombok.RequiredArgsConstructor;
