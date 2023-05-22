@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +38,19 @@ public class AttractionController {
 
         String userId = principal.getName();
         Page<Attraction> attractions = attractionService.getAttractions(pageable,sidoCode,contentTypeId,keyword, contentId);
+
+        return new ResponseEntity<>(attractions,HttpStatus.OK);
+
+    }
+
+    @GetMapping("/like")
+    public ResponseEntity<?> attractionLike(
+            @PageableDefault(size = 15) Pageable pageable,
+            @RequestParam(value = "keyword", required = false) String keyword,
+            Authentication authentication
+    ){
+        String userId = authentication.getName();
+        Page<Attraction> attractions = attractionService.getLikeOrderBy(pageable,keyword);
 
         return new ResponseEntity<>(attractions,HttpStatus.OK);
 

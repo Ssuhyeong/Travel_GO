@@ -19,4 +19,10 @@ public class AttractionService {
         return attractionRepository.findBySearchOption(pageable, sidoCode,contentTypeId,keyword, contentId);
     }
 
+    public Page<Attraction> getLikeOrderBy(
+            Pageable pageable, String keyword
+    ) {
+        return attractionRepository.findBySearchOrderBy(pageable, keyword);
+    }
+
 }
