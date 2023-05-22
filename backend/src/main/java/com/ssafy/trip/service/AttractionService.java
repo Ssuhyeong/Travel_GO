@@ -20,9 +20,9 @@ public class AttractionService {
     }
 
     public Page<Attraction> getLikeOrderBy(
-            Pageable pageable, String keyword
+            Pageable pageable, String keyword , Integer sidoCode
     ) {
-        return attractionRepository.findBySearchOrderBy(pageable, keyword);
+        return attractionRepository.findBySearchOrderBy(pageable, keyword,sidoCode);
     }
 
 }
