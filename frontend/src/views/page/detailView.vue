@@ -11,7 +11,7 @@
     <section id="title_sec">
       <img
         :src="detail_data.first_image"
-        alt=""
+        onerror="this.src= 'https://www.control.vg/wp-content/themes/crystalskull/img/defaults/default.jpg'"
         style="width: 40%; height: 400px; border-radius: 10px" />
       <div class="description">
         <div
@@ -20,19 +20,23 @@
             align-items: center;
             justify-content: space-between;
           ">
-          <h3 style="display: inline; margin: 0px; color:#777777">
+          <h3 style="display: inline; margin: 0px; color: #777777">
             {{ catagory_spec[detail_data.content_type_id] }}
           </h3>
           <div
             style="display: flex; align-items: center; justify-content: center">
-              <font-awesome-icon v-if="test == false"
-                id="empty_heart"
-                :icon="['far', 'heart']"
-                size="xl" @click="like_add()" />
-              <font-awesome-icon v-else
+            <font-awesome-icon
+              v-if="like_empty == true"
+              id="empty_heart"
+              :icon="['far', 'heart']"
+              size="xl"
+              @click="like_add()" />
+            <font-awesome-icon
+              v-else
               :icon="['fas', 'heart']"
               size="xl"
-              style="color: #ff0000; padding: 5px; cursor: pointer;" @click="like_delete()" />
+              style="color: #ff0000; padding: 5px; cursor: pointer"
+              @click="like_delete()" />
             <img
               src="@/assets/img/kakao_talk.png"
               alt=""
@@ -102,9 +106,17 @@
           :icon="['fass', 'plus']"
           size="2x"
           style="margin-right: 10px; cursor: pointer"
-          @click="$router.push({name: 'reviewpage', params: {contentId : content_id, title:detail_data.title}})" />
+          @click="
+            $router.push({
+              name: 'reviewpage',
+              params: { contentId: content_id, title: detail_data.title },
+            })
+          " />
       </div>
-      <div class="review_content" v-for="review in review_data.slice(0, 2)" :key="review.articleNo">
+      <div
+        class="review_content"
+        v-for="review in review_data.slice(0, 2)"
+        :key="review.articleNo">
         <div
           style="
             display: inline;
@@ -116,19 +128,25 @@
             src="@/assets/img/man.jpg"
             alt=""
             style="width: 150px; height: 150px; border-radius: 100px" />
-          <h3 style="width: 150px">{{review.member.name}}</h3>
+          <h3 style="width: 150px">{{ review.member.name }}</h3>
         </div>
         <div class="review_description">
-              <div>
-                <font-awesome-icon :icon="['fas', 'star']" v-for="star in review.star" :key="star"/>
-                <font-awesome-icon :icon="['far', 'star']" v-for="star in 5 - review.star" :key="star"/>
-                {{ review.star }}.0
-              </div>
-              <div id="review_content">{{ review.content }}</div>
-              <div id="review_time">
-                {{ review.registerTime }}
-              </div>
-            </div>
+          <div>
+            <font-awesome-icon
+              :icon="['fas', 'star']"
+              v-for="star in review.star"
+              :key="star" />
+            <font-awesome-icon
+              :icon="['far', 'star']"
+              v-for="star in 5 - review.star"
+              :key="star" />
+            {{ review.star }}.0
+          </div>
+          <div id="review_content">{{ review.content }}</div>
+          <div id="review_time">
+            {{ review.registerTime }}
+          </div>
+        </div>
       </div>
     </section>
   </div>
@@ -158,15 +176,17 @@ export default {
         39: "음식점",
       },
       length: 0,
-      content_id:"",
+      content_id: "",
       review_data: [],
-      test: false
+      like_empty: true,
     };
   },
   created() {
     //const params = new URL(document.location).searchParams;
     //const content_id = params.get("content_id");
     this.content_id = this.$route.params.contentId;
+
+    this.like_Exist();
 
     const url = `http://localhost:8080/attraction/search-list?contentId=${this.content_id}`;
     axios.get(url).then((res) => {
@@ -188,10 +208,12 @@ export default {
   mounted() {
     const content_id = this.$route.params.contentId;
 
-    axios.get(`http://localhost:8080/review?attractionId=${content_id}`).then((res) => {
-      this.review_data = res.data;
-    })
-    .catch((err) => console.log(err) )
+    axios
+      .get(`http://localhost:8080/review?attractionId=${content_id}`)
+      .then((res) => {
+        this.review_data = res.data;
+      })
+      .catch((err) => console.log(err));
   },
   methods: {
     initMap(latitude, longitude) {
@@ -239,15 +261,37 @@ export default {
       return txt;
     },
     like_add() {
-      axios.post(`http://localhost:8080/like?attractionId=${this.$route.params.contentId}`).then(() => {
-        console.log('등록 성공');
-      })
+      axios
+        .post(
+          `http://localhost:8080/like?attractionId=${this.$route.params.contentId}`
+        )
+        .then(() => {
+          console.log("등록 성공");
+          this.like_empty = !this.like_empty;
+        });
     },
     like_delete() {
-      axios.delete(`http://localhost:8080/like?attractionId=${this.$route.params.contentId}`).then(() => {
-        console.log('삭제 성공');
-      })
-    }
+      axios
+        .delete(
+          `http://localhost:8080/like?attractionId=${this.$route.params.contentId}`
+        )
+        .then(() => {
+          console.log("삭제 성공");
+          this.like_empty = !this.like_empty;
+        });
+    },
+    like_Exist() {
+      axios.get(`http://localhost:8080/like`).then((res) => {
+        console.log(res.data);
+
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.data[i] == this.content_id) {
+            this.like_empty = false;
+            break;
+          }
+        }
+      });
+    },
   },
 };
 </script>
@@ -261,7 +305,6 @@ section {
 
 section > h2 {
   font-size: 40px;
-
 }
 
 a {
@@ -291,7 +334,7 @@ a {
   margin: 20px 0px;
 }
 
-#review_time{
+#review_time {
   font-size: 14px;
 }
 
@@ -303,7 +346,6 @@ a {
 #empty_heart:hover {
   color: #ff0000;
 }
-
 
 .description {
   margin-left: 30px;
@@ -322,5 +364,4 @@ a {
   font-size: 40px;
   margin: 0px;
 }
-
 </style>

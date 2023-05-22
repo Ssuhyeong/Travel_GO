@@ -6,18 +6,45 @@
       <p>{{ catagory_spec[trip_content.content_type_id] }}</p>
     </div>
     <div class="review_num">
-      <p>좋아요 {{ trip_content.like_count }}</p>
+      <p></p>
     </div>
     <div class="addr_main">{{ trip_content.addr1 }}</div>
-    <div class="addr_sub">{{ sido_code[trip_content.sido_code] }}</div>
+    <div class="addr_sub">
+      <font-awesome-icon
+        :icon="['fas', 'star']"
+        size="xs"
+        style="color: #f29d00" />
+      {{ total_score.toFixed(1) }} ( {{ review_num }}명 ) |
+      <font-awesome-icon
+        v-if="like_empty == false"
+        :icon="['fas', 'heart']"
+        size="xs"
+        style="color: #ff0000" />
+      <font-awesome-icon
+        v-else
+        :icon="['far', 'heart']"
+        size="xs"
+        style="color: #ff0000" />
+      {{ trip_content.like_count }}
+    </div>
     <div class="detail">
-      <a class="detail_btn" @click="$router.push({name: 'detailpage', params: {contentId : trip_content.content_id}})">상세보기</a>
+      <a
+        class="detail_btn"
+        @click="
+          $router.push({
+            name: 'detailpage',
+            params: { contentId: trip_content.content_id },
+          })
+        "
+        >상세보기</a
+      >
     </div>
   </div>
 </template>
 
 <script>
 import kakakIcon from "./kakakIcon.vue";
+import axios from "@/service/axios";
 
 export default {
   name: "placeContent",
@@ -44,31 +71,53 @@ export default {
         38: "쇼핑",
         39: "음식점",
       },
-      sido_code: {
-        1: "서울특별시",
-        2: "인천광역시",
-        3: "대전광역시",
-        4: "대구광역시",
-        5: "광주광역시",
-        6: "부산광역시",
-        7: "울산광역시",
-        8: "세종특별자치시",
-        31: "경기도",
-        32: "강원도",
-        33: "충청북도",
-        34: "충청남도",
-        35: "경상북도",
-        36: "경상남도",
-        37: "전라북도",
-        38: "전라남도",
-        39: "제주도",
-      },
+      review_data: [],
+      review_num: 0,
+      total_score: 0,
+      like_empty: true,
     };
+  },
+  mounted() {
+    this.like_Exist();
+    console.log(this.trip_content);
+
+    axios
+      .get(
+        `http://localhost:8080/review?attractionId=${this.trip_content.content_id}`
+      )
+      .then((res) => {
+        this.review_data = res.data;
+        this.review_num = res.data.length;
+
+        for (let i = 0; i < this.review_num; i++) {
+          console.log(this.review_data[i].star);
+          this.total_score = this.total_score + this.review_data[i].star;
+        }
+        console.log(this.total_score);
+        this.total_score = this.total_score / this.review_num;
+
+        if (isNaN(this.total_score)) {
+          this.total_score = 0;
+        }
+        console.log(this.total_score);
+      });
   },
   methods: {
     goDetail() {
       const content_id = this.trip_content.content_id;
       location.href = `/detailpage?content_id=${content_id}`;
+    },
+    like_Exist() {
+      this.like_empty = true;
+
+      axios.get(`http://localhost:8080/like`).then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          if (res.data[i] == this.trip_content.content_id) {
+            this.like_empty = false;
+            break;
+          }
+        }
+      });
     },
   },
 };

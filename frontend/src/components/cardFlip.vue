@@ -12,6 +12,13 @@
         <p>
           {{ category_data.title }}
         </p>
+        <div id="like_container">
+          <font-awesome-icon
+            :icon="['fas', 'heart']"
+            size="xs"
+            style="color: #ff0000" />
+          <div>{{ category_data.like_count }}</div>
+        </div>
       </div>
       <div class="back">
         <div>
@@ -21,7 +28,16 @@
           <p>
             {{ textLengthOverCut(category_data.overview) }}
           </p>
-          <button class="button" @click="$router.push({name: 'detailpage', params: {contentId : category_data.content_id}})">Click Here</button>
+          <button
+            class="button"
+            @click="
+              $router.push({
+                name: 'detailpage',
+                params: { contentId: category_data.content_id },
+              })
+            ">
+            Click Here
+          </button>
         </div>
       </div></a
     >
@@ -64,6 +80,20 @@ html {
   font-weight: 300;
   color: #333;
   font-family: "Nunito Sans", sans-serif;
+}
+
+#like_container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  bottom: 0;
+  right: 0;
+}
+
+#like_container > div {
+  font-size: 18px;
+  margin-left: 10px;
 }
 
 .content {
@@ -151,7 +181,6 @@ html {
   font-weight: 600;
   color: #fff;
   overflow: hidden;
-  font-family: Poppins, sans-serif;
 }
 .front:before {
   position: absolute;

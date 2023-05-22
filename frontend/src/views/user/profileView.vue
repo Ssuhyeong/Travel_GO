@@ -1,4 +1,21 @@
 <template>
+  <transition name="fade" appear>
+    <div
+      class="modal-overlay"
+      v-if="showModal"
+      @click="showModal = false"></div>
+  </transition>
+  <transition name="pop" appear>
+    <div class="modal" role="dialog" v-if="showModal">
+      <h1>프로필 변경</h1>
+      <textarea
+        spellcheck="false"
+        placeholder="변경할 이름을 입력해주세요..."
+        v-model="changeName.name"
+        required></textarea>
+      <button @click="UpdateUser()" class="button">프로필 변경 완료</button>
+    </div>
+  </transition>
   <div class="background">
     <div id="profile_container">
       <div class="outer-div">
@@ -7,10 +24,10 @@
             <div class="front__bkg-photo"></div>
             <div class="front__face-photo"></div>
             <div class="front__text">
-              <h3 class="front__text-header">손수형</h3>
+              <h3 class="front__text-header">{{ user.name }}</h3>
               <p class="front__text-para">
                 <i class="fas fa-map-marker-alt front-icons"></i
-                >tngud124@kakao.com
+                >{{ user.email }}
               </p>
 
               <span class="front__text-hover">Hover For Edit</span>
@@ -18,13 +35,13 @@
           </div>
           <div class="back">
             <div class="social-media-wrapper">
-              <a @click="UpdateUser" class="social-icon"
+              <a @click="showModal = true" class="social-icon"
                 ><font-awesome-icon
                   :icon="['fas', 'pen']"
                   size="20"
                   style="margin: 10px"
               /></a>
-              <a @click="UpdateUser" class="social-icon"
+              <a @click="deleteUser" class="social-icon"
                 ><font-awesome-icon
                   :icon="['fas', 'trash-can']"
                   size="20"
@@ -37,17 +54,25 @@
       <div style="margin-bottom: 23px">
         <div id="category_box">
           <div class="profile_category">즐겨찾기</div>
-          <div class="profile_category">팔로우</div>
-          <div class="profile_category">좋아요</div>
         </div>
         <div class="profile_content">
           <p id="profile_type">즐겨찾기</p>
           <div id="content_container">
-            <div class="card">
+            <div
+              class="card"
+              v-for="like in like_list"
+              :key="like.content_id"
+              @click="
+                $router.push({
+                  name: 'detailpage',
+                  params: { contentId: like.content_id },
+                })
+              ">
               <img
-                src="http://tong.visitkorea.or.kr/cms/resource/31/219131_image2_1.jpg" />
-              <h3>title</h3>
-              <p>description</p>
+                :src="like.first_image"
+                onerror="this.src= 'https://www.control.vg/wp-content/themes/crystalskull/img/defaults/default.jpg'" />
+              <h3>{{ like.title }}</h3>
+              <p>{{ like.addr1 }}</p>
             </div>
           </div>
         </div>
@@ -58,32 +83,66 @@
 
 <script>
 import axios from "@/service/axios";
+import VueCookies from "vue-cookies";
 
 export default {
   name: "profileView",
   data() {
     return {
-      userId: "",
+      user: {
+        email: "",
+        name: "",
+      },
+      changeName: {
+        name: "",
+      },
       updateData: {},
+      like_list: [],
+      showModal: false,
     };
   },
   components: {},
+  mounted() {
+    axios
+      .get(`http://localhost:8080/like`)
+      .then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          const url = `http://localhost:8080/attraction/search-list?contentId=${res.data[i]}`;
+          axios.get(url).then((res) => {
+            this.like_list.push(res.data.content[0]);
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(this.like_list);
+
+    axios.get(`http://localhost:8080/member`).then((res) => {
+      console.log(res.data);
+
+      this.user.email = res.data[0];
+      this.user.name = res.data[1];
+    });
+  },
   methods: {
     deleteUser() {
-      const id = this.userId;
-      const url = `http://localhost:8080/user/${id}`;
-
-      axios.delete(url).then(() => {
-        this.$router.push("/mainpage");
+      axios.put(`http://localhost:8080/member/delete`).then(() => {
+        console.log("삭제 성공");
+        VueCookies.remove("accessToken");
       });
     },
     UpdateUser() {
-      const id = this.userId;
-      const updateData = this.updateData;
-      const url = `http://localhost:8080/user/${id}`;
+      this.showModal = false;
+      const url = `http://localhost:8080/member/modify`;
 
-      axios.update(url, updateData).then(() => {
-        this.$router.push("/profilepage");
+      console.log(this.changeName.name);
+
+      axios.put(url, this.changeName).then(() => {
+        console.log("등록성공");
+        this.changeName = "";
+        this.$router.go(0);
       });
     },
   },
@@ -91,6 +150,52 @@ export default {
 </script>
 
 <style scoped>
+img {
+  filter: brightness(50%);
+}
+
+textarea {
+  width: 80%;
+  resize: none;
+  height: 20px;
+  outline: none;
+  padding: 15px;
+  font-size: 16px;
+  margin: 20px 0px;
+  border-radius: 5px;
+  max-height: 500px;
+  font-family: Cookierun;
+  border: 1px solid #bfbfbf;
+}
+
+textarea::placeholder {
+  color: #b3b3b3;
+}
+
+textarea:is(:focus, :valid) {
+  padding: 14px;
+  border: 2px solid #00859c;
+}
+
+textarea::-webkit-scrollbar {
+  width: 0px;
+}
+
+h1 {
+  font-size: 40px;
+}
+.button {
+  border: none;
+  color: #fff;
+  background: #00859c;
+  appearance: none;
+  font: inherit;
+  font-size: 1.1rem;
+  padding: 0.4em 0.6em;
+  border-radius: 0.3em;
+  cursor: pointer;
+}
+
 #category_box {
   display: flex;
   align-items: center;
@@ -107,12 +212,14 @@ export default {
 }
 
 #profile_container {
+  position: relative;
   height: 100vh;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+  z-index: 3;
 }
 
 #content_container {
@@ -120,7 +227,6 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 2rem;
   margin: 2rem;
-  cursor: pointer;
 }
 
 .profile_category {
@@ -402,5 +508,64 @@ export default {
 .fab:hover,
 .fas:hover {
   top: -5px;
+}
+
+.modal {
+  position: absolute;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+  width: fit-content;
+  height: fit-content;
+  max-width: 25em;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+  background: #fff;
+  z-index: 999;
+  transform: none;
+}
+.modal h1 {
+  margin: 0 0 1rem;
+}
+
+.modal-overlay {
+  content: "";
+  position: absolute;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 998;
+  background: #2c3e50;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+/* ---------------------------------- */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s linear;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.pop-enter-active,
+.pop-leave-active {
+  transition: transform 0.4s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.4s linear;
+}
+
+.pop-enter,
+.pop-leave-to {
+  opacity: 0;
+  transform: scale(0.3) translateY(-50%);
 }
 </style>

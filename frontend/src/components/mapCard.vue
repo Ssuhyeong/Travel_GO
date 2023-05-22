@@ -18,10 +18,22 @@
           </form>
         </div>
         <div id="select_container">
-          <div class="active">검색</div>
-          <div>추천</div>
-          <div>거리순</div>
-          <div>MY</div>
+          <div
+            :class="{ active: sort_active[0] }"
+            @click="[sort_select(0), searchcontent()]">
+            검색
+          </div>
+          <div
+            :class="{ active: sort_active[1] }"
+            @click="[sort_select(1), likecontent()]">
+            추천
+          </div>
+          <div :class="{ active: sort_active[2] }" @click="sort_select(2)">
+            거리순
+          </div>
+          <div :class="{ active: sort_active[3] }" @click="sort_select(3)">
+            MY
+          </div>
         </div>
       </div>
       <div class="card_content">
@@ -30,32 +42,32 @@
           <div id="info_list">
             <infoIcon
               @click="select(0)"
-              :check="test[0]"
+              :check="facility_active[0]"
               icon_type="house-medical"
               icon_name="약국" />
             <infoIcon
               @click="select(1)"
-              :check="test[1]"
+              :check="facility_active[1]"
               icon_type="gas-pump"
               icon_name="주유소" />
             <infoIcon
               @click="select(2)"
-              :check="test[2]"
+              :check="facility_active[2]"
               icon_type="mug-hot"
               icon_name="카페" />
             <infoIcon
               @click="select(3)"
-              :check="test[3]"
+              :check="facility_active[3]"
               icon_type="hotel"
               icon_name="숙박" />
             <infoIcon
               @click="select(4)"
-              :check="test[4]"
+              :check="facility_active[4]"
               icon_type="store"
               icon_name="편의점" />
             <infoIcon
               @click="select(5)"
-              :check="test[5]"
+              :check="facility_active[5]"
               icon_type="cart-shopping"
               icon_name="마트" />
           </div>
@@ -84,7 +96,7 @@
 <script>
 import infoIcon from "./infoIcon.vue";
 import placeContent from "./placeContent.vue";
-import axios from "@/service/axios"
+import axios from "@/service/axios";
 import paginationComponent from "./paginationComponent.vue";
 
 export default {
@@ -96,7 +108,8 @@ export default {
   },
   data() {
     return {
-      test: [false, false, false, false, false, false],
+      facility_active: [false, false, false, false, false, false],
+      sort_active: [true, false, false, false],
       trip_list: [],
       keyword: "",
       sendKeyword: "",
@@ -117,6 +130,7 @@ export default {
       this.$emit("setContentList", this.trip_list);
     },
     searchcontent() {
+      this.sort_select(0);
       const keyword = this.keyword;
       this.sendKeyword = this.keyword;
       const page = this.page;
@@ -136,18 +150,50 @@ export default {
           console.log("검색 실패" + error.data);
         });
     },
+    likecontent() {
+      const keyword = this.keyword;
+      this.sendKeyword = this.keyword;
+      const page = this.page;
+      const url = `http://localhost:8080/attraction/like?keyword=${keyword}&page=${page}`;
+
+      axios
+        .get(url)
+        .then((res) => {
+          this.trip_list = res.data.content;
+          console.log(res.data.content);
+          this.$emit("setContentList", res.data.content);
+
+          this.sendTotalPage = res.data.totalPages;
+          this.totalSearch = res.data.totalElements;
+        })
+        .catch((error) => {
+          console.log("검색 실패" + error.data);
+        });
+    },
     select(idx) {
-      if (this.test[idx]) {
-        this.test[idx] = !this.test[idx];
+      if (this.facility_active[idx]) {
+        this.facility_active[idx] = !this.facility_active[idx];
         this.$emit("setCategoryNum", 0);
       } else {
-        for (let i = 0; i < this.test.length; i++) {
+        for (let i = 0; i < this.facility_active.length; i++) {
           if (i != idx) {
-            this.test[i] = this.test[idx];
+            this.facility_active[i] = this.facility_active[idx];
           }
         }
-        this.test[idx] = !this.test[idx];
+        this.facility_active[idx] = !this.facility_active[idx];
         this.$emit("setCategoryNum", idx + 1);
+      }
+    },
+    sort_select(idx) {
+      if (this.sort_active[idx]) {
+        console.log("none");
+      } else {
+        for (let i = 0; i < this.sort_active.length; i++) {
+          if (i != idx) {
+            this.sort_active[i] = this.sort_active[idx];
+          }
+        }
+        this.sort_active[idx] = !this.sort_active[idx];
       }
     },
   },

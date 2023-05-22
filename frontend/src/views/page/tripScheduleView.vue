@@ -1,27 +1,40 @@
 <template>
-  <myNav/>
-  <div>안녕하세요</div>
-  <div id="map"></div>
-  <scheduleDivision :list_data="list_data"/>
+  <myNav />
+  <div id="schedule_container">
+    <section id="schedule_header">
+      <font-awesome-icon
+        :icon="['fass', 'left-long']"
+        size="3x"
+        style="margin: 20px 10px; cursor: pointer"
+        @click="$router.go(-1)" />
+      <div id="schedule_title">손수형 님 여행코스</div>
+    </section>
+    <section>
+      <div id="schedule_map"></div>
+    </section>
+    <section>
+      <scheduleDivision :list_data="list_data" />
+    </section>
+  </div>
 </template>
 
 <script>
-import myNav from '../includes/myNav.vue';
-import scheduleDivision from '@/components/scheduleDivision.vue';
+import myNav from "../includes/myNav.vue";
+import scheduleDivision from "@/components/scheduleDivision.vue";
 import axios from "@/service/axios";
 
 export default {
   components: {
     scheduleDivision,
-    myNav
+    myNav,
   },
   data() {
-    return{
+    return {
       map: null,
       markers: [],
       infowindow: null,
-      list_data: []
-    }
+      list_data: [],
+    };
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -47,11 +60,10 @@ export default {
       .catch((error) => {
         console.log("검색 실패" + error.data);
       });
-
   },
   methods: {
     initMap() {
-      const container = document.getElementById("map");
+      const container = document.getElementById("schedule_map");
 
       const options = {
         center: new kakao.maps.LatLng(33.450701, 126.570667),
@@ -67,7 +79,6 @@ export default {
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
     },
     displayMarkers(positions) {
-
       console.log(positions);
       // 여러개 마커를 정보를 보여줄 info window
       if (this.markers.length > 0) {
@@ -119,16 +130,29 @@ export default {
 
         this.map.setBounds(bounds);
       }
-    }
+    },
   },
-  
-}
+};
 </script>
 
 <style scoped>
-#map {
+#schedule_map {
   height: 500px;
-  width: 1200px;
+}
+
+#schedule_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+#schedule_title {
+  font-size: 20px;
+}
+
+section {
+  display: block;
   margin: 0 auto;
+  width: 120vh;
 }
 </style>

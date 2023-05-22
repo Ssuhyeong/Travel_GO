@@ -19,21 +19,21 @@
         <ul class="navbar-nav">
           <li class="navbar-dropdown">
             <a class="dropdown-toggler" data-dropdown="my-dropdown-id">
-              travel
+              여행을 떠나요
               <font-awesome-icon :icon="['fas', 'angle-down']" />
             </a>
             <ul class="dropdown" id="my-dropdown-id">
               <li><router-link to="/">여행지 검색</router-link></li>
-              <li><router-link to="/categorypage">추천 여행지</router-link></li>
+              <li><router-link to="/categorypage">핫플레이스</router-link></li>
               <li class="separator"></li>
-              <li><a href="#">지역별 여행지</a></li>
-              <li class="separator"></li>
-              <li><a href="#">나의 여행경로</a></li>
+              <li>
+                <router-link to="/tripScheduleView">나의 여행경로</router-link>
+              </li>
             </ul>
           </li>
           <li class="navbar-dropdown">
             <a class="dropdown-toggler" data-dropdown="blog">
-              board
+              커뮤니티
               <font-awesome-icon :icon="['fas', 'angle-down']" />
             </a>
             <ul class="dropdown" id="blog">
@@ -59,7 +59,14 @@
             </ul>
           </li>
           <li><router-link to="/profilepage">프로필</router-link></li>
-          <li><router-link to="/loginpage">로그인</router-link></li>
+          <li v-if="login">
+            <router-link to="/loginpage">로그인</router-link>
+          </li>
+          <li v-else>
+            <router-link to="/loginpage" @click="logout()"
+              >로그아웃</router-link
+            >
+          </li>
         </ul>
       </div>
     </div>
@@ -67,13 +74,23 @@
 </template>
 
 <script>
+import VueCookies from "vue-cookies";
+
 export default {
   data() {
     return {
       navActive: true,
       dropdownIsOpen: false,
       dropdowns: null,
+      login: false,
     };
+  },
+  created() {
+    if (VueCookies.get("accessToken")) {
+      this.login = false;
+    } else {
+      this.login = true;
+    }
   },
   methods: {
     ClickEvent(event) {
@@ -109,6 +126,9 @@ export default {
           }
         });
       }
+    },
+    logout() {
+      VueCookies.remove("accessToken");
     },
   },
   mounted() {

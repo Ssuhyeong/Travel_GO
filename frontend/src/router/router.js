@@ -12,6 +12,8 @@ import boardView from "@/views/board/boardView";
 import boardWritePage from "@/views/board/boardWriteView";
 import boardContentPage from "@/views/board/boardContentView";
 import reviewView from "@/views/page/reviewView";
+import tripScheduleView from "@/views/page/tripScheduleView";
+import updateScheduleView from "@/views/page/updateScheduleView";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -45,9 +47,27 @@ const router = createRouter({
       meta: { authRequired: true },
     },
     { path: "/profilepage", name: "profilepage", component: profileView },
-    { path: "/detailpage/:contentId", name: "detailpage", component: detailView },
+    {
+      path: "/detailpage/:contentId",
+      name: "detailpage",
+      component: detailView,
+    },
     { path: "/categorypage", name: "categorypage", component: categoryView },
-    { path: "/reviewpage/:contentId/:title", name: "reviewpage", component: reviewView },
+    {
+      path: "/reviewpage/:contentId/:title",
+      name: "reviewpage",
+      component: reviewView,
+    },
+    {
+      path: "/tripScheduleView",
+      name: "tripScheduleView",
+      component: tripScheduleView,
+    },
+    {
+      path: "/updateScheduleView",
+      name: "updateScheduleView",
+      component: updateScheduleView,
+    },
   ],
   scrollBehavior() {
     return { top: 0 };

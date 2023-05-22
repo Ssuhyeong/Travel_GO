@@ -155,6 +155,7 @@ export default {
       <h3>${positions[idx].addr1}</h3>
       <img
         src="${positions[idx].first_image}"
+        onerror="this.src= 'https://www.control.vg/wp-content/themes/crystalskull/img/defaults/default.jpg'" 
         style="width: 150px" />
     </div>`;
 
@@ -319,10 +320,6 @@ export default {
 
 .button-group {
   margin: 10px 0px;
-}
-
-button {
-  margin: 0 3px;
 }
 
 div {
