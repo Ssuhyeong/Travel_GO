@@ -47,18 +47,16 @@ public class MemberController {
             Authentication authentication) {
         String userId = authentication.getName();
 
+        memberService.modifyMemberInfo(memberRequestDto,userId);
 
-
-        return null;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping
+    @PutMapping("/delete")
     public ResponseEntity<?> userDeleteInfo(Authentication authentication) {
         String userId = authentication.getName();
-        Member member = memberRepository.findByEmail(userId).get();
+        memberService.killPassword(userId);
 
-        memberRepository.delete(member);
-
-        return null;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
