@@ -30,7 +30,7 @@ public class QSchedule extends EntityPathBase<Schedule> {
 
     public final QMember member;
 
-    public final QTravelRoutes travelRoutes;
+    public final NumberPath<Integer> scheduleNum = createNumber("scheduleNum", Integer.class);
 
     public QSchedule(String variable) {
         this(Schedule.class, forVariable(variable), INITS);
@@ -52,7 +52,6 @@ public class QSchedule extends EntityPathBase<Schedule> {
         super(type, metadata, inits);
         this.attraction = inits.isInitialized("attraction") ? new QAttraction(forProperty("attraction"), inits.get("attraction")) : null;
         this.member = inits.isInitialized("member") ? new QMember(forProperty("member")) : null;
-        this.travelRoutes = inits.isInitialized("travelRoutes") ? new QTravelRoutes(forProperty("travelRoutes"), inits.get("travelRoutes")) : null;
     }
 
 }
