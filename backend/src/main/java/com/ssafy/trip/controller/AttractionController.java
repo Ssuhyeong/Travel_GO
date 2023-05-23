@@ -86,4 +86,20 @@ public class AttractionController {
         return new ResponseEntity<>(attractionPage,HttpStatus.OK);
     }
 
+
+    @GetMapping("/course/limit")
+    public ResponseEntity<?> distanceLimit(
+            @RequestParam String latitude,
+            @RequestParam String longitude,
+            @RequestParam(required = false) String keyword,
+            Authentication authentication
+    ){
+
+        String userId = authentication.getName();
+
+        List<Attraction> distanceList = attractionService.distanceLimit(keyword,latitude,longitude);
+
+        return new ResponseEntity<>(distanceList,HttpStatus.OK);
+    }
+
 }
