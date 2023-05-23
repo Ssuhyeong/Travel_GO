@@ -1,6 +1,5 @@
 package com.ssafy.trip.dto.request;
 
-import com.ssafy.trip.Entity.Attraction;
 import com.ssafy.trip.Entity.Member;
 import com.ssafy.trip.Entity.Schedule;
 import com.ssafy.trip.Entity.TravelRoutes;
@@ -13,23 +12,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ScheduleRequestDto {
+public class TravelRoutesRequestDto {
 
     private Integer id;
+    private String title;
     private Member member;
-    private TravelRoutes travelRoutes;
-    private Attraction attraction;
-    private Integer day;
+    private Integer scheduleInfo;
 
-    public Schedule toEntity() {
-        Schedule schedule = Schedule.builder()
+    public TravelRoutes toEntity() {
+        TravelRoutes travelRoutes = TravelRoutes.builder()
                 .id(id)
+                .title(title)
                 .member(member)
-                .travelRoutes(travelRoutes)
-                .attraction(attraction)
-                .day(day)
+                .scheduleInfo(scheduleInfo)
                 .build();
 
-        return schedule;
+        return travelRoutes;
     }
 }
