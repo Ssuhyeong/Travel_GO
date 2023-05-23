@@ -1,26 +1,49 @@
 <template>
-  <myNav/>
-  <div id="map"></div>
-  <scheduleDivisionUpdate :list_data="list_data"/>
+  <myNav />
+  <div id="map">
+    <div class="card">
+      <div
+        class="place_content"
+        v-for="data in list_data"
+        :key="data.content_id">
+        <div class="place_title">
+          <h3>{{ data.title }}</h3>
+          <p>{{ catagory_spec[data.content_type_id] }}</p>
+        </div>
+        <div class="addr_main">{{ data.addr1 }}</div>
+      </div>
+    </div>
+  </div>
+  <scheduleDivisionUpdate :list_data="list_data" />
 </template>
 
 <script>
-import scheduleDivisionUpdate from '@/components/scheduleDivisionUpdate.vue';
-import myNav from '../includes/myNav.vue';
+import scheduleDivisionUpdate from "@/components/scheduleDivisionUpdate.vue";
+import myNav from "../includes/myNav.vue";
 import axios from "@/service/axios";
 
 export default {
   components: {
     scheduleDivisionUpdate,
-    myNav
+    myNav,
   },
   data() {
-    return{
+    return {
       map: null,
       markers: [],
       infowindow: null,
-      list_data: []
-    }
+      list_data: [],
+      catagory_spec: {
+        12: "관광지",
+        14: "문화시설",
+        15: "축제공연행사",
+        25: "여행코스",
+        28: "레포츠",
+        32: "숙박",
+        38: "쇼핑",
+        39: "음식점",
+      },
+    };
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -34,19 +57,21 @@ export default {
       document.head.appendChild(script);
     }
 
-    const url = `http://localhost:8080/attraction/search-list?keyword=서울랜드&page=0`;
-
     axios
-      .get(url)
+      .get(`http://localhost:8080/like`)
       .then((res) => {
-        console.log(res);
-        this.list_data = res.data.content;
-        this.displayMarkers(res.data.content);
+        for (let i = 0; i < res.data.length; i++) {
+          const url = `http://localhost:8080/attraction/search-list?contentId=${res.data[i]}`;
+          axios.get(url).then((res) => {
+            this.list_data.push(res.data.content[0]);
+          });
+        }
       })
-      .catch((error) => {
-        console.log("검색 실패" + error.data);
+      .catch((err) => {
+        console.log(err);
       });
 
+    console.log(this.list_data);
   },
   methods: {
     initMap() {
@@ -66,7 +91,6 @@ export default {
       this.map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
     },
     displayMarkers(positions) {
-
       console.log(positions);
       // 여러개 마커를 정보를 보여줄 info window
       if (this.markers.length > 0) {
@@ -118,16 +142,48 @@ export default {
 
         this.map.setBounds(bounds);
       }
-    }
+    },
   },
-  
-}
+};
 </script>
 
-<style scoped>
+<style>
 #map {
   height: 500px;
   width: 1200px;
   margin: 0 auto;
+  border-radius: 20px;
+}
+
+.card {
+  position: relative;
+  width: 300px;
+  height: 97%;
+  background-color: #fff;
+  border-radius: 5px;
+  margin: 20px 10px;
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+  border-radius: 10px;
+  z-index: 2;
+  overflow: auto;
+}
+
+.place_content {
+  padding: 10px 30px;
+  border-bottom: 1px solid #dbdbdb;
+}
+.place_content:hover {
+  background-color: #d9ecf0;
+}
+
+.place_title {
+  display: flex;
+  align-items: center;
+}
+
+.place_title > p {
+  color: #9c9c9c;
+  font-size: 12px;
+  margin-left: 6px;
 }
 </style>

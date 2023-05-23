@@ -177,6 +177,7 @@ export default {
 <style scoped>
 a {
   text-decoration: none;
+  text-align: center;
 }
 
 ul {

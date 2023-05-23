@@ -53,9 +53,26 @@
       </div>
       <div style="margin-bottom: 23px">
         <div id="category_box">
-          <div class="profile_category">즐겨찾기</div>
+          <div
+            class="profile_category"
+            :class="{ active: btn_active[0] }"
+            @click="select_active(0)">
+            즐겨찾기
+          </div>
+          <div
+            class="profile_category"
+            :class="{ active: btn_active[1] }"
+            @click="select_active(1)">
+            여행경로
+          </div>
+          <div
+            class="profile_category"
+            :class="{ active: btn_active[2] }"
+            @click="select_active(2)">
+            팔로우
+          </div>
         </div>
-        <div class="profile_content">
+        <div v-if="btn_active[0]" class="profile_content">
           <p id="profile_type">즐겨찾기</p>
           <div id="content_container">
             <div
@@ -76,6 +93,31 @@
             </div>
           </div>
         </div>
+        <div v-if="btn_active[1]" class="profile_content">
+          <div id="route_header">
+            <p id="profile_type">여행경로</p>
+            <font-awesome-icon
+              :icon="['fass', 'plus']"
+              size="2x"
+              style="cursor: pointer; margin-right: 30px"
+              @click="
+                $router.push({
+                  name: 'updateScheduleView',
+                })
+              " />
+          </div>
+          <div id="content_container">
+            <div class="card">
+              <img
+                src="https://www.control.vg/wp-content/themes/crystalskull/img/defaults/default.jpg" />
+              <h3>테스트</h3>
+              <p>
+                ㅁ니ㅏ엉ㄴ마ㅣㅓ마ㅣㄴ어나ㅣㅓㅁㄴ아ㅣㄴㅇ머ㅏㅣㅁㄴ어ㅣㅏㄴ먼이마ㅓㄴㅁ이ㅏㅓㄴ이ㅏㅓㅁ니ㅏ
+              </p>
+            </div>
+          </div>
+        </div>
+        <div v-if="btn_active[2]" class="profile_content"></div>
       </div>
     </div>
   </div>
@@ -99,6 +141,7 @@ export default {
       updateData: {},
       like_list: [],
       showModal: false,
+      btn_active: [true, false, false],
     };
   },
   components: {},
@@ -144,6 +187,13 @@ export default {
         this.changeName = "";
         this.$router.go(0);
       });
+    },
+    select_active(idx) {
+      for (let i = 0; i < 3; i++) {
+        this.btn_active[i] = false;
+      }
+
+      this.btn_active[idx] = true;
     },
   },
 };
@@ -229,6 +279,11 @@ h1 {
   margin: 2rem;
 }
 
+#route_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .profile_category {
   background-color: #fff;
   margin: 5px 5px;
@@ -242,6 +297,10 @@ h1 {
 .profile_category:hover {
   background-color: #d9ecf0;
   cursor: pointer;
+}
+
+.active {
+  background-color: #d9ecf0;
 }
 
 .card {
@@ -269,7 +328,7 @@ h1 {
 .card > h3 {
   color: white;
   font-size: 20px;
-  margin: 20px 0 0 20px;
+  margin: 20px 20px 20px 20px;
 }
 
 .card > p {
@@ -277,7 +336,7 @@ h1 {
   font-weight: 400;
   font-size: 12px;
   align-self: end;
-  margin: 0 0 20px 20px;
+  margin: 20px 20px 20px 20px;
   letter-spacing: 0.5px;
 }
 

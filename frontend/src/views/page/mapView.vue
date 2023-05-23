@@ -4,6 +4,7 @@
     <div id="map">
       <mapCard
         style="z-index: 2"
+        :current_point="current_point"
         @setContentList="setContentList"
         @setCategoryNum="setCategoryNum" />
       <weatherBoxVue :weatherArea="weatherArea" />
@@ -39,6 +40,7 @@ export default {
       weatherArea: "",
       placeOverlay: null,
       contentNode: null,
+      current_point: null,
     };
   },
   mounted() {
@@ -93,6 +95,7 @@ export default {
           pos.coords.latitude,
           pos.coords.longitude
         );
+        this.current_point = currentPos;
         this.map.panTo(currentPos);
       };
       navigator.geolocation.getCurrentPosition(locationLoadSuccess);

@@ -28,7 +28,9 @@
             @click="[sort_select(1), likecontent()]">
             추천
           </div>
-          <div :class="{ active: sort_active[2] }" @click="sort_select(2)">
+          <div
+            :class="{ active: sort_active[2] }"
+            @click="[sort_select(2), distcontent()]">
             거리순
           </div>
           <div :class="{ active: sort_active[3] }" @click="sort_select(3)">
@@ -118,6 +120,11 @@ export default {
       page: "0",
     };
   },
+  props: {
+    current_point: {
+      type: Array,
+    },
+  },
   mounted() {
     const searchForm = document.getElementById("search_form");
     searchForm.addEventListener("submit", (e) => e.preventDefault());
@@ -155,6 +162,28 @@ export default {
       this.sendKeyword = this.keyword;
       const page = this.page;
       const url = `http://localhost:8080/attraction/like?keyword=${keyword}&page=${page}`;
+
+      axios
+        .get(url)
+        .then((res) => {
+          this.trip_list = res.data.content;
+          console.log(res.data.content);
+          this.$emit("setContentList", res.data.content);
+
+          this.sendTotalPage = res.data.totalPages;
+          this.totalSearch = res.data.totalElements;
+        })
+        .catch((error) => {
+          console.log("검색 실패" + error.data);
+        });
+    },
+    distcontent() {
+      const keyword = this.keyword;
+      this.sendKeyword = this.keyword;
+      const page = this.page;
+
+      console.log(this.current_point.La);
+      const url = `http://localhost:8080/attraction/course?keyword=${keyword}&latitude=${this.current_point.Ma}&longitude=${this.current_point.La}&page=${page}`;
 
       axios
         .get(url)

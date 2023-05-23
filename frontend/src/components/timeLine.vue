@@ -1,34 +1,36 @@
 <template>
   <section class="steps steps-area">
-        <div class="container">
-            <!-- title-section -->
-            <ul class="timeline">
-              <li class="timeline-box wow fadeInRight" v-for="(data, idx) in list_data" :key="data.content_id" @click="$router.push({name: 'detailpage', params: {contentId : data.content_id}})">
-                  <i class="icon-layers">
-                    여기가 왜?
-                  </i>
-                  <p class="timeline-title">{{ data.title }}</p>
-                  <p class="timeline-details" style="width: 740px">{{ data.addr1 }}</p>
-                  <span>{{ idx + 1 }}</span>
-              </li> 
-            </ul>
-        </div>                 
-      </section>
+    <div class="container">
+      <!-- title-section -->
+      <ul class="timeline">
+        <li
+          class="timeline-box wow fadeInRight"
+          v-for="(data, idx) in list_data"
+          :key="data.content_id"
+          @click="
+            $router.push({
+              name: 'detailpage',
+              params: { contentId: data.content_id },
+            })
+          ">
+          <i class="icon-layers"> 여기가 왜? </i>
+          <p class="timeline-title">{{ data.title }}</p>
+          <p class="timeline-details" style="width: 740px">{{ data.addr1 }}</p>
+          <span>{{ idx + 1 }}</span>
+        </li>
+      </ul>
+    </div>
+  </section>
 </template>
 
 <script>
 export default {
   props: {
     list_data: {
-      type: Array
-    }
+      type: Array,
+    },
   },
-  watch: {
-    list_data(value) {
-      console.log(value);
-    }
-  }
-}
+};
 </script>
 
 <style>
@@ -62,6 +64,7 @@ export default {
   list-style-type: none;
   display: block;
   padding: 25px;
+  border-radius: 20px;
   background: #f8f8f8;
   cursor: pointer;
   z-index: 15;
@@ -153,13 +156,15 @@ export default {
   right: auto;
 }
 
-.timeline-box:hover, .timeline-box:focus {
+.timeline-box:hover,
+.timeline-box:focus {
   transform: translate(0, -5px);
   -webkit-transform: translate(0, -5px);
   -ms-transform: translate(0, -5px);
 }
 
-.timeline-box:hover, .timeline-box:focus {
+.timeline-box:hover,
+.timeline-box:focus {
   -webkit-box-shadow: 0px 3px 0px 0px #ff4769;
   -moz-box-shadow: 0px 3px 0px 0px #ff4769;
   box-shadow: 0px 3px 0px 0px #ff4769;
@@ -171,5 +176,4 @@ export default {
   -moz-transition: all 300ms ease-in-out;
   -o-transition: all 300ms ease-in-out;
 }
-
 </style>

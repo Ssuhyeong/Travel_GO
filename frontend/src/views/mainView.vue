@@ -14,7 +14,9 @@
         src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_2.png"
         id="clouds_2" />
     </section>
-    <cardSlider style="padding-top: 40px; margin-bottom: 0px" />
+    <cardSlider
+      :best_list="best_list"
+      style="padding-top: 40px; margin-bottom: 0px" />
     <section id="sec" style="padding-top: 0px">
       <h2 style="padding: 0px">Welcome to the 여행가자</h2>
       <p>
@@ -69,12 +71,16 @@ export default {
   data() {
     return {
       board_list: [],
+      best_list: [],
     };
   },
   created() {
     axios.get(`http://localhost:8080/board/search`).then((res) => {
       this.board_list = res.data.content;
       console.log(this.board_list);
+    });
+    axios.get(`http://localhost:8080/attraction/bestlike`).then((res) => {
+      this.best_list = res.data;
     });
   },
   mounted() {
