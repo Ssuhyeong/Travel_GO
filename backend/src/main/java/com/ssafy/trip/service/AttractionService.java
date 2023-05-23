@@ -59,4 +59,23 @@ public class AttractionService {
         return resultList;
     }
 
+    public List<Attraction> distanceLimit(String keyword, String w , String g) {
+        List<Attraction> attractionList = distance(keyword,w,g);
+
+        List<Attraction> limitAttraction = new ArrayList<>();
+
+        if(attractionList.size()<4){
+            for(int i=0;i<attractionList.size();i++){
+                limitAttraction.add(attractionList.get(i));
+            }
+        }
+        else{
+            for (int i=0;i<4;i++){
+                limitAttraction.add(attractionList.get(i));
+            }
+        }
+
+        return limitAttraction;
+    }
+
 }
