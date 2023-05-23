@@ -95,4 +95,13 @@ public class AttractionRepositoryImpl extends QuerydslRepositorySupport implemen
                 .where(attraction.eq(attraction1))
                 .execute();
     }
+
+    @Override
+    public List<Attraction> findByBestLike() {
+
+        List<Attraction> bestLike =
+        queryFactory.selectFrom(attraction).orderBy(attraction.like_count.desc()).limit(5).fetch();
+
+        return bestLike;
+    }
 }

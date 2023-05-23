@@ -4,6 +4,8 @@ import com.ssafy.trip.Entity.Attraction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
+
 public interface AttractionRepositoryCustom {
 
     Page<Attraction> findBySearchOption(
@@ -14,5 +16,7 @@ public interface AttractionRepositoryCustom {
 
     void  updateLikeCount(Attraction attraction1);
     void  updateDownLike(Attraction attraction1);
+
+    List<Attraction> findByBestLike();
 
 }
