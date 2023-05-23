@@ -6,8 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.w3c.dom.Attr;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,32 @@ public class AttractionService {
 
     public List<Attraction> bestLike() {
         return attractionRepository.findByBestLike();
+    }
+
+    public List<Attraction> distance(String keyword, String w , String g) {
+        List<Attraction> distanceList = attractionRepository.findByKeyword(keyword);
+        Double wee = Double.valueOf(w);
+        Double gyu = Double.valueOf(g);
+
+        Map<Double,Attraction> dis = new TreeMap<>();
+
+        for (int i=0;i<distanceList.size();i++){
+            Double x = Double.valueOf(distanceList.get(i).getLatitude());
+            Double y = Double.valueOf(distanceList.get(i).getLongitude());
+
+            Double result = Math.abs(x-wee)+Math.abs(y-gyu);
+
+            dis.put(result,distanceList.get(i));
+        }
+
+        List<Attraction> resultList = new ArrayList<>();
+
+        for (Double key : dis.keySet()){
+            Attraction att = dis.get(key);
+            resultList.add(att);
+        }
+
+        return resultList;
     }
 
 }

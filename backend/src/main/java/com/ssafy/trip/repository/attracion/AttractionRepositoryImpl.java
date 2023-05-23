@@ -104,4 +104,14 @@ public class AttractionRepositoryImpl extends QuerydslRepositorySupport implemen
 
         return bestLike;
     }
+
+    @Override
+    public List<Attraction> findByKeyword(String keyword) {
+
+        JPQLQuery<Attraction> query =  queryFactory.selectFrom(attraction)
+                .where(containKeyword(keyword));
+
+        List<Attraction> attractions = queryFactory.selectFrom(attraction).where(containKeyword(keyword)).fetch();
+        return attractions;
+    }
 }
