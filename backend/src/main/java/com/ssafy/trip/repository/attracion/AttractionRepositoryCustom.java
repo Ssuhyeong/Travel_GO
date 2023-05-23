@@ -19,4 +19,6 @@ public interface AttractionRepositoryCustom {
 
     List<Attraction> findByBestLike();
 
+    List<Attraction> findByKeyword(String keyword);
+
 }

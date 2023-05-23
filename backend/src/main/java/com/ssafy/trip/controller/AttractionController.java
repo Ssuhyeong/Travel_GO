@@ -6,15 +6,15 @@ import com.ssafy.trip.service.AttractionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.parameters.P;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
@@ -63,6 +63,27 @@ public class AttractionController {
     public ResponseEntity<?> bestLike() {
         List<Attraction> best = attractionService.bestLike();
         return new ResponseEntity<>(best,HttpStatus.OK);
+    }
+
+    @GetMapping("/course")
+    public ResponseEntity<?> distanceSort(
+            @PageableDefault(size = 15) Pageable pageable,
+            @RequestParam String latitude,
+            @RequestParam String longitude,
+            @RequestParam(required = false) String keyword,
+            Authentication authentication
+            ){
+
+        String userId = authentication.getName();
+
+        List<Attraction> distanceList = attractionService.distance(keyword,latitude,longitude);
+
+        int start = (int)pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), distanceList.size());
+
+        Page<Attraction> attractionPage = new PageImpl<>(distanceList.subList(start,end),pageable, distanceList.size());
+
+        return new ResponseEntity<>(attractionPage,HttpStatus.OK);
     }
 
 }
