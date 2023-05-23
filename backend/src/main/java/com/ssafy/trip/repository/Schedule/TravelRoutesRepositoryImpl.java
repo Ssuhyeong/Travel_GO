@@ -1,7 +1,6 @@
 package com.ssafy.trip.repository.Schedule;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.trip.Entity.Member;
 import com.ssafy.trip.Entity.Schedule;
 import com.ssafy.trip.Entity.TravelRoutes;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class TravelRoutesRepositoryImpl extends QuerydslRepositorySupport implem
 
         List<Schedule> scheduleList =
         queryFactory.selectFrom(schedule)
-                .where(schedule.member.email.eq(userId).and(schedule.travelRoutes.scheduleInfo.eq(scheduleInfo))).fetch();
+                .where(schedule.member.email.eq(userId).and(schedule.scheduleNum.eq(scheduleInfo))).fetch();
 
         return scheduleList;
     }

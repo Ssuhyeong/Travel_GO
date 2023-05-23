@@ -36,7 +36,8 @@ public class ScheduleService {
         scheduleRequestDto.setMember(member);
         scheduleRequestDto.setDay(day);
         scheduleRequestDto.setAttraction(attraction);
-        scheduleRequestDto.setTravelRoutes(travelRoutes);//setScheduleNum(scheduleNum);
+        scheduleRequestDto.setScheduleNum(scheduleNum);
+        //scheduleRequestDto.setTravelRoutes.(TravelRoutes);//setScheduleNum(scheduleNum);
 
         Schedule schedule = scheduleRequestDto.toEntity();
 
@@ -45,7 +46,7 @@ public class ScheduleService {
 
     public List<Attraction>[] scheduleOfDay(String userId,Integer scheduleNum){
         Member member = memberRepository.findByEmail(userId).get();
-        List<Attraction>[] plan  = new ArrayList[7];
+        List<Attraction>[] plan  = new ArrayList[8];
         for(int day=1;day<=7;day++){
             List<Attraction> attractionsOfDay = scheduleRepository.findByDayAndScheduleNum(userId,day,scheduleNum);
             plan[day] = attractionsOfDay;
