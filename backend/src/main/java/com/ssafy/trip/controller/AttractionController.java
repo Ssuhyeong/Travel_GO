@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -56,6 +57,12 @@ public class AttractionController {
 
         return new ResponseEntity<>(attractions,HttpStatus.OK);
 
+    }
+
+    @GetMapping("/bestlike")
+    public ResponseEntity<?> bestLike() {
+        List<Attraction> best = attractionService.bestLike();
+        return new ResponseEntity<>(best,HttpStatus.OK);
     }
 
 }

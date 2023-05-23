@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AttractionService {
@@ -23,6 +25,10 @@ public class AttractionService {
             Pageable pageable, String keyword , Integer sidoCode , Integer contentTypeId
     ) {
         return attractionRepository.findBySearchOrderBy(pageable, keyword,sidoCode, contentTypeId);
+    }
+
+    public List<Attraction> bestLike() {
+        return attractionRepository.findByBestLike();
     }
 
 }
