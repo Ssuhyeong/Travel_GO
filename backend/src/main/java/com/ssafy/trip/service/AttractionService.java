@@ -63,13 +63,13 @@ public class AttractionService {
 
         List<Attraction> limitAttraction = new ArrayList<>();
 
-        if(attractionList.size()<4){
-            for(int i=0;i<attractionList.size();i++){
+        if(attractionList.size()<5){
+            for(int i=1;i<attractionList.size();i++){
                 limitAttraction.add(attractionList.get(i));
             }
         }
         else{
-            for (int i=0;i<4;i++){
+            for (int i=1;i<5;i++){
                 limitAttraction.add(attractionList.get(i));
             }
         }
