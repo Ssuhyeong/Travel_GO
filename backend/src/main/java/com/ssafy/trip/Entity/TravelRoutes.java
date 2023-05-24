@@ -20,7 +20,7 @@ public class TravelRoutes implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(targetEntity = Member.class,fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Member.class,fetch = FetchType.LAZY )
     @JoinColumn(name = "member_email" , referencedColumnName = "email")
     private Member member;
 

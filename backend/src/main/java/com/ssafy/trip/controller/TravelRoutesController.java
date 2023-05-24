@@ -2,10 +2,8 @@ package com.ssafy.trip.controller;
 
 import com.ssafy.trip.Entity.Schedule;
 import com.ssafy.trip.Entity.TravelRoutes;
-import com.ssafy.trip.dto.request.TravelRoutesRequestDto;
 import com.ssafy.trip.service.TravelRoutesService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -51,5 +49,17 @@ public class TravelRoutesController {
         List<Schedule> scheduleDetailList = travelRoutesService.scheduleListSearch(userId,scheduleInfo);
 
         return new ResponseEntity<>(scheduleDetailList, HttpStatus.OK);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteTravel(
+            @RequestParam Integer scheduleInfo,
+            Authentication authentication
+    ){
+        String userId = authentication.getName();
+
+        travelRoutesService.deleteTravel(userId,scheduleInfo);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
