@@ -61,7 +61,12 @@
         </div>
       </div>
     </div>
+    <vue-basic-alert 
+       :duration="1500"
+       :closeIn="1500"
+       ref="alert" />
   </div>
+  
 </template>
 
 <script>
@@ -69,12 +74,13 @@ import toastNotice from "@/components/toastNotice.vue";
 import axios from "@/service/axios";
 import VueCookies from "vue-cookies";
 import { useStore } from "vuex";
-import swal from "sweetalert";
+import VueBasicAlert from 'vue-basic-alert'
 
 export default {
   name: "loginView",
   components: {
     toastNotice,
+    VueBasicAlert
   },
   data() {
     return {
@@ -126,13 +132,18 @@ export default {
         .then((res) => {
           VueCookies.set("accessToken", res.data.accessToken);
           VueCookies.set("refreshToken", res.data.refreshToken);
-          swal("로그인 성공!", "Welcome to our website.", "success");
+          
           this.$router.push({
             path: "/mainpage",
           });
         })
         .catch(() => {
-          swal("로그인 실패!", "아이디와 비밀번호를 확인해 주세요", "warning");
+          this.$refs.alert
+        .showAlert(
+            'error', 
+            '올바르지 않은 이메일 또는 비밀번호입니다.',
+            '로그인 실패', 
+        )
         });
     },
     signup() {
@@ -148,7 +159,12 @@ export default {
           // this.user_data.email = "";
           // this.user_data.name = "";
           // this.user_data.password = "";
-          swal("로그인 성공!", "Welcome to our website.");
+          this.$refs.alert
+        .showAlert(
+            'success', 
+            '회원가입에 성공하셨습니다!',
+            '회원가입 성공', 
+        )
         })
         .catch(() => {
           // console.log(err);
@@ -158,7 +174,12 @@ export default {
           // this.user_data.email = "";
           // this.user_data.name = "";
           // this.user_data.password = "";
-          swal("로그인 실패!", "아이디와 비밀번호를 확인해 주세요", "warning");
+          this.$refs.alert
+        .showAlert(
+            'error', 
+            '이미 등록되어 있는 가입자입니다.',
+            '회원가입 실패', 
+        )
         });
     },
   },

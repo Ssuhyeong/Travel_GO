@@ -1,5 +1,6 @@
 package com.ssafy.trip.Entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,7 +30,7 @@ public class Member implements Serializable {
 
 	@Column(name = "refresh_token")
 	private String refreshToken;
-
+	
 	@OneToMany(mappedBy = "member")
 	private List<Photo> photos = new ArrayList<>();
 

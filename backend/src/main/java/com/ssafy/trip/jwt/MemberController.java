@@ -66,7 +66,7 @@ public class MemberController {
 
     @PostMapping("/photo")
     public ResponseEntity<?> uploadProfilePhoto(
-            @RequestParam("files") List<MultipartFile> files,
+            @RequestParam(value = "files",required = false) List<MultipartFile> files,
             Authentication authentication
     ) throws Exception{
 

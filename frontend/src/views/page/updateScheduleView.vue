@@ -77,8 +77,8 @@
 <script>
 import scheduleDivisionUpdate from "@/components/scheduleDivisionUpdate.vue";
 import { VueDraggableNext } from "vue-draggable-next";
+import { useStore } from "vuex";
 import myNav from "../includes/myNav.vue";
-import swal from "sweetalert";
 import axios from "@/service/axios";
 
 export default {
@@ -110,6 +110,14 @@ export default {
       active_day: 0,
       customOverlay_list: [],
     };
+  },
+  setup() {
+    const store = useStore();
+    const setShow = () => store.commit("setShow", true);
+    const setText = () => store.commit("setText", "성공적으로 등록하였습니다.");
+    const setColor = () => store.commit("setColor", "#0e4bf1");
+
+    return { setShow, setText, setColor };
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -244,7 +252,9 @@ export default {
           this.day_list
         )
         .then(() => {
-          swal("등록 성공!", "", "success");
+          this.setShow();
+          this.setText();
+          this.setColor();
           this.$router.go(-1);
         });
     },

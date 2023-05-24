@@ -1,5 +1,6 @@
 <template>
   <!-- 프로필 변경 모달 -->
+  <toastNotice :message="toastText" v-if="toastShow" style="z-index: 999"/>
   <transition name="fade" appear>
     <div
       class="modal-overlay"
@@ -37,6 +38,21 @@
     </div>
   </transition>
 
+  <!-- 삭제 경고창 -->
+  <transition name="fade" appear>
+    <div
+      class="modal-overlay"
+      v-if="showModal_delete"
+      @click="showModal_delete = false"></div>
+  </transition>
+  <transition name="pop" appear>
+    <div class="modal" role="dialog" v-if="showModal_delete">
+      <h1>정말 삭제하시겠습니까?</h1>
+      <button @click="deleteUser()" class="cancel_button">삭제하기</button>
+      <button @click="showModal_delete = false" class="button">취소</button>
+    </div>
+  </transition>
+
   <div class="background">
     <div id="profile_container">
       <div class="outer-div">
@@ -62,7 +78,7 @@
                   size="20"
                   style="margin: 10px"
               /></a>
-              <a @click="deleteUser" class="social-icon"
+              <a @click="showModal_delete = true" class="social-icon"
                 ><font-awesome-icon
                   :icon="['fas', 'trash-can']"
                   size="20"
@@ -165,7 +181,10 @@
 <script>
 import axios from "@/service/axios";
 import VueCookies from "vue-cookies";
+import toastNotice from "@/components/toastNotice.vue";
 import swal from "sweetalert";
+import { useStore } from "vuex";
+import { computed } from "vue";
 
 export default {
   name: "profileView",
@@ -183,12 +202,25 @@ export default {
       route_list: [],
       showModal: false,
       showModal_route: false,
+      showModal_delete: false,
       btn_active: [true, false, false],
       route_title: "",
       scheduleInfo: 0,
+      toastShow: false,
+      toastText: "",
     };
   },
-  components: {},
+  components: {toastNotice},
+  setup() {
+    const store = useStore();
+    const toastTextResult = computed(() => store.state.text);
+    const toastShowResult = computed(() => store.state.toastShow);
+
+    return { toastTextResult, toastShowResult };
+  },
+  created() {
+    this.createBoard();
+  },
   mounted() {
     axios
       .get(`http://localhost:8080/like`)
@@ -219,6 +251,10 @@ export default {
     });
   },
   methods: {
+    createBoard() {
+      this.toastText = this.toastTextResult;
+      this.toastShow = this.toastShowResult;
+    },
     deleteUser() {
       swal({
         title: "정말 탈퇴하겠습니까?",
@@ -314,7 +350,7 @@ textarea::-webkit-scrollbar {
 }
 
 h1 {
-  font-size: 40px;
+  font-size: 32px;
 }
 .button {
   border: none;
@@ -323,8 +359,21 @@ h1 {
   appearance: none;
   font: inherit;
   font-size: 1.1rem;
+  padding: 0.4em 0.8em;
+  border-radius: 0.3em;
+  cursor: pointer;
+}
+
+.cancel_button {
+  border: none;
+  color: #fff;
+  background: #ed4956;
+  appearance: none;
+  font: inherit;
+  font-size: 1.1rem;
   padding: 0.4em 0.6em;
   border-radius: 0.3em;
+  margin-right: 20px;
   cursor: pointer;
 }
 

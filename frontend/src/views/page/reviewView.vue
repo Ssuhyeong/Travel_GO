@@ -113,7 +113,9 @@ export default {
     axios
       .get(`http://localhost:8080/review?attractionId=${content_id}`)
       .then((res) => {
-        this.review_data = res.data;
+        this.review_data = res.data.sort(
+          (a, b) => new Date(b.registerTime) - new Date(a.registerTime)
+        );
         this.review_num = res.data.length;
 
         for (let i = 0; i < this.review_num; i++) {

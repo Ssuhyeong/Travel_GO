@@ -33,9 +33,6 @@
             @click="[sort_select(2), distcontent()]">
             거리순
           </div>
-          <div :class="{ active: sort_active[3] }" @click="sort_select(3)">
-            MY
-          </div>
         </div>
       </div>
       <div class="card_content">
@@ -313,7 +310,7 @@ hr {
 }
 
 #select_container > div {
-  padding: 10px 20px;
+  padding: 10px 30px;
   margin: 10px;
   border-radius: 10px;
   cursor: pointer;

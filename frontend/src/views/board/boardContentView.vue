@@ -30,17 +30,23 @@
       @click="deleteBoard()">
       글삭제
     </button>
+    <vue-basic-alert 
+       :duration="1500"
+       :closeIn="1500"
+       ref="alert" />
   </div>
 </template>
 
 <script>
 import myNav from "@/views/includes/myNav.vue";
 import axios from "@/service/axios";
+import VueBasicAlert from 'vue-basic-alert'
 import { useStore } from "vuex";
 
 export default {
   components: {
     myNav,
+    VueBasicAlert
   },
   data() {
     return {
@@ -66,6 +72,7 @@ export default {
     axios.get(url).then((res) => {
       this.board_data = res.data;
       this.name = this.board_data.member.name;
+      
     });
   },
   methods: {
@@ -78,7 +85,14 @@ export default {
         this.setText();
         this.setColor();
         this.$router.go(-1);
-      });
+      }).catch(() => {
+        this.$refs.alert
+        .showAlert(
+            'error', 
+            '본인의 계정만 삭제가 가능합니다.',
+            '삭제 실패', 
+        )
+      })
     },
     goUpdate() {
       const no = this.board_data.articleNo;

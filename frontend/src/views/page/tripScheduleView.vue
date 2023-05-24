@@ -25,7 +25,7 @@
         </h1>
       </div>
     </section>
-    <p id="dist">코스 총거리 : 337.48km</p>
+    <p id="dist">코스 총거리 : {{total_dist.toFixed(2)}}km</p>
     <section>
       <div id="day_container">
         <div id="day_icon">
@@ -58,6 +58,7 @@
 import myNav from "../includes/myNav.vue";
 import scheduleDivision from "@/components/scheduleDivision.vue";
 import axios from "@/service/axios";
+import { useStore } from "vuex";
 
 export default {
   components: {
@@ -73,7 +74,16 @@ export default {
       test: [],
       day_cnt: 0,
       route_cnt: 0,
+      total_dist: 0
     };
+  },
+  setup() {
+    const store = useStore();
+    const setShow = () => store.commit("setShow", true);
+    const setText = () => store.commit("setText", "성공적으로 삭제하였습니다.");
+    const setColor = () => store.commit("setColor", "#f44040");
+
+    return { setShow, setText, setColor };
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -90,9 +100,13 @@ export default {
     axios
       .get(`http://localhost:8080/travel/${this.$route.params.scheduleInfo}`)
       .then((res) => {
-        console.log(res);
         for (let i = 0; i < res.data.length; i++) {
           this.list_data[res.data[i].day].push(res.data[i].attraction);
+          
+          if(i != 0 && res.data[i].day == res.data[i-1].day) {
+            this.total_dist += this.calculateDistance(res.data[i-1].attraction.latitude, res.data[i-1].attraction.longitude, res.data[i].attraction.latitude, res.data[i].attraction.longitude);
+          }
+          
           this.route_cnt++;
           if (this.day_cnt < res.data[i].day) {
             this.day_cnt = res.data[i].day;
@@ -100,8 +114,6 @@ export default {
         }
         this.displayMarkers(this.list_data[1]);
       });
-
-    console.log(this.list_data);
   },
   methods: {
     day_list(value) {
@@ -194,9 +206,33 @@ export default {
           `http://localhost:8080/travel?scheduleInfo=${this.$route.params.scheduleInfo}`
         )
         .then(() => {
-          console.log("삭제성공");
+          this.setShow();
+          this.setText();
+          this.setColor();
           this.$router.go(-1);
         });
+    },
+    calculateDistance(lat1, lon1, lat2, lon2) {
+      const degToRad = (deg) => {
+        return deg * (Math.PI / 180);
+      };
+
+      const earthRadius = 6371; // Earth's radius in kilometers
+
+      const dLat = degToRad(lat2 - lat1);
+      const dLon = degToRad(lon2 - lon1);
+
+      const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(degToRad(lat1)) *
+          Math.cos(degToRad(lat2)) *
+          Math.sin(dLon / 2) *
+          Math.sin(dLon / 2);
+
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+      const distance = earthRadius * c;
+      return distance;
     },
   },
 };
