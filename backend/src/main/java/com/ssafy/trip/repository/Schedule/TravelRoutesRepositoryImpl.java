@@ -35,7 +35,7 @@ public class TravelRoutesRepositoryImpl extends QuerydslRepositorySupport implem
 
        TravelRoutes travel =
                 queryFactory.selectFrom(travelRoutes)
-                        .where(travelRoutes.member.email.eq(userId).and(travelRoutes.scheduleInfo.eq(scheduleInfo))).fetchOne();
+                        .where(travelRoutes.member.email.eq(userId).and(travelRoutes.scheduleInfo.eq(scheduleInfo))).fetchFirst();
 
         return travel;
     }
