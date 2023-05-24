@@ -3,6 +3,7 @@ package com.ssafy.trip.controller;
 import com.ssafy.trip.Entity.Attraction;
 import com.ssafy.trip.service.ScheduleService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -13,19 +14,21 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/schedule")
 @RestController
+@Slf4j
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
 
     @PostMapping
     public ResponseEntity<?> addSchedule(
-            @RequestParam Integer day,
-            @RequestParam Integer attractionId,
-            @RequestParam Integer scheduleNum
-            ,Authentication authentication) {
+            @RequestBody List<Attraction>[] addList,
+            @RequestParam Integer scheduleNum,
+            @RequestParam(required = false) Integer day,
+            Authentication authentication) {
+
         String userId = authentication.getName();
 
-        scheduleService.addSchedule(day,attractionId,userId,scheduleNum);
+        scheduleService.addSchedule(addList,scheduleNum,userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

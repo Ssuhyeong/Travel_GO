@@ -22,11 +22,12 @@ public class TravelRoutesController {
 
     @PostMapping
     public ResponseEntity<?> addTravelRoutes(
-            @RequestBody TravelRoutesRequestDto travelRoutesRequestDto,
+            @RequestParam String title,
+            @RequestParam Integer scheduleInfo,
             Authentication authentication
     ){
         String userId = authentication.getName();
-        travelRoutesService.addTravelRoutes(travelRoutesRequestDto,userId);
+        travelRoutesService.addTravelRoutes(title,scheduleInfo,userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
