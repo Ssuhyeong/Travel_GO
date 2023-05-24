@@ -12,7 +12,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
+@CrossOrigin
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -56,6 +60,18 @@ public class MemberController {
     public ResponseEntity<?> userDeleteInfo(Authentication authentication) {
         String userId = authentication.getName();
         memberService.killPassword(userId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/photo")
+    public ResponseEntity<?> uploadProfilePhoto(
+            @RequestParam("files") List<MultipartFile> files,
+            Authentication authentication
+    ) throws Exception{
+
+        Member member = memberRepository.findByEmail(authentication.getName()).get();
+        memberService.savePhoto(member,files);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
