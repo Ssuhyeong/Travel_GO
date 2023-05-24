@@ -20,7 +20,6 @@ public class MemberRequestDto {
     private String email;
     private String name;
 
-
     public Member toEntity() {
         Member member = Member.builder()
                 .id(id)
@@ -33,5 +32,16 @@ public class MemberRequestDto {
 
         return member;
     }
+
+    public MemberRequestDto(Integer id, String password, Role role, String refreshToken, String email, String name) {
+        this.id = id;
+        this.password = password;
+        this.role = role;
+        this.refreshToken = refreshToken;
+        this.email = email;
+        this.name = name;
+    }
+
+
 
 }

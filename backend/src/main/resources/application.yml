@@ -25,6 +25,13 @@ spring:
   data.rest:
     base-path: /api
     detection-strategy: annotated
+  servlet:
+    multipart:
+      enabled: true
+      maxFileSize: 200MB
+      maxRequestSize: 200MB
+      fileSizeThreshold: 2KB
+      location:  /data/upload_tmp
 jwt:
   secretKey: jafpio49ejgiowesdlKFc20EAwsjfdejL3ASkdnFaegmsdkl3fcnjwebfeLJSDFCwelkfn
 

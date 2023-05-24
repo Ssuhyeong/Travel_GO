@@ -1,11 +1,15 @@
 package com.ssafy.trip.Entity;
 
 import lombok.*;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
+@EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
@@ -26,6 +30,16 @@ public class Member implements Serializable {
 	@Column(name = "refresh_token")
 	private String refreshToken;
 
+	@OneToMany(mappedBy = "member")
+	private List<Photo> photos = new ArrayList<>();
+
+	public void addPhoto(Photo photo){
+		this.photos.add(photo);
+
+		if(photo.getMember() != this){
+			photo.setMember(this);
+		}
+	}
 
 	// 유저 권한 설정 메소드
 	public void authorizeUser() {

@@ -7,6 +7,7 @@ import com.querydsl.core.types.dsl.*;
 import com.querydsl.core.types.PathMetadata;
 import javax.annotation.Generated;
 import com.querydsl.core.types.Path;
+import com.querydsl.core.types.dsl.PathInits;
 
 
 /**
@@ -26,6 +27,8 @@ public class QMember extends EntityPathBase<Member> {
     public final StringPath name = createString("name");
 
     public final StringPath password = createString("password");
+
+    public final ListPath<Photo, QPhoto> photos = this.<Photo, QPhoto>createList("photos", Photo.class, QPhoto.class, PathInits.DIRECT2);
 
     public final StringPath refreshToken = createString("refreshToken");
 
