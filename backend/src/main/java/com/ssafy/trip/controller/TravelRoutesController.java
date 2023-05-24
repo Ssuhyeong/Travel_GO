@@ -18,17 +18,17 @@ public class TravelRoutesController {
 
     private final TravelRoutesService travelRoutesService;
 
-    @PostMapping
-    public ResponseEntity<?> addTravelRoutes(
-            @RequestParam String title,
-            @RequestParam Integer scheduleInfo,
-            Authentication authentication
-    ){
-        String userId = authentication.getName();
-        travelRoutesService.addTravelRoutes(title,scheduleInfo,userId);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @PostMapping
+//    public ResponseEntity<?> addTravelRoutes(
+//            @RequestParam String title,
+//            @RequestParam Integer scheduleInfo,
+//            Authentication authentication
+//    ){
+//        String userId = authentication.getName();
+//        travelRoutesService.addTravelRoutes(title,scheduleInfo,userId);
+//
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
     @GetMapping
     public ResponseEntity<?> listTravelRoutes(Authentication authentication){
