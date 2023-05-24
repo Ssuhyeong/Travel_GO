@@ -20,10 +20,13 @@ public class TravelRoutesService {
     private final TravelRoutesRepository travelRoutesRepository;
     private final MemberRepository memberRepository;
 
-    public void addTravelRoutes(TravelRoutesRequestDto travelRoutesRequestDto, String userId) {
+    public void addTravelRoutes(String title,Integer scheduleInfo, String userId) {
 
         Member member = memberRepository.findByEmail(userId).get();
+        TravelRoutesRequestDto travelRoutesRequestDto = new TravelRoutesRequestDto();
         travelRoutesRequestDto.setMember(member);
+        travelRoutesRequestDto.setTitle(title);
+        travelRoutesRequestDto.setScheduleInfo(scheduleInfo);
 
         TravelRoutes travelRoutes = travelRoutesRequestDto.toEntity();
 

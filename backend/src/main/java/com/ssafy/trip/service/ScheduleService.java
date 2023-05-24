@@ -3,7 +3,6 @@ package com.ssafy.trip.service;
 import com.ssafy.trip.Entity.Attraction;
 import com.ssafy.trip.Entity.Member;
 import com.ssafy.trip.Entity.Schedule;
-import com.ssafy.trip.Entity.TravelRoutes;
 import com.ssafy.trip.dto.request.ScheduleRequestDto;
 import com.ssafy.trip.repository.MemberRepository;
 import com.ssafy.trip.repository.Schedule.ScheduleRepository;
@@ -23,25 +22,29 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final MemberRepository memberRepository;
-    private final AttractionRepository attractionRepository;
-    private final TravelRoutesRepository travelRoutesRepository;
 
-
-    public void addSchedule(Integer day, Integer attractionId, String userId,Integer scheduleNum) {
+    public void addSchedule(List<Attraction>[] addList, Integer scheduleNum, String userId) {
         Member member = memberRepository.findByEmail(userId).get();
-        Attraction attraction = attractionRepository.findById(attractionId).get();
-        TravelRoutes travelRoutes = travelRoutesRepository.findByEamilAndScheduleNum(userId,scheduleNum);
 
-        ScheduleRequestDto scheduleRequestDto = new ScheduleRequestDto();
-        scheduleRequestDto.setMember(member);
-        scheduleRequestDto.setDay(day);
-        scheduleRequestDto.setAttraction(attraction);
-        scheduleRequestDto.setScheduleNum(scheduleNum);
-        //scheduleRequestDto.setTravelRoutes.(TravelRoutes);//setScheduleNum(scheduleNum);
+        for(int i=1;i<=7;i++) {
+            Integer day = i;
+            int s = addList[i].size();
+            for (int j=0;j<s;j++){
+                Attraction attraction = addList[i].get(j);
 
-        Schedule schedule = scheduleRequestDto.toEntity();
+                ScheduleRequestDto scheduleRequestDto = new ScheduleRequestDto();
+                scheduleRequestDto.setMember(member);
+                scheduleRequestDto.setDay(day);
+                scheduleRequestDto.setAttraction(attraction);
+                scheduleRequestDto.setScheduleNum(scheduleNum);
 
-        scheduleRepository.save(schedule);
+                Schedule schedule = scheduleRequestDto.toEntity();
+
+                scheduleRepository.save(schedule);
+            }
+
+        }
+
     }
 
     public List<Attraction>[] scheduleOfDay(String userId,Integer scheduleNum){
