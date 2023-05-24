@@ -31,13 +31,13 @@ public class TravelRoutesRepositoryImpl extends QuerydslRepositorySupport implem
     }
 
     @Override
-    public TravelRoutes findByEamilAndScheduleNum(String userId, Integer scheduleNum) {
+    public TravelRoutes findByEamilAndScheduleNum(String userId, Integer scheduleInfo) {
 
-       TravelRoutes scheduleList =
+       TravelRoutes travel =
                 queryFactory.selectFrom(travelRoutes)
-                        .where(travelRoutes.member.email.eq(userId).and(travelRoutes.scheduleInfo.eq(scheduleNum))).fetchOne();
+                        .where(travelRoutes.member.email.eq(userId).and(travelRoutes.scheduleInfo.eq(scheduleInfo))).fetchOne();
 
-        return scheduleList;
+        return travel;
     }
 
     @Override
