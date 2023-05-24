@@ -2,12 +2,27 @@
   <myNav />
   <div id="schedule_container">
     <section id="schedule_header">
-      <div style="padding: 30px; font-weight: 600; font-size: 20px">노호종</div>
+      <div
+        style="
+          padding: 30px;
+          font-weight: 600;
+          font-size: 20px;
+          display: flex;
+          align-self: center;
+          justify-content: space-between;
+        ">
+        {{ this.$route.params.user }}
+        <button class="delete_btn" @click="delete_route()">
+          <font-awesome-icon :icon="['fas', 'trash-can']" />
+        </button>
+      </div>
     </section>
     <section id="schedule_title">
       <div id="schedule_name">
-        <div id="total_day">2코스</div>
-        <h1 style="font-size: 48px; margin: 0px">인천여행 가보자</h1>
+        <div id="total_day">{{ route_cnt }}코스</div>
+        <h1 style="font-size: 48px; margin: 0px">
+          {{ this.$route.params.title }}
+        </h1>
       </div>
     </section>
     <p id="dist">코스 총거리 : 337.48km</p>
@@ -21,7 +36,9 @@
         </div>
         <div id="day_content">
           <p style="font-size: 12px; color: #777777">일정</p>
-          <p style="font-size: 18px; font-weight: 600">2박3일</p>
+          <p style="font-size: 18px; font-weight: 600">
+            {{ day_cnt }}박{{ day_cnt + 1 }}일
+          </p>
         </div>
       </div>
     </section>
@@ -29,7 +46,10 @@
       <div id="schedule_map"></div>
     </section>
     <section>
-      <scheduleDivision :list_data="list_data" @day_list="day_list" />
+      <scheduleDivision
+        :list_data="list_data"
+        :day_cnt="day_cnt"
+        @day_list="day_list" />
     </section>
   </div>
 </template>
@@ -49,8 +69,10 @@ export default {
       map: null,
       markers: [],
       customOverlay_list: [],
-      list_data: [],
+      list_data: [null, [], [], [], [], [], [], []],
       test: [],
+      day_cnt: 0,
+      route_cnt: 0,
     };
   },
   mounted() {
@@ -65,11 +87,21 @@ export default {
       document.head.appendChild(script);
     }
 
-    axios.get(`http://localhost:8080/schedule`).then((res) => {
-      console.log(res.data);
-      this.list_data = res.data;
-      this.displayMarkers(res.data[1]);
-    });
+    axios
+      .get(`http://localhost:8080/travel/${this.$route.params.scheduleInfo}`)
+      .then((res) => {
+        console.log(res);
+        for (let i = 0; i < res.data.length; i++) {
+          this.list_data[res.data[i].day].push(res.data[i].attraction);
+          this.route_cnt++;
+          if (this.day_cnt < res.data[i].day) {
+            this.day_cnt = res.data[i].day;
+          }
+        }
+        this.displayMarkers(this.list_data[1]);
+      });
+
+    console.log(this.list_data);
   },
   methods: {
     day_list(value) {
@@ -156,6 +188,16 @@ export default {
         this.map.setBounds(bounds);
       }
     },
+    delete_route() {
+      axios
+        .delete(
+          `http://localhost:8080/travel?scheduleInfo=${this.$route.params.scheduleInfo}`
+        )
+        .then(() => {
+          console.log("삭제성공");
+          this.$router.go(-1);
+        });
+    },
   },
 };
 </script>
@@ -169,6 +211,7 @@ export default {
 
 #schedule_map {
   height: 550px;
+  border-radius: 20px;
 }
 
 #schedule_header {
@@ -180,7 +223,7 @@ export default {
 #schedule_title {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: left;
 }
 
 #schedule_name {
@@ -226,6 +269,18 @@ export default {
 
 #day_content > p {
   margin: 0;
+}
+
+.delete_btn {
+  border: none;
+  color: #fff;
+  background: #ed4956;
+  appearance: none;
+  font: inherit;
+  font-size: 1.1rem;
+  padding: 0.4em 0.6em;
+  border-radius: 0.3em;
+  cursor: pointer;
 }
 
 .label {

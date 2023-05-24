@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import VueCookies from "vue-cookies";
+import swal from "sweetalert";
 
 import mainView from "@/views/mainView";
 import loginView from "@/views/user/loginView";
@@ -59,12 +60,12 @@ const router = createRouter({
       component: reviewView,
     },
     {
-      path: "/tripScheduleView",
+      path: "/tripScheduleView/:title/:user/:scheduleInfo",
       name: "tripScheduleView",
       component: tripScheduleView,
     },
     {
-      path: "/updateScheduleView",
+      path: "/updateScheduleView/:title/:scheduleInfo",
       name: "updateScheduleView",
       component: updateScheduleView,
     },
@@ -91,7 +92,7 @@ router.beforeEach(async (to, from, next) => {
     return next();
   }
 
-  // alert("로그인 해주세요");
-  return next();
+  swal("로그인이 필요한 페이지입니다. ", "로그인을 해주세요");
+  return next("/loginpage");
 });
 export default router;

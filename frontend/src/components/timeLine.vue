@@ -13,12 +13,35 @@
               params: { contentId: data.content_id },
             })
           ">
-          <i class="icon-layers"> 여기가 왜? </i>
-          <p class="timeline-title">{{ data.title }}</p>
+          <p class="timeline-title">
+            {{ data.title }}
+            <font-awesome-icon
+              :icon="['fas', catagory_spec[data.content_type_id]]"
+              size="xs"
+              style="
+                padding: 5px;
+                border-radius: 100px;
+                background-color: #fbd2da;
+                margin-left: 10px;
+              " />
+          </p>
           <p class="timeline-details" style="width: 740px">{{ data.addr1 }}</p>
           <span>{{ idx + 1 }}</span>
         </li>
       </ul>
+      <div style="display: flex; align-items: center; justify-content: center">
+        <font-awesome-icon
+          :icon="['fas', 'flag']"
+          size="lg"
+          style="
+            padding: 10px;
+            border-radius: 100px;
+            background-color: #ff4769;
+            color: #fff;
+            margin-top: 10px;
+            z-index: 3;
+          " />
+      </div>
     </div>
   </section>
 </template>
@@ -29,6 +52,20 @@ export default {
     list_data: {
       type: Array,
     },
+  },
+  data() {
+    return {
+      catagory_spec: {
+        12: "icons",
+        14: "place-of-worship",
+        15: "축제공연행사",
+        25: "champagne-glasses",
+        28: "person-swimming",
+        32: "hotel",
+        38: "bag-shopping",
+        39: "utensils",
+      },
+    };
   },
 };
 </script>
@@ -175,5 +212,11 @@ export default {
   -webkit-transition: all 300ms ease-in-out;
   -moz-transition: all 300ms ease-in-out;
   -o-transition: all 300ms ease-in-out;
+}
+
+.timeline-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

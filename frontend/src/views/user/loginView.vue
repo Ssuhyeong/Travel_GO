@@ -69,6 +69,7 @@ import toastNotice from "@/components/toastNotice.vue";
 import axios from "@/service/axios";
 import VueCookies from "vue-cookies";
 import { useStore } from "vuex";
+import swal from "sweetalert";
 
 export default {
   name: "loginView",
@@ -123,17 +124,15 @@ export default {
       axios
         .post(url, this.login_data)
         .then((res) => {
-          console.log("accessToken: ", res.data.accessToken);
           VueCookies.set("accessToken", res.data.accessToken);
-          console.log("refreshToken: ", res.data.refreshToken);
           VueCookies.set("refreshToken", res.data.refreshToken);
-
+          swal("로그인 성공!", "Welcome to our website.", "success");
           this.$router.push({
             path: "/mainpage",
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
+          swal("로그인 실패!", "아이디와 비밀번호를 확인해 주세요", "warning");
         });
     },
     signup() {
@@ -143,21 +142,23 @@ export default {
       axios
         .post(url, this.user_data)
         .then(() => {
-          this.setSuccessColor();
-          this.toastShow = true;
-          this.toastText = "성공적으로 회원가입하셨습니다.";
-          this.user_data.email = "";
-          this.user_data.name = "";
-          this.user_data.password = "";
+          // this.setSuccessColor();
+          // this.toastShow = true;
+          // this.toastText = "성공적으로 회원가입하셨습니다.";
+          // this.user_data.email = "";
+          // this.user_data.name = "";
+          // this.user_data.password = "";
+          swal("로그인 성공!", "Welcome to our website.");
         })
-        .catch((err) => {
-          console.log(err);
-          this.setFailColor();
-          this.toastShow = true;
-          this.toastText = "회원가입에 실패하셨습니다. 다시 입력해주세요";
-          this.user_data.email = "";
-          this.user_data.name = "";
-          this.user_data.password = "";
+        .catch(() => {
+          // console.log(err);
+          // this.setFailColor();
+          // this.toastShow = true;
+          // this.toastText = "회원가입에 실패하셨습니다. 다시 입력해주세요";
+          // this.user_data.email = "";
+          // this.user_data.name = "";
+          // this.user_data.password = "";
+          swal("로그인 실패!", "아이디와 비밀번호를 확인해 주세요", "warning");
         });
     },
   },

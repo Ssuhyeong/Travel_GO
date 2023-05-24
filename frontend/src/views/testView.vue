@@ -1,48 +1,39 @@
 <template>
-  <div>
-    <draggable :list="list" @change="log" style="display: flex;" :options="{animation:300, handle:'.handle'}">
-      <div
-        v-for="element in list"
-        :key="element.name"
-        id="element"
-      >
-        {{ element.name }}
-      </div>
-    </draggable>
+  <div class="container">
+    <div class="delete-button">
+      <button>Delete</button>
+    </div>
+    <p>Hover over this div to see the delete button.</p>
   </div>
 </template>
+
 <script>
-  import { VueDraggableNext } from 'vue-draggable-next'
-  export default ({
-    components: {
-      draggable: VueDraggableNext,
-    },
-    data() {
-      return {
-        enabled: true,
-        list: [
-          { name: 'John', id: 1 },
-          { name: 'Joao', id: 2 },
-          { name: 'Jean', id: 3 },
-          { name: 'Gerard', id: 4 },
-        ],
-        dragging: false,
-      }
-    },
-    methods: {
-      log(event) {
-        console.log(event)
-      },
-    },
-  })
+// import axios from "@/service/axios";
+
+export default {
+  name: "PhotoUpload",
+  components: {},
+  methods: {},
+};
 </script>
+
 <style scoped>
-#element {
-  padding: 20px; 
-  border-radius: 20px; 
-  margin: 5px;  
-  cursor: move;
-  background-color: #fff;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+.container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+  background-color: lightgray;
+  padding: 20px;
+}
+
+.delete-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: none;
+}
+
+.container:hover .delete-button {
+  display: block;
 }
 </style>

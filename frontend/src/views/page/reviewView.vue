@@ -139,7 +139,7 @@ export default {
     registTime() {
       if (this.review_data != undefined) {
         this.review_data = this.review_data.sort(
-          (a, b) => new Date(a.registerTime) - new Date(b.registerTime)
+          (a, b) => new Date(b.registerTime) - new Date(a.registerTime)
         );
       }
       this.sort_active[0] = false;

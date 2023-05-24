@@ -99,10 +99,7 @@ export default {
           this.setShow();
           this.setText();
           this.setColor();
-          this.$router.push({
-            name: "boardView",
-            params: { type: "board" },
-          });
+          this.$router.go(-1);
         })
         .catch((error) => {
           console.log(error);

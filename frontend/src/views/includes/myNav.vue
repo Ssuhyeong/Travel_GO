@@ -27,7 +27,7 @@
               <li><router-link to="/categorypage">핫플레이스</router-link></li>
               <li class="separator"></li>
               <li>
-                <router-link to="/tripScheduleView">나의 여행경로</router-link>
+                <router-link to="/profilepage">나의 여행경로</router-link>
               </li>
             </ul>
           </li>

@@ -5,7 +5,13 @@
         <div class="footer-col">
           <h4>SSAFY</h4>
           <ul>
-            <li><a href="#">about us</a></li>
+            <li>
+              <a
+                href="https://www.ssafy.com/ksp/servlet/swp.content.controller.SwpContentServlet?p_process=select-content-view&p_menu_cd=M0101&p_content_cd=C0101"
+                target="_blank"
+                >What is SSAFY</a
+              >
+            </li>
             <li>
               <a
                 href="https://www.ssafy.com/ksp/servlet/swp.content.controller.SwpContentServlet"
@@ -13,7 +19,6 @@
                 >our SSAFY</a
               >
             </li>
-            <li><a href="#">더 알아보기</a></li>
           </ul>
         </div>
         <div class="footer-col">
@@ -41,23 +46,43 @@
         <div class="footer-col">
           <h4>Travel</h4>
           <ul>
-            <li><a href="#">지역별 여행지</a></li>
-            <li><a href="#">카테고리별</a></li>
-            <li><a href="#">즐겨찾기</a></li>
-            <li><a href="#">유명한 관광지</a></li>
+            <li>
+              <router-link :to="{ path: '/' }">지역별 여행지</router-link>
+            </li>
+
+            <li>
+              <router-link :to="{ path: '/categorypage' }"
+                >핫플레이스</router-link
+              >
+            </li>
+            <li>
+              <router-link :to="{ path: '/profilepage' }">즐겨찾기</router-link>
+            </li>
           </ul>
         </div>
         <div class="footer-col">
           <h4>follow us</h4>
           <div class="social-links">
-            <a href="#"><font-awesome-icon :icon="['fas', 'phone']" /></a>
-            <a href="#"><font-awesome-icon :icon="['fas', 'heart']" /></a>
-            <a href="#"><font-awesome-icon :icon="['fas', 'envelope']" /></a>
+            <a href="https://ssuhyeong.tistory.com/" target="_blank"
+              ><font-awesome-icon :icon="['fas', 'person']" size="lg"
+            /></a>
+            <a href="https://github.com/Ssuhyeong" target="_blank"
+              ><font-awesome-icon :icon="['fab', 'github']" size="lg"
+            /></a>
+            <a href="https://www.instagram.com/" target="_blank"
+              ><font-awesome-icon :icon="['fab', 'instagram']" size="lg"
+            /></a>
           </div>
           <div class="social-links">
-            <a href="#"><font-awesome-icon :icon="['fas', 'phone']" /></a>
-            <a href="#"><font-awesome-icon :icon="['fas', 'heart']" /></a>
-            <a href="#"><font-awesome-icon :icon="['fas', 'envelope']" /></a>
+            <a href="https://lucirin12.tistory.com/" target="_blank"
+              ><font-awesome-icon :icon="['fas', 'person-dress']" size="lg"
+            /></a>
+            <a href="https://github.com/Fizioo0102" target="_blank"
+              ><font-awesome-icon :icon="['fab', 'github']" size="lg"
+            /></a>
+            <a href="https://www.instagram.com/renxsat/" target="_blank"
+              ><font-awesome-icon :icon="['fab', 'instagram']" size="lg"
+            /></a>
           </div>
         </div>
       </div>

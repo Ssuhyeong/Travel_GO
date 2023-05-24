@@ -1,4 +1,5 @@
 <template>
+  <!-- 프로필 변경 모달 -->
   <transition name="fade" appear>
     <div
       class="modal-overlay"
@@ -16,6 +17,26 @@
       <button @click="UpdateUser()" class="button">프로필 변경 완료</button>
     </div>
   </transition>
+
+  <!-- 여행코스 타이틀 등록 부분 -->
+  <transition name="fade" appear>
+    <div
+      class="modal-overlay"
+      v-if="showModal_route"
+      @click="showModal_route = false"></div>
+  </transition>
+  <transition name="pop" appear>
+    <div class="modal" role="dialog" v-if="showModal_route">
+      <h1>여행코스 등록</h1>
+      <textarea
+        spellcheck="false"
+        placeholder="여행코스 타이틀을 입력해주세요"
+        v-model="route_title"
+        required></textarea>
+      <button @click="route_regist()" class="button">여행코스 등록 이동</button>
+    </div>
+  </transition>
+
   <div class="background">
     <div id="profile_container">
       <div class="outer-div">
@@ -73,7 +94,18 @@
           </div>
         </div>
         <div v-if="btn_active[0]" class="profile_content">
-          <p id="profile_type">즐겨찾기</p>
+          <div id="route_header">
+            <p id="profile_type">즐겨찾기</p>
+            <font-awesome-icon
+              :icon="['fass', 'plus']"
+              size="2x"
+              style="cursor: pointer; margin-right: 30px"
+              @click="
+                $router.push({
+                  path: '/',
+                })
+              " />
+          </div>
           <div id="content_container">
             <div
               class="card"
@@ -100,20 +132,27 @@
               :icon="['fass', 'plus']"
               size="2x"
               style="cursor: pointer; margin-right: 30px"
-              @click="
-                $router.push({
-                  name: 'updateScheduleView',
-                })
-              " />
+              @click="showModal_route = true" />
           </div>
           <div id="content_container">
-            <div class="card">
+            <div
+              class="card"
+              v-for="route in route_list"
+              :key="route.title"
+              @click="
+                $router.push({
+                  name: 'tripScheduleView',
+                  params: {
+                    title: route.title,
+                    user: route.member.name,
+                    scheduleInfo: route.scheduleInfo,
+                  },
+                })
+              ">
               <img
-                src="https://www.control.vg/wp-content/themes/crystalskull/img/defaults/default.jpg" />
-              <h3>테스트</h3>
-              <p>
-                ㅁ니ㅏ엉ㄴ마ㅣㅓ마ㅣㄴ어나ㅣㅓㅁㄴ아ㅣㄴㅇ머ㅏㅣㅁㄴ어ㅣㅏㄴ먼이마ㅓㄴㅁ이ㅏㅓㄴ이ㅏㅓㅁ니ㅏ
-              </p>
+                src="https://cdn.pixabay.com/photo/2019/05/01/22/38/plan-4172283_960_720.jpg" />
+              <h3>{{ route.title }}</h3>
+              <p>{{ route.member.name }}</p>
             </div>
           </div>
         </div>
@@ -126,6 +165,7 @@
 <script>
 import axios from "@/service/axios";
 import VueCookies from "vue-cookies";
+import swal from "sweetalert";
 
 export default {
   name: "profileView",
@@ -140,8 +180,12 @@ export default {
       },
       updateData: {},
       like_list: [],
+      route_list: [],
       showModal: false,
+      showModal_route: false,
       btn_active: [true, false, false],
+      route_title: "",
+      scheduleInfo: 0,
     };
   },
   components: {},
@@ -168,12 +212,32 @@ export default {
       this.user.email = res.data[0];
       this.user.name = res.data[1];
     });
+
+    axios.get(`http://localhost:8080/travel`).then((res) => {
+      this.scheduleInfo = res.data.length + 1;
+      this.route_list = res.data;
+    });
   },
   methods: {
     deleteUser() {
-      axios.put(`http://localhost:8080/member/delete`).then(() => {
-        console.log("삭제 성공");
-        VueCookies.remove("accessToken");
+      swal({
+        title: "정말 탈퇴하겠습니까?",
+        text: "일단, 한번 삭제하면 되돌릴 수 없습니다!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          axios.put(`http://localhost:8080/member/delete`).then(() => {
+            console.log("삭제 성공");
+            VueCookies.remove("accessToken");
+          });
+          swal("계정이 성공적으로 삭제되었습니다!", {
+            icon: "success",
+          });
+        } else {
+          swal("계정 삭제를 취소했습니다.");
+        }
       });
     },
     UpdateUser() {
@@ -188,6 +252,17 @@ export default {
         this.$router.go(0);
       });
     },
+    route_regist() {
+      console.log(this.scheduleInfo);
+
+      this.$router.push({
+        name: "updateScheduleView",
+        params: {
+          title: this.route_title,
+          scheduleInfo: this.scheduleInfo,
+        },
+      });
+    },
     select_active(idx) {
       for (let i = 0; i < 3; i++) {
         this.btn_active[i] = false;
@@ -200,6 +275,13 @@ export default {
 </script>
 
 <style scoped>
+h2#swal-title {
+  font-family: cookierun;
+}
+div#swal-html-container {
+  font-family: cookierun;
+}
+
 img {
   filter: brightness(50%);
 }
@@ -277,6 +359,7 @@ h1 {
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 2rem;
   margin: 0px 30px;
+  padding: 20px;
 }
 
 #route_header {
@@ -515,10 +598,10 @@ h1 {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  border: 2px solid #00aacf;
+  border: 2px solid #00859c;
   padding: 8px 15px;
   border-radius: 30px;
-  background: #00aeff;
+  background: #00859c;
   color: #fff;
 }
 

@@ -95,13 +95,11 @@ export default {
       this.active_count += 1;
       this.select(this.active_count - 1);
     },
-    
   },
 };
 </script>
 
 <style scoped>
-
 .steps {
   display: flex;
   width: 100%;
@@ -135,8 +133,8 @@ export default {
 .steps button {
   cursor: pointer;
   background: transparent;
-  border: 2px solid #318cfc;
-  color: #318cfc;
+  border: 2px solid #00859c;
+  color: #00859c;
   font-weight: 900;
   border-radius: 10px;
   min-width: 60px;
@@ -156,12 +154,12 @@ export default {
 }
 
 .plus_btn:hover {
-  background-color: #318cfc;
+  background-color: #00859c;
   color: #fff;
 }
 
 .steps button.active {
-  background: #318cfc;
+  background: #00859c;
   color: white;
 }
 

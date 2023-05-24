@@ -52,11 +52,15 @@ export default {
     list_data: {
       type: Array,
     },
+    day_cnt: {
+      type: Number,
+      default: 1,
+    },
   },
   data() {
     return {
       content_active: [true, false, false, false, false, false],
-      active_count: 0,
+      active_count: 1,
     };
   },
   components: { timeLine },
@@ -76,13 +80,8 @@ export default {
     },
   },
   watch: {
-    list_data(value) {
-      this.active_count = 0;
-      for (let i = 0; i < value.length; i++) {
-        if (value[1][i]) {
-          this.active_count++;
-        }
-      }
+    day_cnt(value) {
+      this.active_count = value;
     },
   },
 };
@@ -111,7 +110,7 @@ export default {
   top: 0;
   width: 100%;
   height: 100%;
-  background: #318cfc;
+  background: #00859c;
   transform-origin: left;
   transform: scaleX(0);
   transition: transform 0.5s ease-in-out;
@@ -122,8 +121,8 @@ export default {
 .steps button {
   cursor: pointer;
   background: transparent;
-  border: 2px solid #318cfc;
-  color: #318cfc;
+  border: 2px solid #00859c;
+  color: #00859c;
   font-weight: 900;
   border-radius: 10px;
   min-width: 60px;
@@ -132,23 +131,19 @@ export default {
   justify-content: center;
   align-items: center;
   font-size: 14px;
-  box-shadow: 0.9px 2.8px 2.2px rgba(49, 140, 252, 0.02),
-    2.1px 6.7px 5.3px rgba(49, 140, 252, 0.028),
-    4px 12.5px 10px rgba(49, 140, 252, 0.035),
-    7.1px 22.3px 17.9px rgba(49, 140, 252, 0.042),
-    13.4px 41.8px 33.4px rgba(49, 140, 252, 0.05),
-    32px 100px 80px rgba(49, 140, 252, 0.07);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   background: white;
   transition: all 0.3s ease;
 }
 
 .plus_btn:hover {
-  background-color: #318cfc;
+  background-color: #00859c;
   color: #fff;
 }
 
 .steps button.active {
-  background: #318cfc;
+  background: #00859c;
   color: white;
 }
 
@@ -177,12 +172,8 @@ export default {
 }
 .content__box {
   background: white;
-  box-shadow: 0.9px 2.8px 2.2px rgba(49, 140, 252, 0.02),
-    2.1px 6.7px 5.3px rgba(49, 140, 252, 0.028),
-    4px 12.5px 10px rgba(49, 140, 252, 0.035),
-    7.1px 22.3px 17.9px rgba(49, 140, 252, 0.042),
-    13.4px 41.8px 33.4px rgba(49, 140, 252, 0.05),
-    32px 100px 80px rgba(49, 140, 252, 0.07);
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
   border-radius: 20px;
   padding: 50px;
   max-width: 1000px;
