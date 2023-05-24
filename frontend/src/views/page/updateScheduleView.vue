@@ -5,20 +5,38 @@
       <div
         class="place_content"
         v-for="data in list_data"
-        :key="data.content_id">
+        :key="data.content_id"
+        @click="add_schedule(data)">
         <div class="place_title">
           <h3>{{ data.title }}</h3>
           <p>{{ catagory_spec[data.content_type_id] }}</p>
+          <div id="check_icon"></div>
         </div>
         <div class="addr_main">{{ data.addr1 }}</div>
       </div>
     </div>
   </div>
-  <scheduleDivisionUpdate :list_data="list_data" />
+  <div class="btn_container">
+    <button @click="regist">등록하기</button>
+  </div>
+  <VueDraggableNext :list="list" @change="log" id="Drag_container" :options="{animation:300, handle:'.handle'}">
+      <div
+        v-for="element in list"
+        :key="element.content_id"
+        id="element"
+        v-bind:style="{
+          backgroundImage: 'url(' + element.first_image + ')'
+        }"
+      >
+        {{ element.title }}
+      </div>
+    </VueDraggableNext>
+  <scheduleDivisionUpdate :list_data="day_list" @current_day="current_day"/>
 </template>
 
 <script>
 import scheduleDivisionUpdate from "@/components/scheduleDivisionUpdate.vue";
+import { VueDraggableNext } from 'vue-draggable-next'
 import myNav from "../includes/myNav.vue";
 import axios from "@/service/axios";
 
@@ -26,13 +44,15 @@ export default {
   components: {
     scheduleDivisionUpdate,
     myNav,
+    VueDraggableNext
   },
   data() {
     return {
       map: null,
       markers: [],
       infowindow: null,
-      list_data: [],
+      list_data: [
+      ],
       catagory_spec: {
         12: "관광지",
         14: "문화시설",
@@ -43,6 +63,20 @@ export default {
         38: "쇼핑",
         39: "음식점",
       },
+      day_list: [
+        null,
+        [],
+        [],
+        [],
+        [],
+        [],
+        [],
+        []
+      ],
+      list: [],
+      enabled: true,
+      dragging: false,
+      active_day: 0
     };
   },
   mounted() {
@@ -70,10 +104,12 @@ export default {
       .catch((err) => {
         console.log(err);
       });
-
-    console.log(this.list_data);
   },
   methods: {
+    current_day(value) {
+      this.active_day = value;
+      this.list = [];
+    },  
     initMap() {
       const container = document.getElementById("map");
 
@@ -143,16 +179,81 @@ export default {
         this.map.setBounds(bounds);
       }
     },
+    log(event) {
+        console.log(event)
+    },
+    add_schedule(data) {
+      console.log(data);
+      this.list.push(data);
+    },
+    regist() {
+      console.log(this.list);
+      this.day_list[this.active_day + 1] = this.list;
+    }
   },
 };
 </script>
 
-<style>
+<style scoped>
+h3 {
+  margin: 0px
+}
+
 #map {
   height: 500px;
   width: 1200px;
   margin: 0 auto;
   border-radius: 20px;
+}
+
+#Drag_container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+  height: 150px;
+  border-radius: 10px;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+  margin: 20px auto;
+}
+
+#element {
+  height: 60%;
+  width: 9%;
+  padding: 20px; 
+  border-radius: 20px;
+  font-weight: 600;
+  margin: 5px;  
+  cursor: move;
+  background-color: #fff;
+  color:#fff;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color : rgba(0,0,0,0.4);
+  text-shadow: rgb(0, 0, 0) 1px 0 10px;
+}
+
+button {
+  border: none;
+  color: #fff;
+  background: #00859c;
+  appearance: none;
+  font: inherit;
+  font-size: 1.1rem;
+  padding: 0.4em 0.6em;
+  border-radius: 0.3em;
+  cursor: pointer;
+  margin: 20px 10px 10px;
+}
+
+.btn_container{
+  width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: right;
 }
 
 .card {
@@ -169,11 +270,12 @@ export default {
 }
 
 .place_content {
-  padding: 10px 30px;
+  padding: 10px 20px;
   border-bottom: 1px solid #dbdbdb;
 }
 .place_content:hover {
   background-color: #d9ecf0;
+  cursor: pointer;
 }
 
 .place_title {
@@ -183,7 +285,11 @@ export default {
 
 .place_title > p {
   color: #9c9c9c;
-  font-size: 12px;
+  font-size: 10px;
   margin-left: 6px;
+}
+
+.addr_main {
+  font-size: 14px
 }
 </style>

@@ -276,13 +276,14 @@ h1 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 2rem;
-  margin: 2rem;
+  margin: 0px 30px;
 }
 
 #route_header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin: 0px;
 }
 .profile_category {
   background-color: #fff;

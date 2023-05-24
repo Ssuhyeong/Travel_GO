@@ -60,33 +60,17 @@
     <section>
       <h2>이런 곳은 어때요?</h2>
       <div id="recommendation_list">
-        <div>
+        <div v-for="recommand in recommand_area" :key="recommand.content_id" >
           <img
-            src="@/assets/img/부산.jpg"
-            alt=""
-            style="width: 100%; height: 200px; border-radius: 10px" />
-          <h3>부평</h3>
-        </div>
-        <div>
-          <img
-            src="@/assets/img/서울.jpg"
-            alt=""
-            style="width: 100%; height: 200px; border-radius: 10px" />
-          <h3>인천</h3>
-        </div>
-        <div>
-          <img
-            src="@/assets/img/전주.jpg"
-            alt=""
-            style="width: 100%; height: 200px; border-radius: 10px" />
-          <h3>익산</h3>
-        </div>
-        <div>
-          <img
-            src="@/assets/img/서울.jpg"
-            alt=""
-            style="width: 100%; height: 200px; border-radius: 10px" />
-          <h3>청삼동</h3>
+            :src="recommand.first_image"
+            onerror="this.src= 'https://www.control.vg/wp-content/themes/crystalskull/img/defaults/default.jpg'"
+            style="width: 100%; height: 200px; border-radius: 10px; cursor: pointer;" @click="
+            $router.push({
+              name: 'detailpage',
+              params: { contentId: recommand.content_id},
+            })
+          "/>
+          <h3>{{ recommand.title }}</h3>
         </div>
       </div>
     </section>
@@ -179,19 +163,20 @@ export default {
       content_id: "",
       review_data: [],
       like_empty: true,
+      recommand_area: [],
     };
   },
   created() {
     //const params = new URL(document.location).searchParams;
     //const content_id = params.get("content_id");
     this.content_id = this.$route.params.contentId;
-
     this.like_Exist();
 
     const url = `http://localhost:8080/attraction/search-list?contentId=${this.content_id}`;
     axios.get(url).then((res) => {
       this.detail_data = res.data.content[0];
-      console.log(res);
+
+      console.log(this.detail_data);
 
       if (window.kakao && window.kakao.maps) {
         this.initMap(this.detail_data.latitude, this.detail_data.longitude);
@@ -203,7 +188,13 @@ export default {
           "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=811a7460154557e361e1a1839f2697c5&libraries=services";
         document.head.appendChild(script);
       }
+
+      axios.get(`http://localhost:8080/attraction/course/limit?latitude=${this.detail_data.latitude}&longitude=${this.detail_data.longitude}`).then((res) => {
+        this.recommand_area = res.data;
+      })
     });
+
+    
   },
   mounted() {
     const content_id = this.$route.params.contentId;
@@ -292,6 +283,13 @@ export default {
         }
       });
     },
+  },
+  watch: {
+   $route(to, form) {
+     if (to.path !== form.path) {
+      this.$router.go(0);
+     }
+   },
   },
 };
 </script>

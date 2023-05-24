@@ -20,26 +20,38 @@
   <div class="contents" id="contents">
     <div class="content" :class="{ active: content_active[0] }" data-step="1">
       <div class="content__box">
-        <timeLine :list_data="list_data" />
+        <timeLine :list_data="list_data[1]" />
       </div>
     </div>
     <div class="content" :class="{ active: content_active[1] }" data-step="2">
-      <div class="content__box">2</div>
+      <div class="content__box">
+        <timeLine :list_data="list_data[2]" />
+      </div>
     </div>
     <div class="content" :class="{ active: content_active[2] }" data-step="3">
-      <div class="content__box">3</div>
+      <div class="content__box">
+        <timeLine :list_data="list_data[3]" />
+      </div>
     </div>
     <div class="content" :class="{ active: content_active[3] }" data-step="4">
-      <div class="content__box">4</div>
+      <div class="content__box">
+        <timeLine :list_data="list_data[4]" />
+      </div>
     </div>
     <div class="content" :class="{ active: content_active[4] }" data-step="5">
-      <div class="content__box">5</div>
+      <div class="content__box">
+        <timeLine :list_data="list_data[5]" />
+      </div>
     </div>
     <div class="content" :class="{ active: content_active[5] }" data-step="6">
-      <div class="content__box">6</div>
+      <div class="content__box">
+        <timeLine :list_data="list_data[6]" />
+      </div>
     </div>
     <div class="content" :class="{ active: content_active[6] }" data-step="7">
-      <div class="content__box">7</div>
+      <div class="content__box">
+        <timeLine :list_data="list_data[7]" />
+      </div>
     </div>
   </div>
 </template>
@@ -60,10 +72,14 @@ export default {
       active_count: 1,
     };
   },
+  mounted() {
+    console.log(this.list_data);
+  },
   components: { timeLine },
   methods: {
     select(idx) {
       console.log(this.list_data);
+      this.$emit("current_day", idx);
       if (this.content_active[idx]) {
         console.log("none");
       } else {
@@ -79,11 +95,13 @@ export default {
       this.active_count += 1;
       this.select(this.active_count - 1);
     },
+    
   },
 };
 </script>
 
 <style scoped>
+
 .steps {
   display: flex;
   width: 100%;

@@ -24,6 +24,7 @@
     "vue": "^3.2.13",
     "vue-awesome-paginate": "^1.1.46",
     "vue-cookies": "^1.8.3",
+    "vue-draggable-next": "^2.1.1",
     "vue-owl-carousel": "^2.0.3",
     "vue-owl-carousel2": "^2.0.7",
     "vue-router": "^4.1.6",
@@ -31,6 +32,7 @@
     "vue2-hammer": "^2.1.2",
     "vue3-carousel": "^0.3.0",
     "vue3-naver-maps": "^4.1.0",
+    "vuedraggable": "^4.1.0",
     "vuejs-paginate-next": "^1.0.2",
     "vuex": "^4.1.0",
     "yarn": "^1.22.19"

@@ -66,7 +66,7 @@ export default {
     }
 
     axios.get(`http://localhost:8080/schedule`).then((res) => {
-      console.log(res.data[1]);
+      console.log(res.data);
       this.list_data = res.data;
       this.displayMarkers(res.data[1]);
     });
@@ -192,7 +192,7 @@ export default {
 #total_day {
   padding: 5px 10px;
   border-radius: 10px;
-  font-size: 10px;
+  font-size: 14px;
   margin-right: 10px;
   color: #fff;
   background-color: #ed4956;
@@ -201,10 +201,9 @@ export default {
 #dist {
   font-size: 14px;
   color: #66666c;
-  margin: 10px 20px;
+  margin: 10px 50px;
   font-weight: 200;
   text-align: center;
-  margin: 0px;
 }
 
 #day_container {
