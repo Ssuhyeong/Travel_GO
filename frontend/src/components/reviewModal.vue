@@ -46,7 +46,7 @@ export default {
       this.showModal = false;
       axios
         .post(
-          `http://192.168.210.61:8080/review?attractionId=${this.$route.params.contentId}`,
+          `http://localhost:8080/review?attractionId=${this.$route.params.contentId}`,
           this.review
         )
         .then(() => {

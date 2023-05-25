@@ -196,7 +196,6 @@
 import axios from "@/service/axios";
 import VueCookies from "vue-cookies";
 import toastNotice from "@/components/toastNotice.vue";
-import swal from "sweetalert";
 import { useStore } from "vuex";
 import { computed } from "vue";
 
@@ -238,10 +237,10 @@ export default {
   },
   mounted() {
     axios
-      .get(`http://192.168.210.61:8080/like`)
+      .get(`http://localhost:8080/like`)
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
-          const url = `http://192.168.210.61:8080/attraction/search-list?contentId=${res.data[i]}`;
+          const url = `http://localhost:8080/attraction/search-list?contentId=${res.data[i]}`;
           axios.get(url).then((res) => {
             this.like_list.push(res.data.content[0]);
           });
@@ -253,17 +252,17 @@ export default {
 
     console.log(this.like_list);
 
-    axios.get(`http://192.168.210.61:8080/member`).then((res) => {
+    axios.get(`http://localhost:8080/member`).then((res) => {
       console.log(res.data);
 
       this.user.email = res.data[0];
       this.user.name = res.data[1];
       console.log(res.data[2]);
       this.img_path =
-        "http://192.168.210.61:8080/" + res.data[2].replaceAll("\\", "/");
+        "http://localhost:8080/" + res.data[2].replaceAll("\\", "/");
     });
 
-    axios.get(`http://192.168.210.61:8080/travel`).then((res) => {
+    axios.get(`http://localhost:8080/travel`).then((res) => {
       this.scheduleInfo = res.data.length + 1;
       this.route_list = res.data;
     });
@@ -274,29 +273,15 @@ export default {
       this.toastShow = this.toastShowResult;
     },
     deleteUser() {
-      swal({
-        title: "정말 탈퇴하겠습니까?",
-        text: "일단, 한번 삭제하면 되돌릴 수 없습니다!",
-        icon: "warning",
-        buttons: true,
-        dangerMode: true,
-      }).then((willDelete) => {
-        if (willDelete) {
-          axios.put(`http://192.168.210.61:8080/member/delete`).then(() => {
-            console.log("삭제 성공");
-            VueCookies.remove("accessToken");
-          });
-          swal("계정이 성공적으로 삭제되었습니다!", {
-            icon: "success",
-          });
-        } else {
-          swal("계정 삭제를 취소했습니다.");
-        }
+      axios.put(`http://localhost:8080/member/delete`).then(() => {
+        console.log("삭제 성공");
+        VueCookies.remove("accessToken");
+        this.$router.go(0);
       });
     },
     UpdateUser() {
       this.showModal = false;
-      const url = `http://192.168.210.61:8080/member/modify`;
+      const url = `http://localhost:8080/member/modify`;
 
       console.log(this.changeName.name);
 

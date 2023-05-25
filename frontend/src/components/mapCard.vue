@@ -138,7 +138,7 @@ export default {
       const keyword = this.keyword;
       this.sendKeyword = this.keyword;
       const page = this.page;
-      const url = `http://192.168.210.61:8080/attraction/search-list?keyword=${keyword}&page=${page}`;
+      const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}&page=${page}`;
 
       axios
         .get(url)
@@ -158,7 +158,7 @@ export default {
       const keyword = this.keyword;
       this.sendKeyword = this.keyword;
       const page = this.page;
-      const url = `http://192.168.210.61:8080/attraction/like?keyword=${keyword}&page=${page}`;
+      const url = `http://localhost:8080/attraction/like?keyword=${keyword}&page=${page}`;
 
       axios
         .get(url)
@@ -180,7 +180,7 @@ export default {
       const page = this.page;
 
       console.log(this.current_point.La);
-      const url = `http://192.168.210.61:8080/attraction/course?keyword=${keyword}&latitude=${this.current_point.Ma}&longitude=${this.current_point.La}&page=${page}`;
+      const url = `http://localhost:8080/attraction/course?keyword=${keyword}&latitude=${this.current_point.Ma}&longitude=${this.current_point.La}&page=${page}`;
 
       axios
         .get(url)

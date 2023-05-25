@@ -155,7 +155,7 @@ export default {
     },
     url_update(value) {
       const img_path =
-        "http://192.168.210.61:8080/" + value.replaceAll("\\", "/");
+        "http://localhost:8080/" + value.replaceAll("\\", "/");
       return img_path;
     },
   },

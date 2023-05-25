@@ -146,7 +146,7 @@ export default {
     select(num, current_page, sidoCode) {
       this.contentType = num;
       axios(
-        `http://192.168.210.61:8080/attraction/like?contentTypeId=${num}&sidoCode=${sidoCode}&page=${current_page}`
+        `http://localhost:8080/attraction/like?contentTypeId=${num}&sidoCode=${sidoCode}&page=${current_page}`
       ).then((res) => {
         // console.log(res.data.content);
         this.category_list.push(...res.data.content);

@@ -149,28 +149,27 @@ export default {
           image: markerImage,
         });
 
-        kakao.maps.event.addListener(marker, "click", () => {
-          var content = `<div style="width: 400px;
-      height: 200px;
-      padding: 40px;"><h2 style="margin: 10px 0px">${positions[idx].title}</h2>
-    <div style="margin: 10px 0px">리뷰</div>
-    <div style="display: flex; justify-content: space-between">
-      <h3>${positions[idx].addr1}</h3>
-      <img
-        src="${positions[idx].first_image}"
-        onerror="this.src= 'https://www.control.vg/wp-content/themes/crystalskull/img/defaults/default.jpg'" 
-        style="width: 150px" />
-    </div>`;
+    //     kakao.maps.event.addListener(marker, "click", () => {
+    //       var content = `<div style="width: 400px;
+    //   height: 200px;
+    //   padding: 20px;"><h2 style="margin: 10px 0px">${positions[idx].title}</h2>
+    // <div style="display: flex; justify-content: space-between">
+    //   <h3>${positions[idx].addr1}</h3>
+    //   <img
+    //     src="${positions[idx].first_image}"
+    //     onerror="this.src= 'https://www.control.vg/wp-content/themes/crystalskull/img/defaults/default.jpg'" 
+    //     style="width: 150px" />
+    // </div>`;
 
-          this.weatherArea = pos.addr1.split(" ")[0];
+    //       this.weatherArea = pos.addr1.split(" ")[0];
 
-          this.infowindow.setContent(content);
-          const level = 4;
-          this.map.setLevel(level);
-          this.map.setCenter(latlng);
+    //       this.infowindow.setContent(content);
+    //       const level = 4;
+    //       this.map.setLevel(level);
+    //       this.map.setCenter(latlng);
 
-          this.infowindow.open(this.map, marker);
-        });
+    //       this.infowindow.open(this.map, marker);
+    //     });
 
         this.markers.push(marker);
       });
@@ -253,6 +252,17 @@ export default {
 
         this.categoryMarkers.push(marker);
       });
+      if (positions.length != 0) {
+        const bounds = positions.reduce(
+          (bounds, position) =>
+            bounds.extend(
+              new kakao.maps.LatLng(position.y, position.x)
+            ),
+          new kakao.maps.LatLngBounds()
+        );
+
+        this.map.setBounds(bounds);
+      }
     },
     displayPlaceInfo(place) {
       var content =

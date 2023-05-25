@@ -99,7 +99,7 @@ export default {
 
     axios
       .get(
-        `http://192.168.210.61:8080/travel/${this.$route.params.scheduleInfo}`
+        `http://localhost:8080/travel/${this.$route.params.scheduleInfo}`
       )
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
@@ -210,7 +210,7 @@ export default {
     delete_route() {
       axios
         .delete(
-          `http://192.168.210.61:8080/travel?scheduleInfo=${this.$route.params.scheduleInfo}`
+          `http://localhost:8080/travel?scheduleInfo=${this.$route.params.scheduleInfo}`
         )
         .then(() => {
           this.setShow();

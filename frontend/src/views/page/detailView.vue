@@ -178,7 +178,7 @@ export default {
     this.content_id = this.$route.params.contentId;
     this.like_Exist();
 
-    const url = `http://192.168.210.61:8080/attraction/search-list?contentId=${this.content_id}`;
+    const url = `http://localhost:8080/attraction/search-list?contentId=${this.content_id}`;
     axios.get(url).then((res) => {
       this.detail_data = res.data.content[0];
 
@@ -197,7 +197,7 @@ export default {
 
       axios
         .get(
-          `http://192.168.210.61:8080/attraction/course/limit?latitude=${this.detail_data.latitude}&longitude=${this.detail_data.longitude}`
+          `http://localhost:8080/attraction/course/limit?latitude=${this.detail_data.latitude}&longitude=${this.detail_data.longitude}`
         )
         .then((res) => {
           this.recommand_area = res.data;
@@ -208,7 +208,7 @@ export default {
     const content_id = this.$route.params.contentId;
 
     axios
-      .get(`http://192.168.210.61:8080/review?attractionId=${content_id}`)
+      .get(`http://localhost:8080/review?attractionId=${content_id}`)
       .then((res) => {
         this.review_data = res.data;
       })
@@ -247,8 +247,8 @@ export default {
           description: this.detail_data.overview,
           imageUrl: this.detail_data.first_image,
           link: {
-            mobileWebUrl: `http://192.168.210.61:5000/detailpage?${this.detail_data.content_id}`,
-            webUrl: `http://192.168.210.61:5000/detailpage?content_id=${this.detail_data.content_id}`,
+            mobileWebUrl: `http://localhost:5000/detailpage?${this.detail_data.content_id}`,
+            webUrl: `http://localhost:5000/detailpage?content_id=${this.detail_data.content_id}`,
           },
         },
       });
@@ -262,7 +262,7 @@ export default {
     like_add() {
       axios
         .post(
-          `http://192.168.210.61:8080/like?attractionId=${this.$route.params.contentId}`
+          `http://localhost:8080/like?attractionId=${this.$route.params.contentId}`
         )
         .then(() => {
           console.log("등록 성공");
@@ -272,7 +272,7 @@ export default {
     like_delete() {
       axios
         .delete(
-          `http://192.168.210.61:8080/like?attractionId=${this.$route.params.contentId}`
+          `http://localhost:8080/like?attractionId=${this.$route.params.contentId}`
         )
         .then(() => {
           console.log("삭제 성공");
@@ -280,7 +280,7 @@ export default {
         });
     },
     like_Exist() {
-      axios.get(`http://192.168.210.61:8080/like`).then((res) => {
+      axios.get(`http://localhost:8080/like`).then((res) => {
         console.log(res.data);
 
         for (let i = 0; i < res.data.length; i++) {
@@ -293,7 +293,7 @@ export default {
     },
     url_update(value) {
       const img_path =
-        "http://192.168.210.61:8080/" + value.replaceAll("\\", "/");
+        "http://localhost:8080/" + value.replaceAll("\\", "/");
       return img_path;
     },
   },

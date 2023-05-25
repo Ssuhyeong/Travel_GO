@@ -1,12 +1,11 @@
 package com.ssafy.trip.service;
 
-import com.ssafy.trip.etc.CustomMultipartFile;
-import com.ssafy.trip.handler.FileHandler;
 import com.ssafy.trip.Entity.Member;
 import com.ssafy.trip.Entity.Photo;
 import com.ssafy.trip.Entity.Role;
 import com.ssafy.trip.dto.UserSignDto;
 import com.ssafy.trip.dto.request.MemberRequestDto;
+import com.ssafy.trip.handler.FileHandler;
 import com.ssafy.trip.repository.MemberRepository;
 import com.ssafy.trip.repository.PhotoRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Transactional

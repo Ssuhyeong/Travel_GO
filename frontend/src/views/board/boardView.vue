@@ -169,7 +169,7 @@ export default {
     this.createBoard(this.boardtype);
   },
   mounted() {
-    axios.get(`http://192.168.210.61:8080/member`).then((res) => {
+    axios.get(`http://localhost:8080/member`).then((res) => {
       this.current_user = res.data[3];
     });
   },
@@ -181,7 +181,7 @@ export default {
       this.toastText = this.toastTextResult;
       this.toastShow = this.toastShowResult;
 
-      axios.get(`http://192.168.210.61:8080/${type}/search`).then((res) => {
+      axios.get(`http://localhost:8080/${type}/search`).then((res) => {
         console.log(res.data.content);
         this.board_list = res.data.content;
         this.totalpage = res.data.totalPages;
@@ -199,7 +199,7 @@ export default {
 
       axios
         .get(
-          `http://192.168.210.61:8080/${this.boardtype}/search?keyword=${keyword}`
+          `http://localhost:8080/${this.boardtype}/search?keyword=${keyword}`
         )
         .then((res) => {
           this.board_list = res.data.content;

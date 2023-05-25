@@ -5,7 +5,6 @@ import com.ssafy.trip.Entity.Photo;
 import com.ssafy.trip.dto.UserSignDto;
 import com.ssafy.trip.dto.request.MemberRequestDto;
 import com.ssafy.trip.dto.request.PhotoRequestDto;
-import com.ssafy.trip.etc.CustomMultipartFile;
 import com.ssafy.trip.repository.MemberRepository;
 import com.ssafy.trip.repository.PhotoRepository;
 import com.ssafy.trip.service.JwtService;
@@ -18,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
@@ -94,7 +92,7 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PutMapping("/change")
+    @PostMapping("/change")
     public ResponseEntity<?> changePassword(
             @RequestBody MemberRequestDto memberRequestDto
     ) {

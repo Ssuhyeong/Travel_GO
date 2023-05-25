@@ -3,7 +3,7 @@ import VueCookies from "vue-cookies";
 // import { refreshToken } from "../service/login";
 
 const instance = axios.create({
-  baseURL: "http://192.168.210.61:8080",
+  baseURL: "http://localhost:8080",
 });
 
 // Add a request interceptor

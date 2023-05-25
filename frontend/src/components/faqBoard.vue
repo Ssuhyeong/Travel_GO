@@ -27,7 +27,7 @@ export default {
     };
   },
   created() {
-    axios.get(`http://192.168.210.61:8080/faq/search`).then((res) => {
+    axios.get(`http://localhost:8080/faq/search`).then((res) => {
       this.faq_list = res.data.content;
       console.log(this.faq_list);
     });

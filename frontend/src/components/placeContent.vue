@@ -83,7 +83,7 @@ export default {
 
     axios
       .get(
-        `http://192.168.210.61:8080/review?attractionId=${this.trip_content.content_id}`
+        `http://localhost:8080/review?attractionId=${this.trip_content.content_id}`
       )
       .then((res) => {
         this.review_data = res.data;
@@ -110,7 +110,7 @@ export default {
     like_Exist() {
       this.like_empty = true;
 
-      axios.get(`http://192.168.210.61:8080/like`).then((res) => {
+      axios.get(`http://localhost:8080/like`).then((res) => {
         for (let i = 0; i < res.data.length; i++) {
           if (res.data[i] == this.trip_content.content_id) {
             this.like_empty = false;

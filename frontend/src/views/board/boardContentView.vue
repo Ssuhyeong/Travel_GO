@@ -65,7 +65,7 @@ export default {
     this.boardtype = this.$route.params.type;
     this.articleNo = this.$route.params.articleNo;
 
-    const url = `http://192.168.210.61:8080/${this.boardtype}/${this.articleNo}`;
+    const url = `http://localhost:8080/${this.boardtype}/${this.articleNo}`;
     axios.get(url).then((res) => {
       this.board_data = res.data;
       this.name = this.board_data.member.name;
@@ -74,7 +74,7 @@ export default {
   methods: {
     deleteBoard() {
       const no = this.board_data.articleNo;
-      const url = `http://192.168.210.61:8080/${this.boardtype}/${no}`;
+      const url = `http://localhost:8080/${this.boardtype}/${no}`;
 
       axios
         .delete(url)

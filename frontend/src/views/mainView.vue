@@ -21,7 +21,8 @@
       <h2 style="padding: 0px">Welcome to the 여행가자</h2>
       <p>
         여러분들의 여행의 도우미 <br />
-        여러분들의 여행을 돕기 위해 어쩌구 저쩌구
+        여러분들의 여행을 돕기 위해 다양한 선택지
+        제공함으로서 선택에 도움을 줍니다.
       </p>
       <animationBox style="margin: 30px" />
     </section>
@@ -75,11 +76,11 @@ export default {
     };
   },
   created() {
-    axios.get(`http://192.168.210.61:8080/board/search`).then((res) => {
+    axios.get(`http://localhost:8080/board/search`).then((res) => {
       this.board_list = res.data.content;
       console.log(this.board_list);
     });
-    axios.get(`http://192.168.210.61:8080/attraction/bestlike`).then((res) => {
+    axios.get(`http://localhost:8080/attraction/bestlike`).then((res) => {
       this.best_list = res.data;
     });
   },
