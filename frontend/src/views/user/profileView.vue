@@ -1,6 +1,6 @@
 <template>
   <!-- 프로필 변경 모달 -->
-  <toastNotice :message="toastText" v-if="toastShow" style="z-index: 999"/>
+  <toastNotice :message="toastText" v-if="toastShow" style="z-index: 999" />
   <transition name="fade" appear>
     <div
       class="modal-overlay"
@@ -10,12 +10,28 @@
   <transition name="pop" appear>
     <div class="modal" role="dialog" v-if="showModal">
       <h1>프로필 변경</h1>
-      <textarea
-        spellcheck="false"
-        placeholder="변경할 이름을 입력해주세요..."
-        v-model="changeName.name"
-        required></textarea>
-      <button @click="UpdateUser()" class="button">프로필 변경 완료</button>
+      <form @submit="uploadFile">
+        <input
+          type="file"
+          id="File"
+          class="Button"
+          name="files"
+          multiple="multiple"
+          hidden />
+        <label for="File"
+          ><font-awesome-icon
+            :icon="['fasl', 'image-portrait']"
+            style="color: #fff"
+        /></label>
+        <textarea
+          spellcheck="false"
+          placeholder="변경할 이름을 입력해주세요..."
+          v-model="changeName.name"
+          required></textarea>
+        <button @click="[UpdateUser(), uploadFile()]" class="button">
+          프로필 변경 완료
+        </button>
+      </form>
     </div>
   </transition>
 
@@ -59,7 +75,11 @@
         <div class="inner-div">
           <div class="front">
             <div class="front__bkg-photo"></div>
-            <div class="front__face-photo"></div>
+            <div
+              class="front__face-photo"
+              v-bind:style="{
+                'background-image': 'url(' + img_path + ')',
+              }"></div>
             <div class="front__text">
               <h3 class="front__text-header">{{ user.name }}</h3>
               <p class="front__text-para">
@@ -101,12 +121,6 @@
             :class="{ active: btn_active[1] }"
             @click="select_active(1)">
             여행경로
-          </div>
-          <div
-            class="profile_category"
-            :class="{ active: btn_active[2] }"
-            @click="select_active(2)">
-            팔로우
           </div>
         </div>
         <div v-if="btn_active[0]" class="profile_content">
@@ -208,9 +222,10 @@ export default {
       scheduleInfo: 0,
       toastShow: false,
       toastText: "",
+      img_path: "https://mvp.microsoft.com/ko-kr/PublicProfile/Photo/5003706",
     };
   },
-  components: {toastNotice},
+  components: { toastNotice },
   setup() {
     const store = useStore();
     const toastTextResult = computed(() => store.state.text);
@@ -223,10 +238,10 @@ export default {
   },
   mounted() {
     axios
-      .get(`http://localhost:8080/like`)
+      .get(`http://192.168.210.61:8080/like`)
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
-          const url = `http://localhost:8080/attraction/search-list?contentId=${res.data[i]}`;
+          const url = `http://192.168.210.61:8080/attraction/search-list?contentId=${res.data[i]}`;
           axios.get(url).then((res) => {
             this.like_list.push(res.data.content[0]);
           });
@@ -238,14 +253,17 @@ export default {
 
     console.log(this.like_list);
 
-    axios.get(`http://localhost:8080/member`).then((res) => {
+    axios.get(`http://192.168.210.61:8080/member`).then((res) => {
       console.log(res.data);
 
       this.user.email = res.data[0];
       this.user.name = res.data[1];
+      console.log(res.data[2]);
+      this.img_path =
+        "http://192.168.210.61:8080/" + res.data[2].replaceAll("\\", "/");
     });
 
-    axios.get(`http://localhost:8080/travel`).then((res) => {
+    axios.get(`http://192.168.210.61:8080/travel`).then((res) => {
       this.scheduleInfo = res.data.length + 1;
       this.route_list = res.data;
     });
@@ -264,7 +282,7 @@ export default {
         dangerMode: true,
       }).then((willDelete) => {
         if (willDelete) {
-          axios.put(`http://localhost:8080/member/delete`).then(() => {
+          axios.put(`http://192.168.210.61:8080/member/delete`).then(() => {
             console.log("삭제 성공");
             VueCookies.remove("accessToken");
           });
@@ -278,7 +296,7 @@ export default {
     },
     UpdateUser() {
       this.showModal = false;
-      const url = `http://localhost:8080/member/modify`;
+      const url = `http://192.168.210.61:8080/member/modify`;
 
       console.log(this.changeName.name);
 
@@ -306,11 +324,45 @@ export default {
 
       this.btn_active[idx] = true;
     },
+    async uploadFile(event) {
+      event.preventDefault();
+      const FileElement = document.querySelector("#File");
+
+      console.log(FileElement.files[0]);
+
+      const file = FileElement.files[0];
+      const formData = new FormData();
+      formData.append("files", file);
+
+      console.log(formData);
+
+      try {
+        const response = await axios.post("/member/photo", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        // Handle the response from the server
+        console.log(response.data);
+      } catch (error) {
+        // Handle any errors that occur during the upload
+        console.error(error);
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
+label {
+  padding: 10px 15px;
+  border-radius: 100px;
+  background-color: #00859c;
+  margin: 100px;
+  cursor: pointer;
+}
+
 h2#swal-title {
   font-family: cookierun;
 }
@@ -603,8 +655,6 @@ h1 {
   margin: 0 auto;
   border-radius: 50%;
   border: 5px solid #fff;
-  background: url("https://images.unsplash.com/photo-1679926820639-56c6f62e516e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80")
-    no-repeat;
   background-size: cover;
   overflow: hidden;
 }

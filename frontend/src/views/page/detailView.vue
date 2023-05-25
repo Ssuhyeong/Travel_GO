@@ -60,16 +60,22 @@
     <section>
       <h2>이런 곳은 어때요?</h2>
       <div id="recommendation_list">
-        <div v-for="recommand in recommand_area" :key="recommand.content_id" >
+        <div v-for="recommand in recommand_area" :key="recommand.content_id">
           <img
             :src="recommand.first_image"
             onerror="this.src= 'https://www.control.vg/wp-content/themes/crystalskull/img/defaults/default.jpg'"
-            style="width: 100%; height: 200px; border-radius: 10px; cursor: pointer;" @click="
-            $router.push({
-              name: 'detailpage',
-              params: { contentId: recommand.content_id},
-            })
-          "/>
+            style="
+              width: 100%;
+              height: 200px;
+              border-radius: 10px;
+              cursor: pointer;
+            "
+            @click="
+              $router.push({
+                name: 'detailpage',
+                params: { contentId: recommand.content_id },
+              })
+            " />
           <h3>{{ recommand.title }}</h3>
         </div>
       </div>
@@ -109,8 +115,8 @@
             margin-right: 50px;
           ">
           <img
-            src="@/assets/img/man.jpg"
-            alt=""
+            :src="url_update(review.member.photos[0].filePath)"
+            onerror="this.src= 'https://mvp.microsoft.com/ko-kr/PublicProfile/Photo/5003706'"
             style="width: 150px; height: 150px; border-radius: 100px" />
           <h3 style="width: 150px">{{ review.member.name }}</h3>
         </div>
@@ -172,7 +178,7 @@ export default {
     this.content_id = this.$route.params.contentId;
     this.like_Exist();
 
-    const url = `http://localhost:8080/attraction/search-list?contentId=${this.content_id}`;
+    const url = `http://192.168.210.61:8080/attraction/search-list?contentId=${this.content_id}`;
     axios.get(url).then((res) => {
       this.detail_data = res.data.content[0];
 
@@ -189,18 +195,20 @@ export default {
         document.head.appendChild(script);
       }
 
-      axios.get(`http://localhost:8080/attraction/course/limit?latitude=${this.detail_data.latitude}&longitude=${this.detail_data.longitude}`).then((res) => {
-        this.recommand_area = res.data;
-      })
+      axios
+        .get(
+          `http://192.168.210.61:8080/attraction/course/limit?latitude=${this.detail_data.latitude}&longitude=${this.detail_data.longitude}`
+        )
+        .then((res) => {
+          this.recommand_area = res.data;
+        });
     });
-
-    
   },
   mounted() {
     const content_id = this.$route.params.contentId;
 
     axios
-      .get(`http://localhost:8080/review?attractionId=${content_id}`)
+      .get(`http://192.168.210.61:8080/review?attractionId=${content_id}`)
       .then((res) => {
         this.review_data = res.data;
       })
@@ -239,8 +247,8 @@ export default {
           description: this.detail_data.overview,
           imageUrl: this.detail_data.first_image,
           link: {
-            mobileWebUrl: `http://localhost:5000/detailpage?${this.detail_data.content_id}`,
-            webUrl: `http://localhost:5000/detailpage?content_id=${this.detail_data.content_id}`,
+            mobileWebUrl: `http://192.168.210.61:5000/detailpage?${this.detail_data.content_id}`,
+            webUrl: `http://192.168.210.61:5000/detailpage?content_id=${this.detail_data.content_id}`,
           },
         },
       });
@@ -254,7 +262,7 @@ export default {
     like_add() {
       axios
         .post(
-          `http://localhost:8080/like?attractionId=${this.$route.params.contentId}`
+          `http://192.168.210.61:8080/like?attractionId=${this.$route.params.contentId}`
         )
         .then(() => {
           console.log("등록 성공");
@@ -264,7 +272,7 @@ export default {
     like_delete() {
       axios
         .delete(
-          `http://localhost:8080/like?attractionId=${this.$route.params.contentId}`
+          `http://192.168.210.61:8080/like?attractionId=${this.$route.params.contentId}`
         )
         .then(() => {
           console.log("삭제 성공");
@@ -272,7 +280,7 @@ export default {
         });
     },
     like_Exist() {
-      axios.get(`http://localhost:8080/like`).then((res) => {
+      axios.get(`http://192.168.210.61:8080/like`).then((res) => {
         console.log(res.data);
 
         for (let i = 0; i < res.data.length; i++) {
@@ -283,13 +291,18 @@ export default {
         }
       });
     },
+    url_update(value) {
+      const img_path =
+        "http://192.168.210.61:8080/" + value.replaceAll("\\", "/");
+      return img_path;
+    },
   },
   watch: {
-   $route(to, form) {
-     if (to.path !== form.path) {
-      this.$router.go(0);
-     }
-   },
+    $route(to, form) {
+      if (to.path !== form.path) {
+        this.$router.go(0);
+      }
+    },
   },
 };
 </script>

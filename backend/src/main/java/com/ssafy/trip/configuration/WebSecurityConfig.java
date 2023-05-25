@@ -9,10 +9,16 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebSecurityConfig implements WebMvcConfigurer {// extends WebSecurityConfigurerAdapter {
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/photo/**").addResourceLocations("file:///C:/trip_project/backend/photo/");
+    }
 
 //    @Override
 //    public void addCorsMappings(CorsRegistry registry) {

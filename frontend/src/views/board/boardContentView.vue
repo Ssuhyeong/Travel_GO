@@ -4,7 +4,7 @@
     <form id="contact">
       <h3>{{ board_data.subject }}.</h3>
       <h4>{{ name }}</h4>
-      <h4>{{ board_data.registerTime }} 조회 : {{ board_data.hit }}</h4>
+      <h4>{{ board_data.registerTime }}</h4>
       <fieldset>{{ board_data.content }}</fieldset>
     </form>
   </div>
@@ -30,23 +30,20 @@
       @click="deleteBoard()">
       글삭제
     </button>
-    <vue-basic-alert 
-       :duration="1500"
-       :closeIn="1500"
-       ref="alert" />
+    <vue-basic-alert :duration="1500" :closeIn="1500" ref="alert" />
   </div>
 </template>
 
 <script>
 import myNav from "@/views/includes/myNav.vue";
 import axios from "@/service/axios";
-import VueBasicAlert from 'vue-basic-alert'
+import VueBasicAlert from "vue-basic-alert";
 import { useStore } from "vuex";
 
 export default {
   components: {
     myNav,
-    VueBasicAlert
+    VueBasicAlert,
   },
   data() {
     return {
@@ -68,31 +65,32 @@ export default {
     this.boardtype = this.$route.params.type;
     this.articleNo = this.$route.params.articleNo;
 
-    const url = `http://localhost:8080/${this.boardtype}/${this.articleNo}`;
+    const url = `http://192.168.210.61:8080/${this.boardtype}/${this.articleNo}`;
     axios.get(url).then((res) => {
       this.board_data = res.data;
       this.name = this.board_data.member.name;
-      
     });
   },
   methods: {
     deleteBoard() {
       const no = this.board_data.articleNo;
-      const url = `http://localhost:8080/${this.boardtype}/${no}`;
+      const url = `http://192.168.210.61:8080/${this.boardtype}/${no}`;
 
-      axios.delete(url).then(() => {
-        this.setShow();
-        this.setText();
-        this.setColor();
-        this.$router.go(-1);
-      }).catch(() => {
-        this.$refs.alert
-        .showAlert(
-            'error', 
-            '본인의 계정만 삭제가 가능합니다.',
-            '삭제 실패', 
-        )
-      })
+      axios
+        .delete(url)
+        .then(() => {
+          this.setShow();
+          this.setText();
+          this.setColor();
+          this.$router.go(-1);
+        })
+        .catch(() => {
+          this.$refs.alert.showAlert(
+            "error",
+            "본인의 계정만 삭제가 가능합니다.",
+            "삭제 실패"
+          );
+        });
     },
     goUpdate() {
       const no = this.board_data.articleNo;

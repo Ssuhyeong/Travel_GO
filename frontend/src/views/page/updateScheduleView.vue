@@ -132,10 +132,10 @@ export default {
     }
 
     axios
-      .get(`http://localhost:8080/like`)
+      .get(`http://192.168.210.61:8080/like`)
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
-          const url = `http://localhost:8080/attraction/search-list?contentId=${res.data[i]}`;
+          const url = `http://192.168.210.61:8080/attraction/search-list?contentId=${res.data[i]}`;
           axios.get(url).then((res) => {
             this.list_data.push(res.data.content[0]);
           });
@@ -248,7 +248,7 @@ export default {
     route_upload() {
       axios
         .post(
-          `http://localhost:8080/schedule?title=${this.$route.params.title}&scheduleInfo=${this.$route.params.scheduleInfo}`,
+          `http://192.168.210.61:8080/schedule?title=${this.$route.params.title}&scheduleInfo=${this.$route.params.scheduleInfo}`,
           this.day_list
         )
         .then(() => {

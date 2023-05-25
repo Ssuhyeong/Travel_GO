@@ -78,7 +78,7 @@ export default {
 
     if (this.articleNo != "5000") {
       this.type = "update";
-      const url = `http://localhost:8080/${this.boardtype}/${this.articleNo}`;
+      const url = `http://192.168.210.61:8080/${this.boardtype}/${this.articleNo}`;
       axios.get(url).then((res) => {
         this.board_data = res.data;
       });
@@ -88,9 +88,9 @@ export default {
     regist() {
       let url;
       if (this.boardtype == "update") {
-        url = `http://localhost:8080/${this.boardtype}/update/${this.articleNo}`;
+        url = `http://192.168.210.61:8080/${this.boardtype}/update/${this.articleNo}`;
       } else {
-        url = `http://localhost:8080/${this.boardtype}`;
+        url = `http://192.168.210.61:8080/${this.boardtype}`;
       }
 
       axios

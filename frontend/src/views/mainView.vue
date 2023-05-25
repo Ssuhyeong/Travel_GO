@@ -75,11 +75,11 @@ export default {
     };
   },
   created() {
-    axios.get(`http://localhost:8080/board/search`).then((res) => {
+    axios.get(`http://192.168.210.61:8080/board/search`).then((res) => {
       this.board_list = res.data.content;
       console.log(this.board_list);
     });
-    axios.get(`http://localhost:8080/attraction/bestlike`).then((res) => {
+    axios.get(`http://192.168.210.61:8080/attraction/bestlike`).then((res) => {
       this.best_list = res.data;
     });
   },

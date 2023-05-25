@@ -57,10 +57,12 @@
                 margin-right: 50px;
               ">
               <img
-                src="@/assets/img/man.jpg"
-                alt=""
+                :src="url_update(review.member.photos[0].filePath)"
+                onerror="this.src= 'https://mvp.microsoft.com/ko-kr/PublicProfile/Photo/5003706'"
                 style="width: 150px; height: 150px; border-radius: 100px" />
-              <h3 style="width: 150px">{{ review.member.name }}</h3>
+              <h3 style="width: 150px">
+                {{ review.member.name }}
+              </h3>
             </div>
             <div class="review_description">
               <div>
@@ -105,6 +107,7 @@ export default {
       total_score: 0,
       review_range: 5,
       sort_active: [false, true],
+      img_path: "https://mvp.microsoft.com/ko-kr/PublicProfile/Photo/5003706",
     };
   },
   mounted() {
@@ -149,6 +152,11 @@ export default {
     },
     more() {
       this.review_range += 5;
+    },
+    url_update(value) {
+      const img_path =
+        "http://192.168.210.61:8080/" + value.replaceAll("\\", "/");
+      return img_path;
     },
   },
 };

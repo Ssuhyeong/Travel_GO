@@ -8,9 +8,9 @@
   </transition>
   <transition name="pop" appear>
     <div class="modal" role="dialog" v-if="showModal">
-      <h1>{{$route.params.title}}</h1>
+      <h1>{{ $route.params.title }}</h1>
       <p>
-        <starComponentVue @setScore="setScore"/>
+        <starComponentVue @setScore="setScore" />
       </p>
       <textarea
         spellcheck="false"
@@ -24,7 +24,7 @@
 
 <script>
 import starComponentVue from "./starComponent.vue";
-import axios from "@/service/axios"
+import axios from "@/service/axios";
 
 export default {
   name: "testView",
@@ -34,8 +34,8 @@ export default {
       showModal: false,
       review: {
         content: "",
-        star: 0
-      }
+        star: 0,
+      },
     };
   },
   methods: {
@@ -44,14 +44,19 @@ export default {
     },
     review_regist() {
       this.showModal = false;
-      axios.post(`http://localhost:8080/review?attractionId=${this.$route.params.contentId}`, this.review).then(() => {
-        console.log('등록성공');
-        this.review.content = "";
-        this.$router.go(0);
-      })
+      axios
+        .post(
+          `http://192.168.210.61:8080/review?attractionId=${this.$route.params.contentId}`,
+          this.review
+        )
+        .then(() => {
+          console.log("등록성공");
+          this.review.content = "";
+          this.$router.go(0);
+        });
       console.log(this.review);
-    }
-  }
+    },
+  },
 };
 </script>
 

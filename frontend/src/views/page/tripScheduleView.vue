@@ -25,7 +25,7 @@
         </h1>
       </div>
     </section>
-    <p id="dist">코스 총거리 : {{total_dist.toFixed(2)}}km</p>
+    <p id="dist">코스 총거리 : {{ total_dist.toFixed(2) }}km</p>
     <section>
       <div id="day_container">
         <div id="day_icon">
@@ -74,7 +74,7 @@ export default {
       test: [],
       day_cnt: 0,
       route_cnt: 0,
-      total_dist: 0
+      total_dist: 0,
     };
   },
   setup() {
@@ -98,15 +98,22 @@ export default {
     }
 
     axios
-      .get(`http://localhost:8080/travel/${this.$route.params.scheduleInfo}`)
+      .get(
+        `http://192.168.210.61:8080/travel/${this.$route.params.scheduleInfo}`
+      )
       .then((res) => {
         for (let i = 0; i < res.data.length; i++) {
           this.list_data[res.data[i].day].push(res.data[i].attraction);
-          
-          if(i != 0 && res.data[i].day == res.data[i-1].day) {
-            this.total_dist += this.calculateDistance(res.data[i-1].attraction.latitude, res.data[i-1].attraction.longitude, res.data[i].attraction.latitude, res.data[i].attraction.longitude);
+
+          if (i != 0 && res.data[i].day == res.data[i - 1].day) {
+            this.total_dist += this.calculateDistance(
+              res.data[i - 1].attraction.latitude,
+              res.data[i - 1].attraction.longitude,
+              res.data[i].attraction.latitude,
+              res.data[i].attraction.longitude
+            );
           }
-          
+
           this.route_cnt++;
           if (this.day_cnt < res.data[i].day) {
             this.day_cnt = res.data[i].day;
@@ -203,7 +210,7 @@ export default {
     delete_route() {
       axios
         .delete(
-          `http://localhost:8080/travel?scheduleInfo=${this.$route.params.scheduleInfo}`
+          `http://192.168.210.61:8080/travel?scheduleInfo=${this.$route.params.scheduleInfo}`
         )
         .then(() => {
           this.setShow();

@@ -97,6 +97,7 @@
             type="board" />
           <div id="submit_btn">
             <button
+              v-show="current_user != 'USER' || boardtype != 'board'"
               @click="
                 $router.push({
                   name: 'boardwritepage',
@@ -146,6 +147,7 @@ export default {
         "open-board": "열린 게시판",
         faq: "FAQ",
       },
+      current_user: "ADMIN",
     };
   },
   setup() {
@@ -166,6 +168,11 @@ export default {
     }
     this.createBoard(this.boardtype);
   },
+  mounted() {
+    axios.get(`http://192.168.210.61:8080/member`).then((res) => {
+      this.current_user = res.data[3];
+    });
+  },
   methods: {
     setboardList(value) {
       this.board_list = value;
@@ -174,7 +181,7 @@ export default {
       this.toastText = this.toastTextResult;
       this.toastShow = this.toastShowResult;
 
-      axios.get(`http://localhost:8080/${type}/search`).then((res) => {
+      axios.get(`http://192.168.210.61:8080/${type}/search`).then((res) => {
         console.log(res.data.content);
         this.board_list = res.data.content;
         this.totalpage = res.data.totalPages;
@@ -192,7 +199,7 @@ export default {
 
       axios
         .get(
-          `http://localhost:8080/${this.boardtype}/search?keyword=${keyword}`
+          `http://192.168.210.61:8080/${this.boardtype}/search?keyword=${keyword}`
         )
         .then((res) => {
           this.board_list = res.data.content;

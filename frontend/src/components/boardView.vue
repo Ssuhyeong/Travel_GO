@@ -120,7 +120,7 @@ export default {
       this.boardtype = this.$route.params.type;
 
       axios
-        .get(`http://localhost:8080/${this.boardtype}/search`)
+        .get(`http://192.168.210.61:8080/${this.boardtype}/search`)
         .then((res) => {
           this.board_list = res.data.content;
           this.totalpage = res.data.totalPages;
@@ -137,7 +137,7 @@ export default {
       this.sendKeyword = keyword;
 
       axios
-        .get(`http://localhost:8080/board/search?keyword=${keyword}`)
+        .get(`http://192.168.210.61:8080/board/search?keyword=${keyword}`)
         .then((res) => {
           this.board_list = res.data.content;
           this.totalpage = res.data.totalPages;
