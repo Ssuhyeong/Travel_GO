@@ -1,14 +1,16 @@
 package com.ssafy.trip.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
 
 import javax.persistence.*;
 
 @RequiredArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity(name = "photo")
 public class Photo {
 
@@ -22,6 +24,7 @@ public class Photo {
     @Column(name = "file_path",nullable = false)
     private String filePath;
 
+    @JsonIgnoreProperties({"member"})
     @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "member_email",referencedColumnName = "email")
