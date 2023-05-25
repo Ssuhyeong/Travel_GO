@@ -47,7 +47,7 @@ public class MemberController {
         Photo photo = photoRepository.findByMember(member).get();
         String filePath = photo.getFilePath();
 
-        String[] userInfo = {userId,userName,filePath};
+        String[] userInfo = {userId,userName,filePath, String.valueOf(member.getRole())};
 
         return new ResponseEntity<>(userInfo,HttpStatus.OK);
     }
