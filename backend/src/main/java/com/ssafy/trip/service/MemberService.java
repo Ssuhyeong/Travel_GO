@@ -85,7 +85,11 @@ public class MemberService {
         memberRepository.save(member);
     }
 
-    public void changePassword(){
+    public void changePassword(String userId,MemberRequestDto memberRequestDto){
+        Member member = memberRepository.findByEmail(userId).get();
+        member.setPassword(memberRequestDto.getPassword());
 
+        member.passwordEncode(passwordEncoder);
+        memberRepository.save(member);
     }
 }

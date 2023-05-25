@@ -94,9 +94,17 @@ public class MemberController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/change-pwd")
-    public ResponseEntity<?> changePassword(Authentication authentication) {
-        String userId = authentication.getName();
+    @PutMapping("/change")
+    public ResponseEntity<?> changePassword(
+            @RequestBody MemberRequestDto memberRequestDto
+    ) {
+        String userId = memberRequestDto.getEmail();
+        if(!memberRepository.findByEmail(userId).isPresent()){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        else {
+            memberService.changePassword(userId,memberRequestDto);
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
