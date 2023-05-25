@@ -1,9 +1,11 @@
 package com.ssafy.trip.jwt;
 
 import com.ssafy.trip.Entity.Member;
+import com.ssafy.trip.Entity.Photo;
 import com.ssafy.trip.dto.UserSignDto;
 import com.ssafy.trip.dto.request.MemberRequestDto;
 import com.ssafy.trip.repository.MemberRepository;
+import com.ssafy.trip.repository.PhotoRepository;
 import com.ssafy.trip.service.JwtService;
 import com.ssafy.trip.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class MemberController {
     private final JwtService jwtService;
     private final MemberService memberService;
     private final MemberRepository memberRepository;
+    private final PhotoRepository photoRepository;
 
     @CrossOrigin
     @PostMapping("/sign-up")
@@ -40,7 +43,11 @@ public class MemberController {
         Member member = memberRepository.findByEmail(userId).get();
         String userName = member.getName();
 
-        String[] userInfo = {userId,userName};
+
+        Photo photo = photoRepository.findByMember(member).get();
+        String filePath = photo.getFilePath();
+
+        String[] userInfo = {userId,userName,filePath};
 
         return new ResponseEntity<>(userInfo,HttpStatus.OK);
     }
@@ -70,8 +77,16 @@ public class MemberController {
             Authentication authentication
     ) throws Exception{
 
+        log.info("file data -> {}", files.get(0));
         Member member = memberRepository.findByEmail(authentication.getName()).get();
         memberService.savePhoto(member,files);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/change-pwd")
+    public ResponseEntity<?> changePassword(Authentication authentication) {
+        String userId = authentication.getName();
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
