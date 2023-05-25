@@ -67,11 +67,22 @@ public class MemberService {
 
         List<Photo> photoList = FileHandler.parseFileInfo(files);
 
+        if(photoRepository.findByMember(member).isPresent()){
+            Long id = photoRepository.findByMember(member).get().getId();
+            photoRepository.deleteById(id);
+        }
+
         if(!photoList.isEmpty()) {
             for (Photo photo : photoList) {
                 member.addPhoto(photoRepository.save(photo));
             }
         }
+
+
         memberRepository.save(member);
+    }
+
+    public void changePassword(){
+
     }
 }
