@@ -1,4 +1,58 @@
 <template>
+  <!-- 프로필 변경 모달 -->
+  <toastNotice :message="toastText" v-if="toastShow" style="z-index: 999"/>
+  <transition name="fade" appear>
+    <div
+      class="modal-overlay"
+      v-if="showModal"
+      @click="showModal = false"></div>
+  </transition>
+  <transition name="pop" appear>
+    <div class="modal" role="dialog" v-if="showModal">
+      <h1>프로필 변경</h1>
+      <textarea
+        spellcheck="false"
+        placeholder="변경할 이름을 입력해주세요..."
+        v-model="changeName.name"
+        required></textarea>
+      <button @click="UpdateUser()" class="button">프로필 변경 완료</button>
+    </div>
+  </transition>
+
+  <!-- 여행코스 타이틀 등록 부분 -->
+  <transition name="fade" appear>
+    <div
+      class="modal-overlay"
+      v-if="showModal_route"
+      @click="showModal_route = false"></div>
+  </transition>
+  <transition name="pop" appear>
+    <div class="modal" role="dialog" v-if="showModal_route">
+      <h1>여행코스 등록</h1>
+      <textarea
+        spellcheck="false"
+        placeholder="여행코스 타이틀을 입력해주세요"
+        v-model="route_title"
+        required></textarea>
+      <button @click="route_regist()" class="button">여행코스 등록 이동</button>
+    </div>
+  </transition>
+
+  <!-- 삭제 경고창 -->
+  <transition name="fade" appear>
+    <div
+      class="modal-overlay"
+      v-if="showModal_delete"
+      @click="showModal_delete = false"></div>
+  </transition>
+  <transition name="pop" appear>
+    <div class="modal" role="dialog" v-if="showModal_delete">
+      <h1>정말 삭제하시겠습니까?</h1>
+      <button @click="deleteUser()" class="cancel_button">삭제하기</button>
+      <button @click="showModal_delete = false" class="button">취소</button>
+    </div>
+  </transition>
+
   <div class="background">
     <div id="profile_container">
       <div class="outer-div">
@@ -7,10 +61,10 @@
             <div class="front__bkg-photo"></div>
             <div class="front__face-photo"></div>
             <div class="front__text">
-              <h3 class="front__text-header">손수형</h3>
+              <h3 class="front__text-header">{{ user.name }}</h3>
               <p class="front__text-para">
                 <i class="fas fa-map-marker-alt front-icons"></i
-                >tngud124@kakao.com
+                >{{ user.email }}
               </p>
 
               <span class="front__text-hover">Hover For Edit</span>
@@ -18,13 +72,13 @@
           </div>
           <div class="back">
             <div class="social-media-wrapper">
-              <a href="#" class="social-icon"
+              <a @click="showModal = true" class="social-icon"
                 ><font-awesome-icon
                   :icon="['fas', 'pen']"
                   size="20"
                   style="margin: 10px"
               /></a>
-              <a class="social-icon"
+              <a @click="showModal_delete = true" class="social-icon"
                 ><font-awesome-icon
                   :icon="['fas', 'trash-can']"
                   size="20"
@@ -36,31 +90,293 @@
       </div>
       <div style="margin-bottom: 23px">
         <div id="category_box">
-          <div class="profile_category">즐겨찾기</div>
-          <div class="profile_category">팔로우</div>
-          <div class="profile_category">좋아요</div>
+          <div
+            class="profile_category"
+            :class="{ active: btn_active[0] }"
+            @click="select_active(0)">
+            즐겨찾기
+          </div>
+          <div
+            class="profile_category"
+            :class="{ active: btn_active[1] }"
+            @click="select_active(1)">
+            여행경로
+          </div>
+          <div
+            class="profile_category"
+            :class="{ active: btn_active[2] }"
+            @click="select_active(2)">
+            팔로우
+          </div>
         </div>
-        <div class="profile_content">
-          <p id="profile_type">즐겨찾기</p>
+        <div v-if="btn_active[0]" class="profile_content">
+          <div id="route_header">
+            <p id="profile_type">즐겨찾기</p>
+            <font-awesome-icon
+              :icon="['fass', 'plus']"
+              size="2x"
+              style="cursor: pointer; margin-right: 30px"
+              @click="
+                $router.push({
+                  path: '/',
+                })
+              " />
+          </div>
           <div id="content_container">
-            <div class="card">
+            <div
+              class="card"
+              v-for="like in like_list"
+              :key="like.content_id"
+              @click="
+                $router.push({
+                  name: 'detailpage',
+                  params: { contentId: like.content_id },
+                })
+              ">
               <img
-                src="http://tong.visitkorea.or.kr/cms/resource/31/219131_image2_1.jpg" />
-              <h3>title</h3>
-              <p>description</p>
+                :src="like.first_image"
+                onerror="this.src= 'https://www.control.vg/wp-content/themes/crystalskull/img/defaults/default.jpg'" />
+              <h3>{{ like.title }}</h3>
+              <p>{{ like.addr1 }}</p>
             </div>
           </div>
         </div>
+        <div v-if="btn_active[1]" class="profile_content">
+          <div id="route_header">
+            <p id="profile_type">여행경로</p>
+            <font-awesome-icon
+              :icon="['fass', 'plus']"
+              size="2x"
+              style="cursor: pointer; margin-right: 30px"
+              @click="showModal_route = true" />
+          </div>
+          <div id="content_container">
+            <div
+              class="card"
+              v-for="route in route_list"
+              :key="route.title"
+              @click="
+                $router.push({
+                  name: 'tripScheduleView',
+                  params: {
+                    title: route.title,
+                    user: route.member.name,
+                    scheduleInfo: route.scheduleInfo,
+                  },
+                })
+              ">
+              <img
+                src="https://cdn.pixabay.com/photo/2019/05/01/22/38/plan-4172283_960_720.jpg" />
+              <h3>{{ route.title }}</h3>
+              <p>{{ route.member.name }}</p>
+            </div>
+          </div>
+        </div>
+        <div v-if="btn_active[2]" class="profile_content"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import axios from "@/service/axios";
+import VueCookies from "vue-cookies";
+import toastNotice from "@/components/toastNotice.vue";
+import swal from "sweetalert";
+import { useStore } from "vuex";
+import { computed } from "vue";
+
+export default {
+  name: "profileView",
+  data() {
+    return {
+      user: {
+        email: "",
+        name: "",
+      },
+      changeName: {
+        name: "",
+      },
+      updateData: {},
+      like_list: [],
+      route_list: [],
+      showModal: false,
+      showModal_route: false,
+      showModal_delete: false,
+      btn_active: [true, false, false],
+      route_title: "",
+      scheduleInfo: 0,
+      toastShow: false,
+      toastText: "",
+    };
+  },
+  components: {toastNotice},
+  setup() {
+    const store = useStore();
+    const toastTextResult = computed(() => store.state.text);
+    const toastShowResult = computed(() => store.state.toastShow);
+
+    return { toastTextResult, toastShowResult };
+  },
+  created() {
+    this.createBoard();
+  },
+  mounted() {
+    axios
+      .get(`http://localhost:8080/like`)
+      .then((res) => {
+        for (let i = 0; i < res.data.length; i++) {
+          const url = `http://localhost:8080/attraction/search-list?contentId=${res.data[i]}`;
+          axios.get(url).then((res) => {
+            this.like_list.push(res.data.content[0]);
+          });
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(this.like_list);
+
+    axios.get(`http://localhost:8080/member`).then((res) => {
+      console.log(res.data);
+
+      this.user.email = res.data[0];
+      this.user.name = res.data[1];
+    });
+
+    axios.get(`http://localhost:8080/travel`).then((res) => {
+      this.scheduleInfo = res.data.length + 1;
+      this.route_list = res.data;
+    });
+  },
+  methods: {
+    createBoard() {
+      this.toastText = this.toastTextResult;
+      this.toastShow = this.toastShowResult;
+    },
+    deleteUser() {
+      swal({
+        title: "정말 탈퇴하겠습니까?",
+        text: "일단, 한번 삭제하면 되돌릴 수 없습니다!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      }).then((willDelete) => {
+        if (willDelete) {
+          axios.put(`http://localhost:8080/member/delete`).then(() => {
+            console.log("삭제 성공");
+            VueCookies.remove("accessToken");
+          });
+          swal("계정이 성공적으로 삭제되었습니다!", {
+            icon: "success",
+          });
+        } else {
+          swal("계정 삭제를 취소했습니다.");
+        }
+      });
+    },
+    UpdateUser() {
+      this.showModal = false;
+      const url = `http://localhost:8080/member/modify`;
+
+      console.log(this.changeName.name);
+
+      axios.put(url, this.changeName).then(() => {
+        console.log("등록성공");
+        this.changeName = "";
+        this.$router.go(0);
+      });
+    },
+    route_regist() {
+      console.log(this.scheduleInfo);
+
+      this.$router.push({
+        name: "updateScheduleView",
+        params: {
+          title: this.route_title,
+          scheduleInfo: this.scheduleInfo,
+        },
+      });
+    },
+    select_active(idx) {
+      for (let i = 0; i < 3; i++) {
+        this.btn_active[i] = false;
+      }
+
+      this.btn_active[idx] = true;
+    },
+  },
+};
 </script>
 
 <style scoped>
+h2#swal-title {
+  font-family: cookierun;
+}
+div#swal-html-container {
+  font-family: cookierun;
+}
+
+img {
+  filter: brightness(50%);
+}
+
+textarea {
+  width: 80%;
+  resize: none;
+  height: 20px;
+  outline: none;
+  padding: 15px;
+  font-size: 16px;
+  margin: 20px 0px;
+  border-radius: 5px;
+  max-height: 500px;
+  font-family: Cookierun;
+  border: 1px solid #bfbfbf;
+}
+
+textarea::placeholder {
+  color: #b3b3b3;
+}
+
+textarea:is(:focus, :valid) {
+  padding: 14px;
+  border: 2px solid #00859c;
+}
+
+textarea::-webkit-scrollbar {
+  width: 0px;
+}
+
+h1 {
+  font-size: 32px;
+}
+.button {
+  border: none;
+  color: #fff;
+  background: #00859c;
+  appearance: none;
+  font: inherit;
+  font-size: 1.1rem;
+  padding: 0.4em 0.8em;
+  border-radius: 0.3em;
+  cursor: pointer;
+}
+
+.cancel_button {
+  border: none;
+  color: #fff;
+  background: #ed4956;
+  appearance: none;
+  font: inherit;
+  font-size: 1.1rem;
+  padding: 0.4em 0.6em;
+  border-radius: 0.3em;
+  margin-right: 20px;
+  cursor: pointer;
+}
+
 #category_box {
   display: flex;
   align-items: center;
@@ -77,22 +393,30 @@ export default {};
 }
 
 #profile_container {
+  position: relative;
   height: 100vh;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
+  z-index: 3;
 }
 
 #content_container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: 2rem;
-  margin: 2rem;
-  cursor: pointer;
+  margin: 0px 30px;
+  padding: 20px;
 }
 
+#route_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0px;
+}
 .profile_category {
   background-color: #fff;
   margin: 5px 5px;
@@ -106,6 +430,10 @@ export default {};
 .profile_category:hover {
   background-color: #d9ecf0;
   cursor: pointer;
+}
+
+.active {
+  background-color: #d9ecf0;
 }
 
 .card {
@@ -133,7 +461,7 @@ export default {};
 .card > h3 {
   color: white;
   font-size: 20px;
-  margin: 20px 0 0 20px;
+  margin: 20px 20px 20px 20px;
 }
 
 .card > p {
@@ -141,7 +469,7 @@ export default {};
   font-weight: 400;
   font-size: 12px;
   align-self: end;
-  margin: 0 0 20px 20px;
+  margin: 20px 20px 20px 20px;
   letter-spacing: 0.5px;
 }
 
@@ -211,6 +539,11 @@ export default {};
   transition: all 0.6s cubic-bezier(0.8, -0.4, 0.2, 1.7);
   transform-style: preserve-3d;
 }
+
+.social-icon {
+  cursor: pointer;
+}
+
 .inner-div:hover .social-icon {
   opacity: 1;
   top: 0;
@@ -314,10 +647,10 @@ export default {};
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  border: 2px solid #00aacf;
+  border: 2px solid #00859c;
   padding: 8px 15px;
   border-radius: 30px;
-  background: #00aeff;
+  background: #00859c;
   color: #fff;
 }
 
@@ -367,5 +700,64 @@ export default {};
 .fab:hover,
 .fas:hover {
   top: -5px;
+}
+
+.modal {
+  position: absolute;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  text-align: center;
+  width: fit-content;
+  height: fit-content;
+  max-width: 25em;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+  background: #fff;
+  z-index: 999;
+  transform: none;
+}
+.modal h1 {
+  margin: 0 0 1rem;
+}
+
+.modal-overlay {
+  content: "";
+  position: absolute;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 998;
+  background: #2c3e50;
+  opacity: 0.6;
+  cursor: pointer;
+}
+
+/* ---------------------------------- */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s linear;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.pop-enter-active,
+.pop-leave-active {
+  transition: transform 0.4s cubic-bezier(0.5, 0, 0.5, 1), opacity 0.4s linear;
+}
+
+.pop-enter,
+.pop-leave-to {
+  opacity: 0;
+  transform: scale(0.3) translateY(-50%);
 }
 </style>

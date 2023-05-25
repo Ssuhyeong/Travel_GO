@@ -5,27 +5,18 @@
     <section id="top">
       <img
         src="https://images.unsplash.com/photo-1593726222205-21404ff4e5fd?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1073&q=80"
-        id="bg"
-      />
+        id="bg" />
       <h2 id="text">Travel</h2>
       <img
         src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_1.png"
-        id="clouds_1"
-      />
+        id="clouds_1" />
       <img
         src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_2.png"
-        id="clouds_2"
-      />
-      <img
-        src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_1.png"
-        id="mountain_left"
-      />
-      <img
-        src="https://aryan-tayal.github.io/Mountains-Parallax/clouds_2.png"
-        id="mountain_right"
-      />
+        id="clouds_2" />
     </section>
-    <cardSlider style="padding-top: 40px; margin-bottom: 0px" />
+    <cardSlider
+      :best_list="best_list"
+      style="padding-top: 40px; margin-bottom: 0px" />
     <section id="sec" style="padding-top: 0px">
       <h2 style="padding: 0px">Welcome to the 여행가자</h2>
       <p>
@@ -43,22 +34,15 @@
         <boardBox />
       </div>
       <div id="board_contents">
-        <div class="board_content">
-          <h3>개인정보처리방침 변경 안내</h3>
-          <p>2022-11-11</p>
-        </div>
-        <div class="board_content">
-          <h3>개인정보처리방침 변경 안내</h3>
-          <p>2022-11-11</p>
-        </div>
-        <div class="board_content">
-          <h3>개인정보처리방침 변경 안내</h3>
-          <p>2022-11-11</p>
-        </div>
-        <div class="board_content" style="border-right: 3px solid #b5b5b5">
-          <h3>개인정보처리방침 변경 안내</h3>
-          <p>2022-11-11</p>
-        </div>
+        <template v-if="board_list != []">
+          <div
+            class="board_content"
+            v-for="board_data in board_list.slice(0, 4)"
+            :key="board_data.subject">
+            <h3>{{ board_data.subject.substr(0, 15) }}</h3>
+            <p>{{ board_data.registerTime }}</p>
+          </div>
+        </template>
       </div>
     </section>
     <myFooter />
@@ -72,6 +56,7 @@ import cardSlider from "@/components/cardSlider.vue";
 import boardBox from "@/components/boardBox.vue";
 import myFooter from "@/views/includes/myFooter.vue";
 import myNav from "@/views/includes/myNav.vue";
+import axios from "@/service/axios";
 
 export default {
   name: "mainView",
@@ -83,25 +68,46 @@ export default {
     myFooter,
     myNav,
   },
-};
-// mounted() {
-//   const mountainLeft = document.querySelector("#mountain_left");
-//   const mountainRight = document.querySelector("#mountain_right");
-//   const cloud1 = document.querySelector("#clouds_1");
-//   const cloud2 = document.querySelector("#clouds_2");
-//   const text = document.querySelector("#text");
-//   const man = document.querySelector("#man");
+  data() {
+    return {
+      board_list: [],
+      best_list: [],
+    };
+  },
+  created() {
+    axios.get(`http://localhost:8080/board/search`).then((res) => {
+      this.board_list = res.data.content;
+      console.log(this.board_list);
+    });
+    axios.get(`http://localhost:8080/attraction/bestlike`).then((res) => {
+      this.best_list = res.data;
+    });
+  },
+  mounted() {
+    window.addEventListener("scroll", this.scrollEvents);
+  },
+  unmounted() {
+    window.removeEventListener("scroll", this.scrollEvents);
+  },
+  methods: {
+    scrollEvents() {
+      // 구름 이동 관련
 
-//   window.addEventListener("scroll", () => {
-//     let value = scrollY;
-//     mountainLeft.style.left = `-${value / 0.7}px`;
-//     cloud2.style.left = `-${value * 2}px`;
-//     mountainRight.style.left = `${value / 0.7}px`;
-//     cloud1.style.left = `${value * 2}px`;
-//     text.style.bottom = `-${value}px`;
-//     man.style.height = `${window.innerHeight - value}px`;
-//   });
-// },
+      const cloud1 = document.querySelector("#clouds_1");
+      const cloud2 = document.querySelector("#clouds_2");
+      const text = document.querySelector("#text");
+
+      window.addEventListener("scroll", () => {
+        let value =
+          document.documentElement.scrollTop + window.innerHeight - 900;
+
+        cloud2.style.left = `-${value * 2}px`;
+        cloud1.style.left = `${value * 2}px`;
+        text.style.bottom = `-${value}px`;
+      });
+    },
+  },
+};
 </script>
 
 <style scoped>

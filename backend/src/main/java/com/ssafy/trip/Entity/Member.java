@@ -31,7 +31,7 @@ public class Member implements Serializable {
 
 	@Column(name = "refresh_token")
 	private String refreshToken;
-
+	
 	@OneToMany(mappedBy = "member")
 	private List<Photo> photos = new ArrayList<>();
 

@@ -145,7 +145,7 @@ export default {
           stopInterval();
           // Reset all opened accordion descriptions
           if (!e.currentTarget.classList.contains("is--active")) {
-            gsap.to(contentDesc, { height: "0", duration: 0.25 });
+            gsap.to(contentDesc, { height: "0", duration: 0.2 });
             headerClicked(e);
           }
         });
@@ -170,9 +170,9 @@ export default {
           let expandableItem = activeWrapper.querySelector(".cs--content-desc");
 
           // Reset all opened accordion descriptions
-          gsap.to(contentDesc, { height: "0", duration: 0.25 });
+          gsap.to(contentDesc, { height: "0", duration: 0.2 });
           // Expand accordion description
-          gsap.to(expandableItem, { height: "auto", duration: 0.25 });
+          gsap.to(expandableItem, { height: "auto", duration: 0.2 });
           // Toggle active class on active element
           activeWrapper.classList.add("is--active");
           // Remove active class from all elements except current active
@@ -210,7 +210,7 @@ export default {
           element.currentTarget.querySelector(".cs--content-desc");
 
         // Expand accordion description
-        gsap.to(expandableItem, { height: "auto", duration: 0.25 });
+        gsap.to(expandableItem, { height: "auto", duration: 0.2 });
         // Toggle active class on clicked element
         element.currentTarget.classList.add("is--active");
         // Remove active class from all elements except current clicked
@@ -251,7 +251,7 @@ export default {
   grid-row: 1;
   opacity: 0;
   transition-property: all;
-  transition-duration: 0.25s;
+  /* transition-duration: 0.25s; */
   transition-timing-function: ease;
 }
 .content-story-toggle--js .cs--graphics-area .cs--graphics-sequence.is--active {
@@ -360,46 +360,29 @@ export default {
     scale: 1 1;
   }
 }
-* {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+
 h2 {
   font-size: 36px;
   font-weight: 700;
   line-height: 1.2;
-
 }
 h3 {
   font-size: 21px;
   font-weight: 700;
   line-height: 1.2;
-
 }
 p {
   font-size: 16px;
   font-weight: 300;
   line-height: 26px;
   margin-top: 12px;
-
 }
 img {
   display: block;
-  width: 50%;
-  height: 100%;
-}
-section {
-  position: relative;
-  display: flex;
   width: 100%;
   height: 100%;
-  max-width: 1280px;
-  margin: auto;
-  padding: 0 40px;
 }
+
 section .row {
   display: flex;
   flex-wrap: wrap;
@@ -419,9 +402,5 @@ section .row .width--45 .content--wrapper {
 }
 section .row .width--45 .content--wrapper p {
   margin-top: 16px;
-}
-
-img {
-  width: 100%;
 }
 </style>

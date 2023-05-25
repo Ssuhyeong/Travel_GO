@@ -1,71 +1,43 @@
 <template>
   <div class="content">
-    <a class="card" href="#!">
+    <a
+      class="card"
+      v-for="category_data in category_list"
+      :key="category_data.content_id">
       <div
         class="front"
-        style="
-          background-image: url(https://ak-d.tripcdn.com/images/10051g000001h3cqs1344_Z_640_10000_R5.jpg_.webp?proc=autoorient);
-        ">
+        v-bind:style="{
+          backgroundImage: 'url(' + category_data.first_image + ')',
+        }">
         <p>
-          꽉 막힌 교통체증이 두렵다면 바로 여기! 지하철로도 갈 수 있는 송도
-          센트럴 파크를 추천드려요.
+          {{ category_data.title }}
         </p>
-      </div>
-      <div class="back">
-        <div>
-          <p>센트럴파크</p>
-          <p>
-            송도 센트럴파크가 대한민국 최초의 해수 공원인 것 알고 계셨나요?
-            크기도 여의도 공원의 2배나 되어서 센트럴 8경 코스가 있을 정도로
-            볼거리가 풍부하다는 사실! 인천의 공유 자전거 쿠키를 타고 주변을
-            천천히 돌아보면 완전 힐링~
-          </p>
-          <button class="button">Click Here</button>
+        <div id="like_container">
+          <font-awesome-icon
+            :icon="['fas', 'heart']"
+            size="xs"
+            style="color: #ff0000" />
+          <div>{{ category_data.like_count }}</div>
         </div>
-      </div></a
-    >
-    <a class="card" href="#!">
-      <div
-        class="front"
-        style="
-          background-image: url(https://ak-d.tripcdn.com/images/10021g000001h7xezCDEB_Z_640_10000_R5.jpg_.webp?proc=autoorient);
-        ">
-        <p>
-          알록달록한 예쁜 건물들에 각종 벽화와 포토존이 가득해서 어디서 사진
-          찍던 인생샷 남기기 가능!
-        </p>
       </div>
       <div class="back">
         <div>
-          <p>프로방스</p>
-          <p>
-            이렇게 예쁜 곳은 가기만 해도 힐링 되지 않나요? 야경도 너무 예뻐서
-            밤에 가도 좋은 곳이에요. 동화 속 한 장면에 들어온 듯한 파주
-            프로방스에서 유럽의 정취를 느껴보세요~
+          <p style="font-weight: 600; font-size: 20px">
+            {{ category_data.title }}
           </p>
-          <button class="button">Click Here</button>
-        </div>
-      </div></a
-    >
-    <a class="card" href="#!">
-      <div
-        class="front"
-        style="
-          background-image: url(https://ak-d.tripcdn.com/images/10011g000001hds073A02_Z_640_10000_R5.jpg_.webp?proc=autoorient);
-        ">
-        <p>
-          어느 계절에 와도 고즈넉하게 즐기기 좋은 남이섬은 계절의 특성을 잘 느낄
-          수 있는 곳이죠.
-        </p>
-      </div>
-      <div class="back">
-        <div>
-          <p>남이섬</p>
           <p>
-            자연으로 둘러쌓인 남이섬은 봄에 오면 분홍색의 수놓은 벚꽃들을 즐길
-            수 있고 푸른 계절에 오면 싱그러움을 느낄 수 있는 곳이에요.
+            {{ textLengthOverCut(category_data.overview) }}
           </p>
-          <button class="button">Click Here</button>
+          <button
+            class="button"
+            @click="
+              $router.push({
+                name: 'detailpage',
+                params: { contentId: category_data.content_id },
+              })
+            ">
+            Click Here
+          </button>
         </div>
       </div></a
     >
@@ -73,7 +45,26 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: {
+    category_list: {
+      type: Object,
+    },
+  },
+  methods: {
+    textLengthOverCut(txt) {
+      if (txt.length > 80) {
+        txt = txt.substr(0, 80) + "...";
+      }
+      return txt;
+    },
+  },
+  watch: {
+    category_list(value) {
+      console.log(value);
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -89,6 +80,20 @@ html {
   font-weight: 300;
   color: #333;
   font-family: "Nunito Sans", sans-serif;
+}
+
+#like_container {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  bottom: 0;
+  right: 0;
+}
+
+#like_container > div {
+  font-size: 18px;
+  margin-left: 10px;
 }
 
 .content {
@@ -176,7 +181,6 @@ html {
   font-weight: 600;
   color: #fff;
   overflow: hidden;
-  font-family: Poppins, sans-serif;
 }
 .front:before {
   position: absolute;
@@ -198,7 +202,7 @@ html {
 }
 
 .back {
-  background: #fff;
+  background: #f7f7f7;
   transform: rotateY(-180deg);
   padding: 0 2em;
 }

@@ -1,4 +1,6 @@
 <template>
+  <toastNotice :message="toastText" v-if="toastShow" />
+
   <div class="login_body">
     <!-- partial:index.partial.html -->
     <div class="container">
@@ -16,8 +18,8 @@
             type="email"
             placeholder="Id"
             class="input"
-            name="id"
-            v-model="user_data.id" />
+            name="email"
+            v-model="user_data.email" />
           <input
             type="password"
             placeholder="Password"
@@ -32,10 +34,18 @@
       <div class="container__form container--signin">
         <form action="#" class="form" id="form2">
           <h2 class="form__title">Sign In</h2>
-          <input type="email" placeholder="Email" class="input" />
-          <input type="password" placeholder="Password" class="input" />
+          <input
+            type="email"
+            placeholder="Email"
+            class="input"
+            v-model="login_data.email" />
+          <input
+            type="password"
+            placeholder="Password"
+            class="input"
+            v-model="login_data.password" />
           <a href="#" class="link">Forgot your password?</a>
-          <button class="btn">Sign In</button>
+          <button class="btn" @click="signin()">Sign In</button>
         </form>
       </div>
 
@@ -51,20 +61,48 @@
         </div>
       </div>
     </div>
+    <vue-basic-alert 
+       :duration="1500"
+       :closeIn="1500"
+       ref="alert" />
   </div>
+  
 </template>
 
 <script>
+import toastNotice from "@/components/toastNotice.vue";
+import axios from "@/service/axios";
+import VueCookies from "vue-cookies";
+import { useStore } from "vuex";
+import VueBasicAlert from 'vue-basic-alert'
+
 export default {
   name: "loginView",
+  components: {
+    toastNotice,
+    VueBasicAlert
+  },
   data() {
     return {
       user_data: {
         name: "",
-        id: "",
+        email: "",
         password: "",
       },
+      login_data: {
+        email: "",
+        password: "",
+      },
+      toastShow: false,
+      toastText: "",
     };
+  },
+  setup() {
+    const store = useStore();
+    const setSuccessColor = () => store.commit("setColor", "#0e4bf1");
+    const setFailColor = () => store.commit("setColor", "#f44040");
+
+    return { setSuccessColor, setFailColor };
   },
   mounted() {
     const signInBtn = document.getElementById("signIn");
@@ -85,21 +123,69 @@ export default {
     secondForm.addEventListener("submit", (e) => e.preventDefault());
   },
   methods: {
+    signin() {
+      const url = `http://localhost:8080/login`;
+      console.log(this.login_data);
+
+      axios
+        .post(url, this.login_data)
+        .then((res) => {
+          VueCookies.set("accessToken", res.data.accessToken);
+          VueCookies.set("refreshToken", res.data.refreshToken);
+          
+          this.$router.push({
+            path: "/mainpage",
+          });
+        })
+        .catch(() => {
+          this.$refs.alert
+        .showAlert(
+            'error', 
+            '올바르지 않은 이메일 또는 비밀번호입니다.',
+            '로그인 실패', 
+        )
+        });
+    },
     signup() {
       console.log(this.user_data);
-      const url = `http://localhost:8080/user/join`;
+      const url = `http://localhost:8080/member/sign-up`;
 
-      this.$axios
+      axios
         .post(url, this.user_data)
         .then(() => {
-          console.log(this);
-          alert("등록 성공");
-          location.href = "/loginpage";
+          // this.setSuccessColor();
+          // this.toastShow = true;
+          // this.toastText = "성공적으로 회원가입하셨습니다.";
+          // this.user_data.email = "";
+          // this.user_data.name = "";
+          // this.user_data.password = "";
+          this.$refs.alert
+        .showAlert(
+            'success', 
+            '회원가입에 성공하셨습니다!',
+            '회원가입 성공', 
+        )
         })
-        .catch((error) => {
-          console.log(error);
-          alert("등록 실패");
+        .catch(() => {
+          // console.log(err);
+          // this.setFailColor();
+          // this.toastShow = true;
+          // this.toastText = "회원가입에 실패하셨습니다. 다시 입력해주세요";
+          // this.user_data.email = "";
+          // this.user_data.name = "";
+          // this.user_data.password = "";
+          this.$refs.alert
+        .showAlert(
+            'error', 
+            '이미 등록되어 있는 가입자입니다.',
+            '회원가입 실패', 
+        )
         });
+    },
+  },
+  watch: {
+    toastShow() {
+      this.toastShow = !this.toastShow;
     },
   },
 };

@@ -33,7 +33,7 @@
           name="submit"
           type="submit"
           id="contact -submit"
-          @click="cancel()">
+          @click="$router.go(-1)">
           취소
         </button>
       </fieldset>
@@ -44,6 +44,7 @@
 <script>
 import myNav from "@/views/includes/myNav.vue";
 import { useStore } from "vuex";
+import axios from "@/service/axios";
 
 export default {
   components: {
@@ -52,10 +53,12 @@ export default {
   data() {
     return {
       board_data: {
-        userId: "ssafy",
+        user_id: "교수님",
         subject: "",
         content: "",
       },
+      boardtype: "",
+      articleNo: "",
       type: "",
     };
   },
@@ -68,39 +71,40 @@ export default {
     return { setShow, setText, setColor };
   },
   created() {
-    const params = new URL(document.location).searchParams;
-    const articleNo = params.get("articleNo");
+    this.boardtype = this.$route.params.type;
+    this.articleNo = this.$route.params.articleNo;
 
-    if (articleNo != null) {
+    console.log(this.articleNo);
+
+    if (this.articleNo != "5000") {
       this.type = "update";
-      const url = `http://localhost:8080/board/${articleNo}`;
-      this.$axios.get(url).then((res) => {
+      const url = `http://localhost:8080/${this.boardtype}/${this.articleNo}`;
+      axios.get(url).then((res) => {
         this.board_data = res.data;
       });
     }
   },
   methods: {
     regist() {
-      const type = this.type;
-      const url = `http://localhost:8080/board/${type}`;
+      let url;
+      if (this.boardtype == "update") {
+        url = `http://localhost:8080/${this.boardtype}/update/${this.articleNo}`;
+      } else {
+        url = `http://localhost:8080/${this.boardtype}`;
+      }
 
-      this.$axios
+      axios
         .post(url, this.board_data)
         .then(() => {
           this.setShow();
           this.setText();
           this.setColor();
-          this.$router.push({
-            name: "boardView",
-          });
+          this.$router.go(-1);
         })
         .catch((error) => {
           console.log(error);
           alert("등록 실패");
         });
-    },
-    cancel() {
-      this.$router.push("/boardpage");
     },
   },
 };

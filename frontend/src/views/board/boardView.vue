@@ -5,15 +5,56 @@
   <section class="notice">
     <div class="page-title">
       <div class="container">
-        <h3 style="font-size: 45px; color: #00859c">공지사항</h3>
+        <h3 style="font-size: 45px; color: #00859c">
+          {{ boardtitle[boardtype] }}
+        </h3>
+      </div>
+      <div id="categoryBoard">
+        <div
+          class="board_page"
+          :class="{ category_active: active_list[0] }"
+          @click="
+            [
+              select(0),
+              $router.push({ name: 'boardView', params: { type: 'board' } }),
+            ]
+          ">
+          공지사항
+        </div>
+        <div
+          class="board_page"
+          :class="{ category_active: active_list[1] }"
+          @click="
+            [
+              select(1),
+              $router.push({
+                name: 'boardView',
+                params: { type: 'open-board' },
+              }),
+            ]
+          ">
+          열린 게시판
+        </div>
+        <div
+          class="board_page"
+          :class="{ category_active: active_list[2] }"
+          @click="
+            [
+              select(2),
+              $router.push({ name: 'boardView', params: { type: 'faq' } }),
+            ]
+          ">
+          FAQ
+        </div>
       </div>
     </div>
 
-    <!-- board seach area -->
-    <div id="board-search">
-      <div class="container">
-        <div class="search-window">
-          <form action="">
+    <div v-if="boardtype == 'faq'"><faqBoard /></div>
+    <div v-else>
+      <!-- board seach area -->
+      <div id="board-search">
+        <div class="container">
+          <div class="search-window">
             <div class="search-wrap">
               <label for="search" class="blind">공지사항 내용 검색</label>
               <input
@@ -21,43 +62,53 @@
                 type="search"
                 name=""
                 placeholder="검색어를 입력해주세요."
-                value="" />
-              <button type="submit" class="btn btn-dark">검색</button>
+                v-model="searchKeyword"
+                @keyup.enter="search()" />
+              <button class="btn btn-dark" @click="search()">검색</button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- board list area -->
-    <div id="board-list">
-      <div class="container">
-        <table class="board-table">
-          <thead>
-            <tr>
-              <th scope="col" class="th-num">번호</th>
-              <th scope="col" class="th-title">제목</th>
-              <th scope="col" class="th-date">등록일</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="board in board_list" :key="board.articleNo">
-              <td>{{ board.articleNo }}</td>
-              <th>
-                <a @click="goDetail(board.articleNo)">{{ board.subject }}</a>
-              </th>
-              <td>{{ board.registerTime }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <div id="submit_btn">
-          <button
-            @click="write_page()"
-            type="button"
-            id="btn-list"
-            class="custom-btn btn-16">
-            글등록
-          </button>
+      <div id="board-list">
+        <div class="container">
+          <table class="board-table">
+            <thead>
+              <tr>
+                <th scope="col" class="th-num">번호</th>
+                <th scope="col" class="th-title">제목</th>
+                <th scope="col" class="th-date">등록일</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(board, idx) in board_list" :key="board.articleNo">
+                <td>{{ idx + 1 }}</td>
+                <th>
+                  <a @click="goDetail(board.articleNo)">{{ board.subject }}</a>
+                </th>
+                <td>{{ board.registerTime }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <paginationComponent
+            :totalPage="totalpage"
+            @setboardList="setboardList"
+            :keyword="boardtype"
+            type="board" />
+          <div id="submit_btn">
+            <button
+              @click="
+                $router.push({
+                  name: 'boardwritepage',
+                  params: { type: boardtype, articleNo: 5000 },
+                })
+              "
+              type="button"
+              id="btn-list"
+              class="custom-btn btn-16">
+              글등록
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -67,6 +118,9 @@
 <script>
 import myNav from "@/views/includes/myNav.vue";
 import toastNotice from "@/components/toastNotice.vue";
+import paginationComponent from "@/components/paginationComponent.vue";
+import faqBoard from "@/components/faqBoard.vue";
+import axios from "@/service/axios";
 import { useStore } from "vuex";
 import { computed } from "vue";
 
@@ -75,15 +129,25 @@ export default {
   components: {
     myNav,
     toastNotice,
+    paginationComponent,
+    faqBoard,
   },
   data() {
     return {
       board_list: [],
+      active_list: [true, false, false],
       toastShow: false,
       toastText: "",
+      searchKeyword: "",
+      totalpage: 0,
+      boardtype: "",
+      boardtitle: {
+        board: "공지사항",
+        "open-board": "열린 게시판",
+        faq: "FAQ",
+      },
     };
   },
-  props: {},
   setup() {
     const store = useStore();
     const toastTextResult = computed(() => store.state.text);
@@ -92,20 +156,74 @@ export default {
     return { toastTextResult, toastShowResult };
   },
   created() {
-    console.log(this.toastTextResult);
-    this.toastText = this.toastTextResult;
-    this.toastShow = this.toastShowResult;
-
-    this.$axios.get(`http://localhost:8080/board`).then((res) => {
-      this.board_list = res.data;
-    });
+    this.boardtype = this.$route.params.type;
+    if (this.boardtype == "board") {
+      this.select(0);
+    } else if (this.boardtype == "open-board") {
+      this.select(1);
+    } else if (this.boardtype == "faq") {
+      this.select(2);
+    }
+    this.createBoard(this.boardtype);
   },
   methods: {
-    write_page() {
-      this.$router.push("/boardwritepage");
+    setboardList(value) {
+      this.board_list = value;
+    },
+    createBoard(type) {
+      this.toastText = this.toastTextResult;
+      this.toastShow = this.toastShowResult;
+
+      axios.get(`http://localhost:8080/${type}/search`).then((res) => {
+        console.log(res.data.content);
+        this.board_list = res.data.content;
+        this.totalpage = res.data.totalPages;
+      });
     },
     goDetail(articleNo) {
-      location.href = `/boardcontentpage?articleNo=${articleNo}`;
+      this.$router.push({
+        name: "boardcontentpage",
+        params: { type: this.boardtype, articleNo: articleNo },
+      });
+    },
+    search() {
+      const keyword = this.searchKeyword;
+      this.sendKeyword = keyword;
+
+      axios
+        .get(
+          `http://localhost:8080/${this.boardtype}/search?keyword=${keyword}`
+        )
+        .then((res) => {
+          this.board_list = res.data.content;
+          this.totalpage = res.data.totalPages;
+        });
+    },
+    select(idx) {
+      if (this.active_list[idx]) {
+        console.log("none");
+      } else {
+        for (let i = 0; i < this.active_list.length; i++) {
+          if (i != idx) {
+            this.active_list[i] = this.active_list[idx];
+          }
+        }
+        this.active_list[idx] = !this.active_list[idx];
+      }
+    },
+  },
+  watch: {
+    "$route.params.type"(value) {
+      this.boardtype = value;
+      if (this.boardtype == "board") {
+        this.select(0);
+      } else if (this.boardtype == "open-board") {
+        this.select(1);
+      } else if (this.boardtype == "faq") {
+        this.select(2);
+      }
+      console.log(value);
+      this.createBoard(value);
     },
   },
 };
@@ -132,6 +250,33 @@ a {
   color: #333333;
   font-weight: 400;
   text-align: center;
+  margin: 0px;
+}
+
+#categoryBoard {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0px 0px;
+  width: 1100px;
+  margin: 0 auto;
+}
+.board_page {
+  padding: 10px 20px;
+  margin: 10px;
+  background-color: #b1b1b1;
+  color: #fff;
+  border-radius: 20px;
+  font-weight: 400;
+}
+
+#categoryBoard > div:hover {
+  background-color: #4f4f4f;
+  cursor: pointer;
+}
+
+.category_active {
+  background-color: #4f4f4f;
 }
 
 #board-search .search-window {
@@ -257,6 +402,7 @@ a {
 
 .btn-dark {
   background: #555;
+  margin: 0px;
   color: #fff;
 }
 
@@ -285,14 +431,6 @@ a {
 }
 
 /* reset */
-
-* {
-  list-style: none;
-  text-decoration: none;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
 .clearfix:after {
   content: "";
   display: block;
@@ -332,10 +470,10 @@ a {
 /* 16 */
 .btn-16 {
   border: none;
+  margin-top: 10px;
   color: #000;
-  margin-top: 20px;
 }
-.btn-16:after {
+ㅋㅊㅌㅋㅌㅊㅋㅌㅊㅋㅌㅊ .btn-16:after {
   position: absolute;
   content: "";
   width: 0;

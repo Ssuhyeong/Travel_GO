@@ -18,38 +18,75 @@
           </form>
         </div>
         <div id="select_container">
-          <div>검색</div>
-          <div>추천</div>
-          <div>거리순</div>
-          <div>MY</div>
+          <div
+            :class="{ active: sort_active[0] }"
+            @click="[sort_select(0), searchcontent()]">
+            검색
+          </div>
+          <div
+            :class="{ active: sort_active[1] }"
+            @click="[sort_select(1), likecontent()]">
+            추천
+          </div>
+          <div
+            :class="{ active: sort_active[2] }"
+            @click="[sort_select(2), distcontent()]">
+            거리순
+          </div>
         </div>
       </div>
       <div class="card_content">
         <div id="info_around">
           <p style="margin: 10px 0px">주변탐색</p>
           <div id="info_list">
-            <infoIcon icon_type="utensils" icon_name="음식점" />
-            <infoIcon icon_type="mug-hot" icon_name="카페" />
-            <infoIcon icon_type="bus" icon_name="버스" />
-            <infoIcon icon_type="train-subway" icon_name="지하철" />
-            <infoIcon icon_type="wallet" icon_name="은행" />
-            <infoIcon icon_type="store" icon_name="편의점" />
-            <infoIcon icon_type="hotel" icon_name="숙박" />
+            <infoIcon
+              @click="select(0)"
+              :check="facility_active[0]"
+              icon_type="house-medical"
+              icon_name="약국" />
+            <infoIcon
+              @click="select(1)"
+              :check="facility_active[1]"
+              icon_type="gas-pump"
+              icon_name="주유소" />
+            <infoIcon
+              @click="select(2)"
+              :check="facility_active[2]"
+              icon_type="mug-hot"
+              icon_name="카페" />
+            <infoIcon
+              @click="select(3)"
+              :check="facility_active[3]"
+              icon_type="hotel"
+              icon_name="숙박" />
+            <infoIcon
+              @click="select(4)"
+              :check="facility_active[4]"
+              icon_type="store"
+              icon_name="편의점" />
+            <infoIcon
+              @click="select(5)"
+              :check="facility_active[5]"
+              icon_type="cart-shopping"
+              icon_name="마트" />
           </div>
         </div>
         <hr />
         <div class="place_num">
           <p>장소</p>
-          <p style="margin-left: 10px; color: #696969">
-            {{ trip_list.length }}건
-          </p>
+          <p style="margin-left: 10px; color: #696969">{{ totalSearch }}건</p>
         </div>
         <div
           id="content_list"
-          v-for="content in trip_list"
+          v-for="(content, index) in trip_list"
           :key="content.content_id">
-          <placeContent :trip_content="content" />
+          <placeContent :trip_content="content" :marker_num="index + 1" />
         </div>
+        <paginationComponent
+          :keyword="sendKeyword"
+          :totalPage="sendTotalPage"
+          @setpageList="setpageList"
+          type="map" />
       </div>
     </div>
   </div>
@@ -58,41 +95,132 @@
 <script>
 import infoIcon from "./infoIcon.vue";
 import placeContent from "./placeContent.vue";
+import axios from "@/service/axios";
+import paginationComponent from "./paginationComponent.vue";
 
 export default {
   name: "cardMap",
   components: {
     infoIcon,
     placeContent,
+    paginationComponent,
   },
   data() {
     return {
+      facility_active: [false, false, false, false, false, false],
+      sort_active: [true, false, false, false],
       trip_list: [],
       keyword: "",
+      sendKeyword: "",
+      sendTotalPage: 0,
+      totalSearch: 0,
+      page: "0",
     };
+  },
+  props: {
+    current_point: {
+      type: Array,
+    },
   },
   mounted() {
     const searchForm = document.getElementById("search_form");
-
     searchForm.addEventListener("submit", (e) => e.preventDefault());
   },
   methods: {
+    setpageList(value) {
+      this.trip_list = value;
+      const scoller = document.querySelector(".card_content");
+      scoller.scrollTop = 0;
+      this.$emit("setContentList", this.trip_list);
+    },
     searchcontent() {
+      this.sort_select(0);
       const keyword = this.keyword;
-      console.log(this.keyword);
-      const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}`;
+      this.sendKeyword = this.keyword;
+      const page = this.page;
+      const url = `http://localhost:8080/attraction/search-list?keyword=${keyword}&page=${page}`;
 
-      this.$axios
+      axios
         .get(url)
         .then((res) => {
-          this.data = res.data;
           this.trip_list = res.data.content;
+          console.log(res.data.content);
+          this.$emit("setContentList", res.data.content);
+
+          this.sendTotalPage = res.data.totalPages;
+          this.totalSearch = res.data.totalElements;
         })
         .catch((error) => {
-          console.log("등록 실패" + error.data);
+          console.log("검색 실패" + error.data);
         });
+    },
+    likecontent() {
+      const keyword = this.keyword;
+      this.sendKeyword = this.keyword;
+      const page = this.page;
+      const url = `http://localhost:8080/attraction/like?keyword=${keyword}&page=${page}`;
 
-      this.$emit("setContentList", this.trip_list);
+      axios
+        .get(url)
+        .then((res) => {
+          this.trip_list = res.data.content;
+          console.log(res.data.content);
+          this.$emit("setContentList", res.data.content);
+
+          this.sendTotalPage = res.data.totalPages;
+          this.totalSearch = res.data.totalElements;
+        })
+        .catch((error) => {
+          console.log("검색 실패" + error.data);
+        });
+    },
+    distcontent() {
+      const keyword = this.keyword;
+      this.sendKeyword = this.keyword;
+      const page = this.page;
+
+      console.log(this.current_point.La);
+      const url = `http://localhost:8080/attraction/course?keyword=${keyword}&latitude=${this.current_point.Ma}&longitude=${this.current_point.La}&page=${page}`;
+
+      axios
+        .get(url)
+        .then((res) => {
+          this.trip_list = res.data.content;
+          console.log(res.data.content);
+          this.$emit("setContentList", res.data.content);
+
+          this.sendTotalPage = res.data.totalPages;
+          this.totalSearch = res.data.totalElements;
+        })
+        .catch((error) => {
+          console.log("검색 실패" + error.data);
+        });
+    },
+    select(idx) {
+      if (this.facility_active[idx]) {
+        this.facility_active[idx] = !this.facility_active[idx];
+        this.$emit("setCategoryNum", 0);
+      } else {
+        for (let i = 0; i < this.facility_active.length; i++) {
+          if (i != idx) {
+            this.facility_active[i] = this.facility_active[idx];
+          }
+        }
+        this.facility_active[idx] = !this.facility_active[idx];
+        this.$emit("setCategoryNum", idx + 1);
+      }
+    },
+    sort_select(idx) {
+      if (this.sort_active[idx]) {
+        console.log("none");
+      } else {
+        for (let i = 0; i < this.sort_active.length; i++) {
+          if (i != idx) {
+            this.sort_active[i] = this.sort_active[idx];
+          }
+        }
+        this.sort_active[idx] = !this.sort_active[idx];
+      }
     },
   },
 };
@@ -147,6 +275,7 @@ hr {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 15px;
 }
 
 .card img {
@@ -181,7 +310,7 @@ hr {
 }
 
 #select_container > div {
-  padding: 10px 20px;
+  padding: 10px 30px;
   margin: 10px;
   border-radius: 10px;
   cursor: pointer;
@@ -247,5 +376,9 @@ hr {
 
 .container:focus-within > .searchInputWrapper > .searchInputIcon {
   right: 0.2rem;
+}
+
+.active {
+  background-color: #017e94;
 }
 </style>

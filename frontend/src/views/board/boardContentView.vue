@@ -2,8 +2,8 @@
   <myNav />
   <div class="view_container">
     <form id="contact">
-      <h3>{{ board_data.articleNo }}. {{ board_data.subject }}.</h3>
-      <h4>{{ board_data.userId }}</h4>
+      <h3>{{ board_data.subject }}.</h3>
+      <h4>{{ name }}</h4>
       <h4>{{ board_data.registerTime }} 조회 : {{ board_data.hit }}</h4>
       <fieldset>{{ board_data.content }}</fieldset>
     </form>
@@ -13,7 +13,7 @@
       type="button"
       id="btn-list"
       class="custom-btn btn-16"
-      @click="$router.push('/boardpage')">
+      @click="$router.go(-1)">
       글목록
     </button>
     <button
@@ -30,27 +30,30 @@
       @click="deleteBoard()">
       글삭제
     </button>
+    <vue-basic-alert 
+       :duration="1500"
+       :closeIn="1500"
+       ref="alert" />
   </div>
 </template>
 
 <script>
 import myNav from "@/views/includes/myNav.vue";
+import axios from "@/service/axios";
+import VueBasicAlert from 'vue-basic-alert'
 import { useStore } from "vuex";
 
 export default {
   components: {
     myNav,
+    VueBasicAlert
   },
   data() {
     return {
-      board_data: {
-        articleNo: "",
-        userId: "",
-        subject: "",
-        content: "",
-        hit: 0,
-        registerTime: "",
-      },
+      board_data: {},
+      name: "",
+      boardtype: "",
+      articleNo: "",
     };
   },
   setup() {
@@ -62,29 +65,41 @@ export default {
     return { setShow, setText, setColor };
   },
   created() {
-    const params = new URL(document.location).searchParams;
-    const articleNo = params.get("articleNo");
+    this.boardtype = this.$route.params.type;
+    this.articleNo = this.$route.params.articleNo;
 
-    const url = `http://localhost:8080/board/${articleNo}`;
-    this.$axios.get(url).then((res) => {
+    const url = `http://localhost:8080/${this.boardtype}/${this.articleNo}`;
+    axios.get(url).then((res) => {
       this.board_data = res.data;
+      this.name = this.board_data.member.name;
+      
     });
   },
   methods: {
     deleteBoard() {
       const no = this.board_data.articleNo;
-      const url = `http://localhost:8080/board/${no}`;
+      const url = `http://localhost:8080/${this.boardtype}/${no}`;
 
-      this.$axios.delete(url).then(() => {
+      axios.delete(url).then(() => {
         this.setShow();
         this.setText();
         this.setColor();
-        this.$router.push("/boardpage");
-      });
+        this.$router.go(-1);
+      }).catch(() => {
+        this.$refs.alert
+        .showAlert(
+            'error', 
+            '본인의 계정만 삭제가 가능합니다.',
+            '삭제 실패', 
+        )
+      })
     },
     goUpdate() {
       const no = this.board_data.articleNo;
-      location.href = `/boardwritepage?articleNo=${no}`;
+      this.$router.push({
+        name: "boardwritepage",
+        params: { type: this.boardtype, articleNo: no },
+      });
     },
   },
 };
