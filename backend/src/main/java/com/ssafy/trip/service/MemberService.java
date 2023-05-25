@@ -1,5 +1,6 @@
 package com.ssafy.trip.service;
 
+import com.ssafy.trip.etc.CustomMultipartFile;
 import com.ssafy.trip.handler.FileHandler;
 import com.ssafy.trip.Entity.Member;
 import com.ssafy.trip.Entity.Photo;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Transactional
@@ -44,6 +46,7 @@ public class MemberService {
 
         user.passwordEncode(passwordEncoder);
         memberRepository.save(user);
+        //savePhoto(memberRepository.findByEmail(userSignDto.getEmail()).get(),dummy);
     }
 
     public void modifyMemberInfo(MemberRequestDto memberRequestDto , String userId) {

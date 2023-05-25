@@ -34,10 +34,11 @@ public class Photo {
     private Long fileSize;
 
     @Builder
-    public Photo(String originalName, String filePath, Long fileSize) {
+    public Photo(String originalName, String filePath, Long fileSize, Member member) {
         this.originalName = originalName;
         this.filePath = filePath;
         this.fileSize = fileSize;
+        this.member = member;
     }
 
     public void setMember(Member member){
