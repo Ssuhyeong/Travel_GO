@@ -11,9 +11,12 @@
 > 
 # 2. 팀원 소개
 |손수형|최경인|
-|img|<img src="https://github.com/Ssuhyeong/trip_project/assets/73628071/e48e5b3b-783b-4544-886a-50e17a596981" width = "100" height = "100">|
-|img|<img src="https://github.com/Ssuhyeong/trip_project/assets/107913312/705e990f-56c5-4442-8305-be57ea4e4efb" width = "100" height = "100">|
+> 
+<img src="https://github.com/Ssuhyeong/trip_project/assets/73628071/e48e5b3b-783b-4544-886a-50e17a596981" width = "100" height = "100">|
+<img src="https://github.com/Ssuhyeong/trip_project/assets/107913312/705e990f-56c5-4442-8305-be57ea4e4efb" width = "100" height = "100">|
+> 
 |[@Ssuhyeong](https://github.com/Ssuhyeong)|[@Fizioo0102](https://github.com/Fizioo0102)|
+> 
 |Front-end|Back-end|
 
 # 3. 기술 스택
