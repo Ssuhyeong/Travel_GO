@@ -11,7 +11,7 @@
 > 
 # 2. 팀원 소개
 |손수형|최경인|
-|---|---|
+|img|![KakaoTalk_20231019_125513419_01](https://github.com/Ssuhyeong/trip_project/assets/73628071/839f1361-4708-4d09-b26f-aa3627faf962)|
 |img|<img src="https://github.com/Ssuhyeong/trip_project/assets/107913312/705e990f-56c5-4442-8305-be57ea4e4efb" width = "100" height = "100">|
 |[@Ssuhyeong](https://github.com/Ssuhyeong)|[@Fizioo0102](https://github.com/Fizioo0102)|
 |Front-end|Back-end|
